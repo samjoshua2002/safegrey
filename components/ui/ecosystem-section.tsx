@@ -46,8 +46,31 @@ export default function EcosystemSection() {
 
   return (
     <TooltipProvider delayDuration={80}>
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28">
-        <div className="grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-start mb-12">
+      <div className="bg-[var(--theme-dark-base)]">
+      <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28 overflow-hidden ">
+        {/* Dotted background */}
+        <div className="absolute inset-0 opacity-20 pointer-events-none">
+          <div className="absolute inset-0 grid grid-cols-4 gap-24 transform -rotate-6 scale-150">
+            {[...Array(16)].map((_, i) => (
+              <div key={i} className="flex items-center justify-center">
+                <div className="w-2 h-2 rounded-full bg-[var(--theme-accent)]" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Floating accent blobs */}
+        <motion.div
+          className="absolute top-10 left-20 w-48 h-48 rounded-full bg-[var(--theme-accent)]/10 blur-3xl animate-float"
+          transition={{ duration: 6, repeat: Infinity, repeatType: "mirror" }}
+        />
+        <motion.div
+          className="absolute bottom-10 right-20 w-56 h-56 rounded-full bg-[var(--theme-accent-dim)]/10 blur-3xl animate-float"
+          transition={{ duration: 8, repeat: Infinity, repeatType: "mirror" }}
+        />
+
+        {/* Existing Content */}
+        <div className="relative z-10 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-start mb-12 ">
           <div className="md:col-span-3">
             <div className="flex items-center gap-3">
               <div className="w-3 h-3 bg-white mb-3" />
@@ -63,7 +86,7 @@ export default function EcosystemSection() {
           </div>
 
           <div className="md:col-span-9">
-            <div className="flex items-center gap-2 justify-between mt-5">
+            <div className="flex items-center gap-2 justify-between mt-5 ">
               {TABS.map((tab, index) => {
                 const isActive = active === tab.key;
                 const isCompleted =
@@ -122,7 +145,7 @@ export default function EcosystemSection() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start relative z-10 ">
           <div className="lg:col-span-5 mt-14">
             <AnimatePresence mode="wait">
               {TABS.map(
@@ -152,9 +175,11 @@ export default function EcosystemSection() {
           </div>
         </div>
       </div>
+      </div>
     </TooltipProvider>
   );
 }
+
 
 // Other components (IsometricStack, IsometricLayer, SignalBoard, ProtectSignalBoards, DetectSignalBoards, RespondSignalBoards, GraphDots, DotMatrix, ResearchNodes, FloatingParticles, AnimatedMatrix)
 // remain exactly the same but with minimal transition adjustments for smoother motion
@@ -164,7 +189,7 @@ function IsometricStack({ active }: { active: TabKey }) {
   const showRespond = active === "respond";
 
   return (
-    <div className="iso-scene relative mx-auto h-[350px] w-full">
+    <div className="iso-scene relative mx-auto h-[350px] w-full ">
       {/* Enhanced background matrix */}
       <div className="pointer-events-none absolute -top-8 left-1/2 z-0 w-[80%] -translate-x-1/2 opacity-70">
         <AnimatedMatrix />
