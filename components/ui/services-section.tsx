@@ -1,12 +1,10 @@
-"use client"
+"use client";
 
-import type React from "react"
-import type { LucideIcon } from "lucide-react"
-
-import { ShieldCheck, Cog, Target, Cloud, FileCheck, Repeat } from "lucide-react"
-
-import { useMemo, useRef, useState } from "react"
-import { motion, AnimatePresence } from "framer-motion"
+import type React from "react";
+import type { LucideIcon } from "lucide-react";
+import { ShieldCheck, Cog, Target, Cloud, FileCheck, Repeat } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 
 const services = [
   {
@@ -150,7 +148,7 @@ const services = [
       },
     ],
   },
-]
+];
 
 const serviceIcons: Record<string, LucideIcon> = {
   "security-assessments": ShieldCheck,
@@ -159,130 +157,135 @@ const serviceIcons: Record<string, LucideIcon> = {
   "cloud-security": Cloud,
   "risk-compliance": FileCheck,
   "security-subscriptions": Repeat,
-}
+};
 
 export function ServicesSection() {
-  const [activeService, setActiveService] = useState(services[0].key)
-  const [hoveredService, setHoveredService] = useState<string | null>(null)
+  const [activeService, setActiveService] = useState(services[0].key);
+  const [hoveredService, setHoveredService] = useState<string | null>(null);
 
-  const activeIndex = useMemo(
-    () =>
-      Math.max(
-        0,
-        services.findIndex((s) => s.key === activeService),
-      ),
-    [activeService],
-  )
+  const activeIndex = useMemo(() => Math.max(0, services.findIndex((s) => s.key === activeService)), [activeService]);
 
-  const currentService = services.find((s) => s.key === (hoveredService || activeService)) || services[0]
+  const currentService = services.find((s) => s.key === activeService) || services[0]; // <-- use activeService only
 
-  const itemRefs = useRef<Array<HTMLButtonElement | null>>([])
+  const itemRefs = useRef<Array<HTMLButtonElement | null>>([]);
   const focusItem = (index: number) => {
-    const el = itemRefs.current[index]
-    if (el) el.focus()
-  }
+    const el = itemRefs.current[index];
+    if (el) el.focus();
+  };
 
   const onKeyDownTabs = (e: React.KeyboardEvent) => {
-    if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return
-    e.preventDefault()
-    const dir = e.key === "ArrowDown" ? 1 : -1
-    const next = (activeIndex + dir + services.length) % services.length
-    setActiveService(services[next].key)
-    requestAnimationFrame(() => focusItem(next))
-  }
+    if (e.key !== "ArrowDown" && e.key !== "ArrowUp") return;
+    e.preventDefault();
+    const dir = e.key === "ArrowDown" ? 1 : -1;
+    const next = (activeIndex + dir + services.length) % services.length;
+    setActiveService(services[next].key);
+    requestAnimationFrame(() => focusItem(next));
+  };
 
   const listVariants = {
     initial: { opacity: 0, x: 16 },
-    enter: {
-      opacity: 1,
-      x: 0,
-      transition: { duration: 0.25, when: "beforeChildren", staggerChildren: 0.05 },
-    },
+    enter: { opacity: 1, x: 0, transition: { duration: 0.25, when: "beforeChildren", staggerChildren: 0.05 } },
     exit: { opacity: 0, x: -16, transition: { duration: 0.2 } },
-  }
+  };
 
   const cardVariants = {
     initial: { opacity: 0, y: 8 },
     enter: { opacity: 1, y: 0, transition: { duration: 0.2 } },
-  }
+  };
 
   return (
-    <section
-      aria-labelledby="services-heading"
-      className="max-w-6xl mx-auto px-4 py-16 flex flex-col lg:flex-row gap-10 relative"
-    >
-      <h2 id="services-heading" className="sr-only text-white">
-        Our Services
-      </h2>
-
-      {/* Left Nav with vertical timeline */}
-      <div className="flex flex-col items-start w-full lg:w-1/3 relative">
-        {/* Decorative vertical line - uses brand tokens and subtle glow */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute left-9 top-0 bottom-0 border-l border-dashed border-border"
-        />
-
-        <div role="tablist" aria-orientation="vertical" onKeyDown={onKeyDownTabs} className="w-full pt-1 pl-6">
-          {services.map((service, idx) => {
-            const isActive = activeService === service.key
-            const isHover = hoveredService === service.key
-            const Icon = serviceIcons[service.key] ?? ShieldCheck
-
-            return (
-              <div key={service.key} className="relative w-full">
-                {/* connector spacing */}
-                <div className={idx === services.length - 1 ? "mb-2" : "mb-6"} />
-
-                <button
-                  ref={(el) => (itemRefs.current[idx] = el)}
-                  role="tab"
-                  aria-selected={isActive}
-                  aria-controls={`panel-${service.key}`}
-                  id={`tab-${service.key}`}
-                  onMouseEnter={() => setHoveredService(service.key)}
-                  onMouseLeave={() => setHoveredService(null)}
-                  onClick={() => setActiveService(service.key)}
-                  className="relative flex items-center gap-3 w-full cursor-pointer focus:outline-none py-2"
-                >
-                  {/* Dot */}
-                  <span
-                    className={`inline-flex items-center justify-center size-6 md:size-7 rounded-md ring-1 transition-colors  ${
-                      isActive || isHover
-                        ? "bg-primary/10 text-primary ring-primary"
-                        : "bg-muted text-foreground/70 ring-border"
-                    }`}
-                  >
-                    <Icon className="size-3.5 md:size-4" aria-hidden="true" />
-                  </span>
-
-                  {/* Label */}
-                  <span
-                    className={`text-left text-base md:text-lg font-semibold text-pretty transition-colors duration-300 ${
-                      isActive ? "text-primary" : "text-foreground"
-                    }`}
-                  >
-                    {service.title}
-                  </span>
-
-                  
-                </button>
-              </div>
-            )
-          })}
+    <section className="relative overflow-hidden py-24 px-4 sm:px-6 lg:px-8 bg-[var(--theme-dark-base)] text-[var(--theme-text-primary)]">
+      {/* Left 5x5 Corner Dots */}
+      <div className="absolute bottom-0 left-0 pointer-events-none opacity-40">
+        <div className="grid grid-cols-5 gap-8 p-10">
+          {[...Array(25)].map((_, i) => (
+            <div
+              key={i}
+              className={`w-[5px] h-[5px] ${i % 5 === 0 ? "bg-white" : "bg-[var(--theme-accent)]"} rounded-sm`}
+            />
+          ))}
         </div>
       </div>
 
-      {/* Right Content */}
-      <div className="w-full lg:w-2/3">
-        {/* Current service heading for context */}
-        <div className="mb-4">
-          <h3 className="text-xl md:text-2xl font-bold text-balance text-foreground">{currentService.title}</h3>
-          <div className="mt-2 h-1 w-16 bg-primary rounded" aria-hidden="true" />
-        </div>
+      {/* Floating accent blobs */}
+      <motion.div className="absolute top-10 left-20 w-48 h-48 rounded-full bg-[var(--theme-accent)]/10 blur-3xl animate-float" transition={{ duration: 6, repeat: Infinity, repeatType: "mirror" }} />
+      <motion.div className="absolute bottom-10 right-20 w-56 h-56 rounded-full bg-[var(--theme-accent-dim)]/10 blur-3xl animate-float" transition={{ duration: 8, repeat: Infinity, repeatType: "mirror" }} />
 
-        <AnimatePresence mode="wait">
-          {currentService && (
+      {/* Section Header */}
+      <div className="relative z-10 max-w-4xl mx-auto text-center mb-12">
+        <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Explore Our Services</h2>
+        <p className="text-lg md:text-xl text-muted-foreground">
+          SafeGrey offers a full spectrum of cybersecurity services designed to protect, detect, and respond to real-world attacks
+        </p>
+      </div>
+
+      {/* Main Content */}
+      <div className="relative z-10 max-w-6xl mx-auto flex flex-col lg:flex-row gap-10">
+        {/* Left Nav */}
+        <div className="flex flex-col items-start w-full lg:w-1/3 relative">
+  <div className="absolute left-9 top-0 flex flex-col items-center h-60 z-0">
+    <div className="absolute left-[1px] h-[calc(100%+9rem)] w-[2px] border-l border-dashed border-white" />
+    <div className="absolute top-0 -left-12 h-[2px] w-12 border-t border-dashed border-white" />
+    <div className="absolute bottom-full -left-12 h-12 w-[2px] border-l border-dashed border-white" />
+  </div>
+
+  <div
+    role="tablist"
+    aria-orientation="vertical"
+    onKeyDown={onKeyDownTabs}
+    className="w-full pt-1 pl-6"
+  >
+    {services.map((service, idx) => {
+      const isActive = activeService === service.key;
+      const isHover = hoveredService === service.key;
+      const Icon = serviceIcons[service.key] ?? ShieldCheck;
+
+      return (
+        <div key={service.key} className="relative w-full">
+          <div className={idx === services.length - 1 ? "mb-2" : "mb-6"} />
+          <button
+            ref={(el) => { itemRefs.current[idx] = el; }}
+            role="tab"
+            aria-selected={isActive}
+            aria-controls={`panel-${service.key}`}
+            id={`tab-${service.key}`}
+            onMouseEnter={() => setHoveredService(service.key)}
+            onMouseLeave={() => setHoveredService(null)}
+            onClick={() => setActiveService(service.key)}
+            className="relative flex items-center gap-3 w-full cursor-pointer focus:outline-none py-2 z-10"
+          >
+            <span
+              className={`inline-flex items-center justify-center size-6 md:size-7 rounded-md ring-1 transition-colors z-10 ${
+                isActive || isHover
+                  ? "bg-primary/100 text-[var(--theme-text-primary)] ring-[var(--theme-text-primary)]"
+                  : "bg-muted text-foreground/70 ring-border"
+              }`}
+            >
+              <Icon className="size-3.5 md:size-4" aria-hidden="true" />
+            </span>
+            <span
+              className={`text-left text-base md:text-lg font-semibold transition-colors duration-300 ${
+                isActive || isHover ? "text-primary" : "text-foreground"
+              }`}
+            >
+              {service.title}
+            </span>
+          </button>
+        </div>
+      );
+    })}
+  </div>
+</div>
+
+
+        {/* Right Content */}
+        <div className="w-full lg:w-2/3">
+          <div className="mb-4">
+            <h3 className="text-xl md:text-2xl font-bold text-foreground">{currentService.title}</h3>
+            <div className="mt-2 h-1 w-16 bg-primary rounded" aria-hidden="true" />
+          </div>
+
+          <AnimatePresence mode="wait">
             <motion.div
               key={currentService.key}
               variants={listVariants}
@@ -298,16 +301,16 @@ export function ServicesSection() {
                 <motion.div
                   variants={cardVariants}
                   key={`${currentService.key}-${idx}`}
-                  className="p-5 md:p-6 bg-card rounded-xl border border-border shadow-sm transition-all duration-200 hover:border-primary/40 hover:shadow-md hover:-translate-y-0.5"
+                  className="p-5 md:p-6 glass-effect border border-[var(--theme-border)] hover:glow-accent hover:scale-[1.03] transition-all duration-300 rounded-xl text-left"
                 >
                   <h4 className="text-base md:text-lg font-semibold mb-1.5 text-primary">{section.subTitle}</h4>
                   <p className="text-sm md:text-base leading-relaxed text-foreground">{section.description}</p>
                 </motion.div>
               ))}
             </motion.div>
-          )}
-        </AnimatePresence>
+          </AnimatePresence>
+        </div>
       </div>
     </section>
-  )
+  );
 }

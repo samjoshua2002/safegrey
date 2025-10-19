@@ -1,14 +1,53 @@
-import { Button } from "@/components/ui/button"
-import { ArrowRight, Shield } from "lucide-react"
+"use client";
+
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Shield } from "lucide-react";
+import { motion } from "framer-motion";
 
 export function CTASection() {
   return (
-    <section className="py-24 px-4 sm:px-6 lg:px-8 relative">
-      {/* Background Effects */}
-      <div className="absolute inset-0 bg-gradient-to-br from-accent/10 via-transparent to-accent/5" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,240,224,0.1),transparent_70%)]" />
+    <section
+      className="relative overflow-hidden py-24 px-4 sm:px-6 lg:px-8 bg-[var(--theme-dark-base)] text-[var(--theme-text-primary)]"
+    >
+      {/* === Corner Dots (Static Placement) === */}
+      <div className="absolute inset-0 opacity-40 pointer-events-none">
+        {/* Top-left 5x5 grid */}
+        <div className="absolute top-10 left-10 grid grid-cols-5 gap-8">
+          {[...Array(25)].map((_, i) => (
+            <div
+              key={i}
+              className={`w-[5px] h-[5px] ${
+                i % 3 === 0 ? "bg-white" : "bg-[var(--theme-accent)]"
+              } rounded-sm`}
+            />
+          ))}
+        </div>
 
-      <div className="max-w-4xl mx-auto text-center relative z-10">
+        {/* Right-bottom 5x5 grid */}
+        <div className="absolute right-10 bottom-10 grid grid-cols-5 gap-8">
+          {[...Array(25)].map((_, i) => (
+            <div
+              key={i}
+              className={`w-[5px] h-[5px] ${
+                i % 4 === 0 ? "bg-white" : "bg-[var(--theme-accent)]"
+              } rounded-sm`}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Floating accent blobs */}
+      <motion.div
+        className="absolute top-10 left-20 w-48 h-48 rounded-full bg-[var(--theme-accent)]/10 blur-3xl animate-float"
+        transition={{ duration: 6, repeat: Infinity, repeatType: "mirror" }}
+      />
+      <motion.div
+        className="absolute bottom-10 right-20 w-56 h-56 rounded-full bg-[var(--theme-accent-dim)]/10 blur-3xl animate-float"
+        transition={{ duration: 8, repeat: Infinity, repeatType: "mirror" }}
+      />
+
+      {/* Main CTA Content */}
+      <div className="relative z-10 max-w-4xl mx-auto text-center">
         <div className="glass-effect p-12 rounded-2xl glow-accent">
           <Shield className="w-16 h-16 text-accent mx-auto mb-6 animate-pulse" />
 
@@ -37,5 +76,5 @@ export function CTASection() {
         </div>
       </div>
     </section>
-  )
+  );
 }

@@ -5,6 +5,8 @@
 html,
 body {
   overflow-x: hidden;
+  background-color: #1e1e1f;
+
 }
 
 :root {
@@ -145,7 +147,7 @@ body {
 
   body {
     @apply bg-background text-foreground;
-    background: linear-gradient(135deg, #0f0606 0%, #1c1c1e 100%);
+    background: linear-gradient(135deg, #0f0606 0%, #150808 100%);
     min-height: 100vh;
   }
 }
