@@ -88,3 +88,339 @@ export function LogoSection() {
     </section>
   );
 }
+
+
+
+
+
+
+/* 
+'use client';
+
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
+import { useRef } from 'react';
+import {
+  Marquee,
+  MarqueeContent,
+  MarqueeFade,
+  MarqueeItem,
+} from '@/components/ui/shadcn-io/marquee';
+
+export function LogoSection() {
+  const sectionRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: sectionRef,
+    offset: ["start end", "end start"]
+  });
+
+  // Parallax transforms with spring physics
+  const y1 = useSpring(useTransform(scrollYProgress, [0, 1], [100, -100]), {
+    stiffness: 100,
+    damping: 30
+  });
+  const y2 = useSpring(useTransform(scrollYProgress, [0, 1], [-100, 100]), {
+    stiffness: 100,
+    damping: 30
+  });
+  const y3 = useSpring(useTransform(scrollYProgress, [0, 1], [50, -150]), {
+    stiffness: 80,
+    damping: 25
+  });
+  
+  const rotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
+  const scale = useTransform(scrollYProgress, [0, 0.5, 1], [0.8, 1, 0.8]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2, 0.8, 1], [0.3, 1, 1, 0.3]);
+
+  const logos = [
+    'OSCP',
+    'OSCE',
+    'CRTO',
+    'CRISC',
+    'ISO 27001',
+    'Miter & Attack',
+    'OWASP',
+    'NIST',
+    'PTES',
+  ];
+
+  return (
+    <section 
+      ref={sectionRef}
+      className="relative overflow-hidden py-32 px-4 sm:px-6 lg:px-8 bg-[var(--theme-dark-base)] text-[var(--theme-text-primary)]"
+    >
+      
+      <motion.div 
+        className="absolute inset-0 opacity-20"
+        style={{ y: y1 }}
+      >
+        <div className="absolute inset-0 grid grid-cols-8 gap-16 transform -rotate-12 scale-150">
+          {[...Array(64)].map((_, i) => (
+            <motion.div 
+              key={i} 
+              className="flex items-center justify-center"
+              initial={{ scale: 0 }}
+              whileInView={{ scale: 1 }}
+              transition={{ 
+                delay: i * 0.01,
+                type: "spring",
+                stiffness: 200
+              }}
+            >
+              <motion.div 
+                className="w-2 h-2 rounded-full bg-[var(--theme-accent)]"
+                animate={{
+                  scale: [1, 1.5, 1],
+                  opacity: [0.3, 0.8, 0.3]
+                }}
+                transition={{
+                  duration: 3,
+                  repeat: Infinity,
+                  delay: i * 0.05
+                }}
+              />
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+
+     
+      <motion.div 
+        className="absolute inset-0 opacity-10"
+        style={{ y: y2 }}
+      >
+        {[...Array(6)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-32 h-32 border-2 border-[var(--theme-accent)]"
+            style={{
+              left: `${(i * 20) % 100}%`,
+              top: `${(i * 30) % 100}%`,
+              rotate: rotate
+            }}
+            animate={{
+              rotate: [0, 360],
+              scale: [1, 1.2, 1]
+            }}
+            transition={{
+              rotate: { duration: 20 + i * 5, repeat: Infinity, ease: "linear" },
+              scale: { duration: 4, repeat: Infinity, delay: i * 0.5 }
+            }}
+          />
+        ))}
+      </motion.div>
+
+      
+      <motion.div
+        className="absolute top-10 left-20 w-64 h-64 rounded-full bg-[var(--theme-accent)]/20 blur-3xl"
+        style={{ y: y3, scale }}
+        animate={{
+          x: [0, 50, 0],
+          y: [0, -30, 0]
+        }}
+        transition={{ 
+          duration: 8, 
+          repeat: Infinity, 
+          repeatType: 'mirror',
+          ease: "easeInOut"
+        }}
+      />
+      <motion.div
+        className="absolute bottom-20 right-10 w-72 h-72 rounded-full bg-[var(--theme-accent-dim)]/20 blur-3xl"
+        style={{ y: y2, scale }}
+        animate={{
+          x: [0, -40, 0],
+          y: [0, 40, 0]
+        }}
+        transition={{ 
+          duration: 10, 
+          repeat: Infinity, 
+          repeatType: 'mirror',
+          ease: "easeInOut"
+        }}
+      />
+      <motion.div
+        className="absolute top-1/2 left-1/2 w-96 h-96 rounded-full bg-[var(--theme-accent)]/10 blur-3xl"
+        style={{ 
+          y: y1, 
+          x: useTransform(scrollYProgress, [0, 1], [-50, 50])
+        }}
+        animate={{
+          scale: [1, 1.3, 1]
+        }}
+        transition={{ 
+          duration: 12, 
+          repeat: Infinity, 
+          repeatType: 'mirror'
+        }}
+      />
+
+     
+      <motion.div 
+        className="absolute inset-0 opacity-5"
+        style={{ y: y3 }}
+      >
+        <svg className="w-full h-full" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse">
+              <path d="M 40 0 L 0 0 0 40" fill="none" stroke="currentColor" strokeWidth="1"/>
+            </pattern>
+          </defs>
+          <rect width="100%" height="100%" fill="url(#grid)" />
+        </svg>
+      </motion.div>
+
+     
+      <motion.div 
+        className="relative z-10 max-w-6xl mx-auto text-center"
+        style={{ opacity }}
+      >
+      
+        <motion.div
+          initial={{ opacity: 0, y: 50, rotateX: -20 }}
+          whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
+          transition={{ duration: 1, type: "spring" }}
+          viewport={{ once: true }}
+          style={{ 
+            perspective: "1000px",
+            transformStyle: "preserve-3d"
+          }}
+        >
+          <motion.h2
+            className="text-4xl md:text-6xl font-bold mb-8 text-white relative"
+            style={{
+              y: useTransform(scrollYProgress, [0, 0.5, 1], [0, -20, 0])
+            }}
+          >
+            <span className="relative inline-block">
+              <motion.span
+                className="absolute inset-0 blur-2xl bg-gradient-to-r from-[var(--theme-accent)] to-[var(--theme-accent-dim)] opacity-50"
+                animate={{
+                  scale: [1, 1.1, 1],
+                  opacity: [0.3, 0.6, 0.3]
+                }}
+                transition={{ duration: 3, repeat: Infinity }}
+              />
+              <span className="relative">Compliance & Trust</span>
+            </span>
+          </motion.h2>
+        </motion.div>
+
+
+        <motion.p
+          className="max-w-3xl mx-auto mb-16 text-xl md:text-2xl text-[var(--theme-text-secondary)] leading-relaxed"
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.3 }}
+          viewport={{ once: true }}
+          style={{
+            y: useTransform(scrollYProgress, [0, 0.5, 1], [20, 0, 20])
+          }}
+        >
+          With certified professionals and a deep understanding of global compliance standards,
+          SafeGrey delivers security you can trust and ensures you receive{' '}
+          <motion.span 
+            className="text-[var(--theme-accent)] font-semibold"
+            animate={{ 
+              textShadow: [
+                "0 0 10px var(--theme-accent)",
+                "0 0 20px var(--theme-accent)",
+                "0 0 10px var(--theme-accent)"
+              ]
+            }}
+            transition={{ duration: 2, repeat: Infinity }}
+          >
+            best-in-class security outcomes
+          </motion.span>.
+        </motion.p>
+
+      
+        <motion.div 
+          className="relative overflow-hidden"
+          initial={{ opacity: 0, scale: 0.9 }}
+          whileInView={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
+          viewport={{ once: true }}
+          style={{
+            y: useTransform(scrollYProgress, [0, 0.5, 1], [30, 0, 30])
+          }}
+        >
+          <Marquee>
+            <MarqueeFade side="left" />
+            <MarqueeFade side="right" />
+            <MarqueeContent className="flex items-center gap-8">
+              {logos.map((logo, index) => (
+                <MarqueeItem
+                  key={index}
+                  className="group relative flex items-center justify-center h-24 w-40 bg-gradient-to-br from-muted/80 to-muted rounded-2xl text-white font-bold text-lg shadow-xl backdrop-blur-sm border border-white/10 cursor-pointer overflow-hidden"
+                >
+             
+                  <motion.div
+                    className="absolute inset-0 bg-gradient-to-br from-[var(--theme-accent)]/20 to-[var(--theme-accent-dim)]/20 opacity-0 group-hover:opacity-100"
+                    transition={{ duration: 0.3 }}
+                  />
+                  
+          
+                  <motion.div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100"
+                    style={{
+                      background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)'
+                    }}
+                    animate={{
+                      x: ['-100%', '200%']
+                    }}
+                    transition={{
+                      duration: 1.5,
+                      repeat: Infinity,
+                      repeatDelay: 2
+                    }}
+                  />
+                  
+                  <motion.span
+                    className="relative z-10"
+                    whileHover={{ 
+                      scale: 1.1,
+                      rotateY: 10,
+                      z: 50
+                    }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    {logo}
+                  </motion.span>
+                  
+        
+                  <div className="absolute top-2 left-2 w-3 h-3 border-t-2 border-l-2 border-[var(--theme-accent)]/50 opacity-0 group-hover:opacity-100 transition-opacity" />
+                  <div className="absolute bottom-2 right-2 w-3 h-3 border-b-2 border-r-2 border-[var(--theme-accent)]/50 opacity-0 group-hover:opacity-100 transition-opacity" />
+                </MarqueeItem>
+              ))}
+            </MarqueeContent>
+          </Marquee>
+        </motion.div>
+
+     
+        {[...Array(12)].map((_, i) => (
+          <motion.div
+            key={i}
+            className="absolute w-1 h-1 bg-[var(--theme-accent)] rounded-full"
+            style={{
+              left: `${Math.random() * 100}%`,
+              top: `${Math.random() * 100}%`
+            }}
+            animate={{
+              y: [0, -100, 0],
+              opacity: [0, 1, 0],
+              scale: [0, 1, 0]
+            }}
+            transition={{
+              duration: 3 + Math.random() * 2,
+              repeat: Infinity,
+              delay: Math.random() * 3
+            }}
+          />
+        ))}
+      </motion.div>
+    </section>
+  );
+}
+
+
+*/
