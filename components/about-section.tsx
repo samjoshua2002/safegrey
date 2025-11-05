@@ -272,84 +272,88 @@ export function AboutSection() {
           </div>
         </div>
 
-        {/* Enhanced Carousel Controls */}
-        <div className="absolute bottom-12 right-8 lg:right-16 z-30">
-          <div className="flex items-center gap-4 bg-black/50 backdrop-blur-sm border border-white/20 p-4 rounded-lg shadow-2xl">
-            <button
-              onClick={() => {
-                setIsPlaying(!isPlaying);
-                if (!isPlaying && progressRef.current) {
-                  gsap.to(progressRef.current, {
-                    duration: 5 - (gsap.getProperty(progressRef.current, "width") as number) / 100 * 5,
-                    width: '100%',
-                    ease: "none"
-                  });
-                }
-              }}
-              className="w-10 h-10 flex items-center justify-center hover:bg-white/10 transition-all duration-300 rounded-lg group"
-              title={isPlaying ? "Pause" : "Play"}
-            >
-              {isPlaying ? 
-                <Pause className="w-4 h-4 group-hover:scale-110 transition-transform" /> : 
-                <Play className="w-4 h-4 group-hover:scale-110 transition-transform" />
-              }
-            </button>
+     {/* Enhanced Carousel Controls */}
+<div className="hidden md:absolute md:bottom-12 md:right-8 lg:right-16 md:z-30 md:flex">
+  <div className="flex items-center gap-4 bg-black/50 backdrop-blur-sm border border-white/20 p-4 rounded-lg shadow-2xl">
+    
+    {/* Play/Pause Button */}
+    <button
+      onClick={() => {
+        setIsPlaying(!isPlaying);
+        if (!isPlaying && progressRef.current) {
+          gsap.to(progressRef.current, {
+            duration: 5 - (gsap.getProperty(progressRef.current, "width") as number) / 100 * 5,
+            width: '100%',
+            ease: "none"
+          });
+        }
+      }}
+      className="w-10 h-10 flex items-center justify-center hover:bg-white/10 transition-all duration-300 rounded-lg group"
+      title={isPlaying ? "Pause" : "Play"}
+    >
+      {isPlaying ? 
+        <Pause className="w-4 h-4 group-hover:scale-110 transition-transform" /> : 
+        <Play className="w-4 h-4 group-hover:scale-110 transition-transform" />
+      }
+    </button>
 
-            <button
-              onClick={prevSlide}
-              className="w-10 h-10 flex items-center justify-center hover:bg-white/10 transition-all duration-300 rounded-lg group"
-              title="Previous"
-            >
-              <ChevronLeft className="w-5 h-5 group-hover:scale-110 transition-transform" />
-            </button>
+    {/* Previous Slide */}
+    <button
+      onClick={prevSlide}
+      className="w-10 h-10 flex items-center justify-center hover:bg-white/10 transition-all duration-300 rounded-lg group"
+      title="Previous"
+    >
+      <ChevronLeft className="w-5 h-5 group-hover:scale-110 transition-transform" />
+    </button>
 
-            {/* Enhanced Dashes with GSAP hover effects */}
-            <div className="flex gap-1 mx-2">
-              {carouselSlides.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => goToSlide(index)}
-                  className={`relative overflow-hidden transition-all duration-300 ${
-                    index === currentSlide
-                      ? 'w-8 h-1 shadow-lg'
-                      : 'w-4 h-1 bg-white/30 hover:bg-white/50'
-                  }`}
-                  style={{
-                    backgroundColor: index === currentSlide ? "var(--primary)" : undefined,
-                  }}
-                  title={`Go to slide ${index + 1}`}
-                  onMouseEnter={(e) => {
-                    if (index !== currentSlide) {
-                      gsap.to(e.currentTarget, {
-                        duration: 0.3,
-                        scaleX: 1.2,
-                        ease: "power2.out"
-                      });
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (index !== currentSlide) {
-                      gsap.to(e.currentTarget, {
-                        duration: 0.3,
-                        scaleX: 1,
-                        ease: "power2.out"
-                      });
-                    }
-                  }}
-                />
-              ))}
-            </div>
+    {/* Slide Dashes */}
+    <div className="flex gap-1 mx-2">
+      {carouselSlides.map((_, index) => (
+        <button
+          key={index}
+          onClick={() => goToSlide(index)}
+          className={`relative overflow-hidden transition-all duration-300 ${
+            index === currentSlide
+              ? 'w-8 h-1 shadow-lg'
+              : 'w-4 h-1 bg-white/30 hover:bg-white/50'
+          }`}
+          style={{
+            backgroundColor: index === currentSlide ? "var(--primary)" : undefined,
+          }}
+          title={`Go to slide ${index + 1}`}
+          onMouseEnter={(e) => {
+            if (index !== currentSlide) {
+              gsap.to(e.currentTarget, {
+                duration: 0.3,
+                scaleX: 1.2,
+                ease: "power2.out"
+              });
+            }
+          }}
+          onMouseLeave={(e) => {
+            if (index !== currentSlide) {
+              gsap.to(e.currentTarget, {
+                duration: 0.3,
+                scaleX: 1,
+                ease: "power2.out"
+              });
+            }
+          }}
+        />
+      ))}
+    </div>
 
-            <button
-              onClick={nextSlide}
-              className="w-10 h-10 flex items-center justify-center hover:bg-white/10 transition-all duration-300 rounded-lg group"
-              title="Next"
-            >
-              <ChevronRight className="w-5 h-5 group-hover:scale-110 transition-transform" />
-            </button>
-          </div>
-        </div>
+    {/* Next Slide */}
+    <button
+      onClick={nextSlide}
+      className="w-10 h-10 flex items-center justify-center hover:bg-white/10 transition-all duration-300 rounded-lg group"
+      title="Next"
+    >
+      <ChevronRight className="w-5 h-5 group-hover:scale-110 transition-transform" />
+    </button>
 
+  </div>
+</div>
         {/* GSAP Controlled Progress Bar */}
         <div className="absolute bottom-0 left-0 w-full h-1 bg-white/10 z-30">
           <div
@@ -609,7 +613,7 @@ export function AboutSection() {
                 color: "var(--foreground)",
               }}
             >
-              Start Your Security Journey
+              Get Started..
               <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
             </button>
             <p className="text-zinc-400 mt-6 text-lg">
