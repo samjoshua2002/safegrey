@@ -613,7 +613,7 @@ export function AboutSection() {
                 color: "var(--foreground)",
               }}
             >
-              Get Started
+              Get Started.
               <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
             </button>
             <p className="text-zinc-400 mt-6 text-lg">
