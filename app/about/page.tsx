@@ -5,17 +5,23 @@ import { CompanyValues } from "@/components/company-values"
 import { CompanyStats } from "@/components/company-stats"
 import { CTASection } from "@/components/cta-section"
 import { Footer } from "@/components/footer"
+import { AboutSection } from "@/components/about-section"
+ 
 
 export default function AboutPage() {
   return (
     <main className="min-h-screen">
       <Navigation />
-      <AboutHero />
+      {/* <AboutHero /> */}
+      <AboutSection/>
+      
+{/*       
       <CompanyValues />
       <TeamSection />
       <CompanyStats />
-      <CTASection />
+      <CTASection /> */}
      <Footer />
+     
     </main>
   )
 }
