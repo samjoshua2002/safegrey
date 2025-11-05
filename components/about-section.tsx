@@ -50,21 +50,21 @@ export function AboutSection() {
       title: "Securing Your Digital Future",
       subtitle: "Advanced Threat Protection",
       description: "Comprehensive security services that protect your organization from evolving cyber threats with cutting-edge technology and expert oversight.",
-      image: "https://images.pexels.com/photos/5380664/pexels-photo-5380664.jpeg?auto=compress&cs=tinysrgb&w=1920"
+      image: "https://images.pexels.com/photos/17766789/pexels-photo-17766789.jpeg?auto=compress&cs=tinysrgb&w=1920"
     },
     {
       id: 2,
       title: "Zero Trust Security Framework",
       subtitle: "Modern Security Architecture",
       description: "Implementing never trust, always verify principles across your entire digital ecosystem for maximum protection.",
-      image: "https://images.pexels.com/photos/60504/security-protection-anti-virus-software-60504.jpeg?auto=compress&cs=tinysrgb&w=1920"
+      image: "/b3.mp4"
     },
     {
       id: 3,
       title: "24/7 Security Operations Center",
       subtitle: "Continuous Monitoring",
       description: "Round-the-clock surveillance and threat detection to keep your assets secure against emerging threats.",
-      image: "https://images.pexels.com/photos/17766789/pexels-photo-17766789.jpeg?auto=compress&cs=tinysrgb&w=1920"
+      image: "/bg.mp4"
     }
   ];
 
@@ -495,7 +495,7 @@ export function AboutSection() {
 
               <div className="aspect-[4/3] relative overflow-hidden border border-zinc-800 rounded-xl shadow-2xl">
                 <img
-                  src="https://images.pexels.com/photos/5380664/pexels-photo-5380664.jpeg?auto=compress&cs=tinysrgb&w=800"
+                  src="/b2.mp4"
                   alt="Security Operations"
                   className="w-full h-full object-cover filter brightness-50 hover:brightness-75 transition-all duration-500"
                 />
