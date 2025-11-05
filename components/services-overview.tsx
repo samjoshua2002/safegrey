@@ -8,7 +8,7 @@ function StatBar({ value, text }: { value: number; text: string }) {
 
   return (
     <div ref={ref} className="group">
-      <p className="text-[var(--muted-foreground)] mb-2">{text}</p>
+      <p className="text-[var(--muted-foreground)] mb-2 text-lg">{text}</p>
       <div className="w-full bg-[var(--background)/10] rounded-full h-6 overflow-hidden relative">
         <motion.div
           initial={{ width: 0 }}
@@ -20,7 +20,7 @@ function StatBar({ value, text }: { value: number; text: string }) {
                      bg-[length:200%_200%] animate-gradient-x
                      glow-accent group-hover:animate-pulse"
         >
-          <span className="text-sm font-semibold text-[var(--foreground)] drop-shadow-md">
+          <span className="text-lg font-semibold text-[var(--foreground)] drop-shadow-md">
             {value}%
           </span>
         </motion.div>
