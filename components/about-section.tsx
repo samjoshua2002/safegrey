@@ -1,6 +1,7 @@
 "use client";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Users, Target, Shield, Eye, Lock, ArrowRight, Globe, Heart, Zap, ChevronLeft, ChevronRight, Play, Pause } from 'lucide-react';
+import { gsap } from 'gsap';
 import FlowingMenu from './FlowingMenu';
 import GridMotion from './GridMotion';
 import InteractiveTypography from './InteractiveTypography';
@@ -8,6 +9,10 @@ import InteractiveTypography from './InteractiveTypography';
 export function AboutSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [isPlaying, setIsPlaying] = useState(true);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
+  const progressRef = useRef<HTMLDivElement>(null);
 
   const teamStats = [
     { number: "50+", label: "Certified Experts" },
@@ -42,7 +47,7 @@ export function AboutSection() {
   const carouselSlides = [
     {
       id: 1,
-      title: "Security Solutions That Defend Your Digital Future",
+      title: "Securing Your Digital Future",
       subtitle: "Advanced Threat Protection",
       description: "Comprehensive security services that protect your organization from evolving cyber threats with cutting-edge technology and expert oversight.",
       image: "https://images.pexels.com/photos/5380664/pexels-photo-5380664.jpeg?auto=compress&cs=tinysrgb&w=1920"
@@ -80,18 +85,114 @@ export function AboutSection() {
     "Compliance & Risk"
   ];
 
+  // GSAP Animations
+  const animateSlideChange = (direction: 'next' | 'prev' | 'jump') => {
+    const tl = gsap.timeline();
+    
+    // Reset progress bar
+    if (progressRef.current) {
+      gsap.set(progressRef.current, { width: '0%' });
+    }
+
+    // Exit animation for current content
+    tl.to(contentRef.current, {
+      duration: 0.6,
+      y: direction === 'next' ? -50 : 50,
+      opacity: 0,
+      ease: "power2.inOut"
+    })
+    .to(imageRef.current, {
+      duration: 0.8,
+      scale: 1.1,
+      opacity: 0.3,
+      ease: "power2.inOut"
+    }, 0)
+    // Update slide (this happens in the middle of the animation)
+    .add(() => {
+      if (direction === 'next') {
+        setCurrentSlide((prev) => (prev + 1) % carouselSlides.length);
+      } else if (direction === 'prev') {
+        setCurrentSlide((prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length);
+      }
+    }, 0.4)
+    // Enter animation for new content
+    .fromTo(imageRef.current, 
+      { scale: 1.1, opacity: 0.3 },
+      {
+        duration: 0.8,
+        scale: 1,
+        opacity: 1,
+        ease: "power2.out"
+      }, 0.4
+    )
+    .fromTo(contentRef.current, 
+      { y: direction === 'next' ? 50 : -50, opacity: 0 },
+      {
+        duration: 0.6,
+        y: 0,
+        opacity: 1,
+        ease: "power2.out"
+      }, 0.6
+    )
+    // Restart progress bar animation if playing
+    .add(() => {
+      if (isPlaying && progressRef.current) {
+        gsap.to(progressRef.current, {
+          duration: 5,
+          width: '100%',
+          ease: "none"
+        });
+      }
+    }, 0.8);
+
+    return tl;
+  };
+
   const nextSlide = () => {
-    setCurrentSlide((prev) => (prev + 1) % carouselSlides.length);
+    animateSlideChange('next');
   };
 
   const prevSlide = () => {
-    setCurrentSlide((prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length);
+    animateSlideChange('prev');
   };
 
   const goToSlide = (index: number) => {
-    setCurrentSlide(index);
+    if (index !== currentSlide) {
+      animateSlideChange('jump');
+      setCurrentSlide(index);
+    }
   };
 
+  // Initial animation on mount
+  useEffect(() => {
+    if (contentRef.current && imageRef.current) {
+      const tl = gsap.timeline();
+      tl.fromTo(carouselRef.current, 
+        { opacity: 0 },
+        { duration: 1, opacity: 1, ease: "power2.out" }
+      )
+      .fromTo(imageRef.current,
+        { scale: 1.2 },
+        { duration: 1.5, scale: 1, ease: "power2.out" },
+        0
+      )
+      .fromTo(contentRef.current,
+        { y: 30, opacity: 0 },
+        { duration: 1, y: 0, opacity: 1, ease: "power2.out" },
+        0.5
+      );
+
+      // Initial progress bar animation
+      if (isPlaying && progressRef.current) {
+        gsap.fromTo(progressRef.current,
+          { width: '0%' },
+          { duration: 5, width: '100%', ease: "none" }
+        );
+      }
+    }
+  }, []);
+
+  // Auto-play effect
   useEffect(() => {
     if (!isPlaying) return;
 
@@ -106,9 +207,11 @@ export function AboutSection() {
 
   return (
     <div className="min-h-screen bg-zinc-950 text-white overflow-hidden">
-      <section className="relative h-screen w-full overflow-hidden">
+      <section ref={carouselRef} className="relative h-screen w-full overflow-hidden">
+        {/* Background Image */}
         <div
-          className="absolute inset-0 bg-cover bg-center transition-all duration-1000 ease-in-out"
+          ref={imageRef}
+          className="absolute inset-0 bg-cover bg-center"
           style={{
             backgroundImage: `url(${currentCarousel.image})`,
             filter: 'brightness(0.4)'
@@ -121,10 +224,11 @@ export function AboutSection() {
           <GridMotion items={gridItems} />
         </div>
 
-        <div className="relative z-20 h-full flex items-center">
+        {/* Content */}
+        <div ref={contentRef} className="relative z-20 h-full flex items-center">
           <div className="max-w-7xl mx-auto px-8 lg:px-16 w-full">
             <div className="max-w-3xl">
-              {/* Badge with CSS variables */}
+              {/* Badge */}
               <div 
                 className="inline-flex items-center gap-2 px-4 py-2 rounded-full border backdrop-blur-sm mb-8 shadow-lg"
                 style={{
@@ -147,29 +251,41 @@ export function AboutSection() {
               </p>
 
               <div className="flex flex-col sm:flex-row gap-4">
-                <button 
-                  className="px-8 py-4 font-semibold rounded-none transition-all duration-300 hover:translate-x-1 flex items-center justify-center gap-2 group shadow-lg"
+                <button
+                  className="glow-accent animate-pulse-glow group cursor-pointer px-8 py-4 font-semibold rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
                   style={{
                     backgroundColor: "var(--primary)",
                     color: "var(--foreground)",
                   }}
                 >
-                  Get Protected
+                  Start Your Security Assessment
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </button>
-                <button className="px-8 py-4 bg-transparent border-2 border-white hover:bg-white hover:text-black text-white font-semibold rounded-none transition-all duration-300 shadow-lg shadow-white/10">
-                  Learn More
+                
+                <button
+                  className="glass-effect bg-transparent border border-primary text-foreground hover:bg-primary hover:text-foreground transition-colors cursor-pointer px-8 py-4 font-semibold rounded-lg"
+                >
+                  View Our Services
                 </button>
               </div>
             </div>
           </div>
         </div>
 
-        {/* Carousel Controls - Moved to Right with Dashes */}
+        {/* Enhanced Carousel Controls */}
         <div className="absolute bottom-12 right-8 lg:right-16 z-30">
           <div className="flex items-center gap-4 bg-black/50 backdrop-blur-sm border border-white/20 p-4 rounded-lg shadow-2xl">
             <button
-              onClick={() => setIsPlaying(!isPlaying)}
+              onClick={() => {
+                setIsPlaying(!isPlaying);
+                if (!isPlaying && progressRef.current) {
+                  gsap.to(progressRef.current, {
+                    duration: 5 - (gsap.getProperty(progressRef.current, "width") as number) / 100 * 5,
+                    width: '100%',
+                    ease: "none"
+                  });
+                }
+              }}
               className="w-10 h-10 flex items-center justify-center hover:bg-white/10 transition-all duration-300 rounded-lg group"
               title={isPlaying ? "Pause" : "Play"}
             >
@@ -187,13 +303,13 @@ export function AboutSection() {
               <ChevronLeft className="w-5 h-5 group-hover:scale-110 transition-transform" />
             </button>
 
-            {/* Dashes instead of dots */}
+            {/* Enhanced Dashes with GSAP hover effects */}
             <div className="flex gap-1 mx-2">
               {carouselSlides.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => goToSlide(index)}
-                  className={`transition-all duration-300 ${
+                  className={`relative overflow-hidden transition-all duration-300 ${
                     index === currentSlide
                       ? 'w-8 h-1 shadow-lg'
                       : 'w-4 h-1 bg-white/30 hover:bg-white/50'
@@ -202,6 +318,24 @@ export function AboutSection() {
                     backgroundColor: index === currentSlide ? "var(--primary)" : undefined,
                   }}
                   title={`Go to slide ${index + 1}`}
+                  onMouseEnter={(e) => {
+                    if (index !== currentSlide) {
+                      gsap.to(e.currentTarget, {
+                        duration: 0.3,
+                        scaleX: 1.2,
+                        ease: "power2.out"
+                      });
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (index !== currentSlide) {
+                      gsap.to(e.currentTarget, {
+                        duration: 0.3,
+                        scaleX: 1,
+                        ease: "power2.out"
+                      });
+                    }
+                  }}
                 />
               ))}
             </div>
@@ -216,10 +350,11 @@ export function AboutSection() {
           </div>
         </div>
 
-        {/* Progress Bar */}
+        {/* GSAP Controlled Progress Bar */}
         <div className="absolute bottom-0 left-0 w-full h-1 bg-white/10 z-30">
           <div
-            className={`h-full ${isPlaying ? 'animate-progress' : ''}`}
+            ref={progressRef}
+            className="h-full"
             style={{
               backgroundColor: "var(--primary)",
             }}
@@ -468,7 +603,7 @@ export function AboutSection() {
 
           <div className="text-center mt-32">
             <button 
-              className="px-12 py-6 font-semibold text-lg rounded-xl transition-all duration-300 hover:translate-y-[-4px] shadow-2xl flex items-center justify-center gap-3 mx-auto group"
+              className="glow-accent animate-pulse-glow group cursor-pointer px-12 py-6 font-semibold text-lg rounded-xl transition-all duration-300 flex items-center justify-center gap-3 mx-auto"
               style={{
                 backgroundColor: "var(--primary)",
                 color: "var(--foreground)",
@@ -483,16 +618,6 @@ export function AboutSection() {
           </div>
         </div>
       </section>
-
-      <style>{`
-        @keyframes progress {
-          from { width: 0%; }
-          to { width: 100%; }
-        }
-        .animate-progress {
-          animation: progress 5s linear;
-        }
-      `}</style>
     </div>
   );
 }
