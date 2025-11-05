@@ -213,8 +213,8 @@ export function ServicesSection() {
 
       {/* Section Header */}
       <div className="relative z-10 max-w-4xl mx-auto text-center mb-12">
-        <h2 className="text-3xl md:text-4xl font-bold text-foreground mb-4">Explore Our Services</h2>
-        <p className="text-lg md:text-xl text-muted-foreground">
+        <h2 className="text-3xl md:text-5xl font-bold text-foreground mb-8">Explore Our Services</h2>
+        <p className="max-w-3xl mx-auto mb-16 text-xl md:text-2xl text-[var(--theme-text-secondary)] leading-relaxed">
           SafeGrey offers a full spectrum of cybersecurity services designed to protect, detect, and respond to real-world attacks
         </p>
       </div>
@@ -224,57 +224,59 @@ export function ServicesSection() {
         {/* Left Nav */}
         <div className="flex flex-col items-start w-full lg:w-1/3 relative">
   <div className="absolute left-9 top-0 flex flex-col items-center h-60 z-0">
-    <div className="absolute left-[1px] h-[calc(100%+9rem)] w-[2px] border-l border-dashed border-white" />
-    <div className="absolute top-0 -left-12 h-[2px] w-12 border-t border-dashed border-white" />
-    <div className="absolute bottom-full -left-12 h-12 w-[2px] border-l border-dashed border-white" />
+    <div className="absolute left-[1px] top-[-2rem] h-[calc(100%+7rem)] w-[2px] border-l border-dashed border-white" />
+    <div className="absolute top-[-2rem] -left-16  h-[2px] w-16 border-t border-dashed border-white" />
+    <div className="absolute top-[-6rem] -left-16 h-[4rem] w-[2px] border-l border-dashed border-white" />
   </div>
 
   <div
-    role="tablist"
-    aria-orientation="vertical"
-    onKeyDown={onKeyDownTabs}
-    className="w-full pt-1 pl-6"
-  >
-    {services.map((service, idx) => {
-      const isActive = activeService === service.key;
-      const isHover = hoveredService === service.key;
-      const Icon = serviceIcons[service.key] ?? ShieldCheck;
+  role="tablist"
+  aria-orientation="vertical"
+  onKeyDown={onKeyDownTabs}
+  className="w-full pt-1 pl-6 space-y-4" // 👈 handles consistent spacing
+>
+  {services.map((service, idx) => {
+    const isActive = activeService === service.key;
+    const isHover = hoveredService === service.key;
+    const Icon = serviceIcons[service.key] ?? ShieldCheck;
 
-      return (
-        <div key={service.key} className="relative w-full">
-          <div className={idx === services.length - 1 ? "mb-2" : "mb-6"} />
-          <button
-            ref={(el) => { itemRefs.current[idx] = el; }}
-            role="tab"
-            aria-selected={isActive}
-            aria-controls={`panel-${service.key}`}
-            id={`tab-${service.key}`}
-            onMouseEnter={() => setHoveredService(service.key)}
-            onMouseLeave={() => setHoveredService(null)}
-            onClick={() => setActiveService(service.key)}
-            className="relative flex items-center gap-3 w-full cursor-pointer focus:outline-none py-2 z-10"
-          >
-            <span
-              className={`inline-flex items-center justify-center size-6 md:size-7 rounded-md ring-1 transition-colors z-10 ${
-                isActive || isHover
-                  ? "bg-primary/100 text-[var(--theme-text-primary)] ring-[var(--theme-text-primary)]"
-                  : "bg-muted text-foreground/70 ring-border"
-              }`}
-            >
-              <Icon className="size-3.5 md:size-4" aria-hidden="true" />
-            </span>
-            <span
-              className={`text-left text-base md:text-lg font-semibold transition-colors duration-300 ${
-                isActive || isHover ? "text-primary" : "text-foreground"
-              }`}
-            >
-              {service.title}
-            </span>
-          </button>
-        </div>
-      );
-    })}
-  </div>
+    return (
+      <button
+        key={service.key}
+        ref={(el) => { itemRefs.current[idx] = el; }}
+        role="tab"
+        aria-selected={isActive}
+        aria-controls={`panel-${service.key}`}
+        id={`tab-${service.key}`}
+        onMouseEnter={() => setHoveredService(service.key)}
+        onMouseLeave={() => setHoveredService(null)}
+        onClick={() => setActiveService(service.key)}
+        className="relative flex items-center gap-3 w-full cursor-pointer focus:outline-none py-2 z-10"
+      >
+        <span
+          className={`inline-flex items-center justify-center size-6 md:size-7 rounded-md ring-1 transition-colors z-10
+            bg-muted
+            ${
+              isActive || isHover
+                ? "text-primary ring-primary"
+                : "text-foreground/70 ring-border"
+            }
+          `}
+        >
+          <Icon className="size-3.5 md:size-4" aria-hidden="true" />
+        </span>
+        <span
+          className={`text-left text-base md:text-lg font-semibold transition-colors duration-300 ${
+            isActive || isHover ? "text-primary" : "text-foreground"
+          }`}
+        >
+          {service.title}
+        </span>
+      </button>
+    );
+  })}
+</div>
+
 </div>
 
 

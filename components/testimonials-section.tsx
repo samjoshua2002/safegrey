@@ -130,7 +130,7 @@ export function TestimonialsSection() {
                     </h3>
 
                     {/* Description - Left aligned */}
-                    <p className="text-[var(--theme-text-secondary)] text-base leading-relaxed text-left">
+                    <p className="text-[var(--theme-text-secondary)] text-lg leading-relaxed text-left">
                       {feature.description}
                     </p>
                   </CardContent>
@@ -166,7 +166,7 @@ export function TestimonialsSection() {
                     </h3>
 
                     {/* Description - Left aligned */}
-                    <p className="text-[var(--theme-text-secondary)] text-base leading-relaxed text-left">
+                    <p className="text-[var(--theme-text-secondary)] text-lg  leading-relaxed text-left">
                       {feature.description}
                     </p>
                   </CardContent>

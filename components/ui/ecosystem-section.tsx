@@ -75,10 +75,10 @@ export default function EcosystemSection() {
             <div className="flex items-center gap-3">
               <div className="w-3 h-3 bg-white mb-3" />
               <div>
-                <div className="text-sm text-muted-foreground font-medium">
+                <div className="text-xl text-muted-foreground font-medium">
                   Ecosystem
                 </div>
-                <div className="text-xl font-bold text-foreground">
+                <div className="text-2xl font-bold text-foreground">
                   THE SAFEGREY <span className="text-[#E5453D]">ECOSYSTEM</span>
                 </div>
               </div>
