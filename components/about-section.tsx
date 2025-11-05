@@ -1,15 +1,25 @@
-import { Card, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { CheckCircle, Users, Target, Shield, Eye, Lock, Sparkles, ArrowRight, Globe, Heart, Zap } from "lucide-react"
-import GridMotion from "@/components/grid-motion"
+"use client";
+import { useState, useEffect, useRef } from 'react';
+import { Users, Target, Shield, Eye, Lock, ArrowRight, Globe, Heart, Zap, ChevronLeft, ChevronRight, Play, Pause } from 'lucide-react';
+import { gsap } from 'gsap';
+import FlowingMenu from './FlowingMenu';
+import GridMotion from './GridMotion';
+import InteractiveTypography from './InteractiveTypography';
 
 export function AboutSection() {
+  const [currentSlide, setCurrentSlide] = useState(0);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const carouselRef = useRef<HTMLDivElement>(null);
+  const contentRef = useRef<HTMLDivElement>(null);
+  const imageRef = useRef<HTMLDivElement>(null);
+  const progressRef = useRef<HTMLDivElement>(null);
+
   const teamStats = [
     { number: "50+", label: "Certified Experts" },
     { number: "100+", label: "Projects Completed" },
     { number: "24/7", label: "Security Operations" },
     { number: "99%", label: "Client Satisfaction" }
-  ]
+  ];
 
   const values = [
     {
@@ -32,240 +42,582 @@ export function AboutSection() {
       title: "Proactive",
       description: "Staying ahead of emerging threats"
     }
-  ]
+  ];
 
-  // Grid items for the motion effect
+  const carouselSlides = [
+    {
+      id: 1,
+      title: "Securing Your Digital Future",
+      subtitle: "Advanced Threat Protection",
+      description: "Comprehensive security services that protect your organization from evolving cyber threats with cutting-edge technology and expert oversight.",
+      image: "https://images.pexels.com/photos/5380664/pexels-photo-5380664.jpeg?auto=compress&cs=tinysrgb&w=1920"
+    },
+    {
+      id: 2,
+      title: "Zero Trust Security Framework",
+      subtitle: "Modern Security Architecture",
+      description: "Implementing never trust, always verify principles across your entire digital ecosystem for maximum protection.",
+      image: "https://images.pexels.com/photos/60504/security-protection-anti-virus-software-60504.jpeg?auto=compress&cs=tinysrgb&w=1920"
+    },
+    {
+      id: 3,
+      title: "24/7 Security Operations Center",
+      subtitle: "Continuous Monitoring",
+      description: "Round-the-clock surveillance and threat detection to keep your assets secure against emerging threats.",
+      image: "https://images.pexels.com/photos/17766789/pexels-photo-17766789.jpeg?auto=compress&cs=tinysrgb&w=1920"
+    }
+  ];
+
   const gridItems = [
     "Security", "ThreatOps", "Cyber", "Defense",
     "Protection", "Risk", "Analysis", "Monitoring",
-    "Incident", "Response", "Forensics", "Compliance",
-    "Network", "Cloud", "Endpoint", "Mobile",
-    "IoT", "Zero Trust", "SOC", "SIEM",
-    "EDR", "XDR", "MDR", "Vulnerability",
-    "Penetration", "Red Team", "Blue Team", "Purple Team"
-  ]
+    "Incident", "Response", "Forensics", "Compliance"
+  ];
+
+  const flowingItems = [
+    "Penetration Testing",
+    "Red Team Operations",
+    "Security Audits",
+    "Threat Intelligence",
+    "Incident Response",
+    "Vulnerability Assessment",
+    "Security Architecture",
+    "Compliance & Risk"
+  ];
+
+  // GSAP Animations
+  const animateSlideChange = (direction: 'next' | 'prev' | 'jump') => {
+    const tl = gsap.timeline();
+    
+    // Reset progress bar
+    if (progressRef.current) {
+      gsap.set(progressRef.current, { width: '0%' });
+    }
+
+    // Exit animation for current content
+    tl.to(contentRef.current, {
+      duration: 0.6,
+      y: direction === 'next' ? -50 : 50,
+      opacity: 0,
+      ease: "power2.inOut"
+    })
+    .to(imageRef.current, {
+      duration: 0.8,
+      scale: 1.1,
+      opacity: 0.3,
+      ease: "power2.inOut"
+    }, 0)
+    // Update slide (this happens in the middle of the animation)
+    .add(() => {
+      if (direction === 'next') {
+        setCurrentSlide((prev) => (prev + 1) % carouselSlides.length);
+      } else if (direction === 'prev') {
+        setCurrentSlide((prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length);
+      }
+    }, 0.4)
+    // Enter animation for new content
+    .fromTo(imageRef.current, 
+      { scale: 1.1, opacity: 0.3 },
+      {
+        duration: 0.8,
+        scale: 1,
+        opacity: 1,
+        ease: "power2.out"
+      }, 0.4
+    )
+    .fromTo(contentRef.current, 
+      { y: direction === 'next' ? 50 : -50, opacity: 0 },
+      {
+        duration: 0.6,
+        y: 0,
+        opacity: 1,
+        ease: "power2.out"
+      }, 0.6
+    )
+    // Restart progress bar animation if playing
+    .add(() => {
+      if (isPlaying && progressRef.current) {
+        gsap.to(progressRef.current, {
+          duration: 5,
+          width: '100%',
+          ease: "none"
+        });
+      }
+    }, 0.8);
+
+    return tl;
+  };
+
+  const nextSlide = () => {
+    animateSlideChange('next');
+  };
+
+  const prevSlide = () => {
+    animateSlideChange('prev');
+  };
+
+  const goToSlide = (index: number) => {
+    if (index !== currentSlide) {
+      animateSlideChange('jump');
+      setCurrentSlide(index);
+    }
+  };
+
+  // Initial animation on mount
+  useEffect(() => {
+    if (contentRef.current && imageRef.current) {
+      const tl = gsap.timeline();
+      tl.fromTo(carouselRef.current, 
+        { opacity: 0 },
+        { duration: 1, opacity: 1, ease: "power2.out" }
+      )
+      .fromTo(imageRef.current,
+        { scale: 1.2 },
+        { duration: 1.5, scale: 1, ease: "power2.out" },
+        0
+      )
+      .fromTo(contentRef.current,
+        { y: 30, opacity: 0 },
+        { duration: 1, y: 0, opacity: 1, ease: "power2.out" },
+        0.5
+      );
+
+      // Initial progress bar animation
+      if (isPlaying && progressRef.current) {
+        gsap.fromTo(progressRef.current,
+          { width: '0%' },
+          { duration: 5, width: '100%', ease: "none" }
+        );
+      }
+    }
+  }, []);
+
+  // Auto-play effect
+  useEffect(() => {
+    if (!isPlaying) return;
+
+    const interval = setInterval(() => {
+      nextSlide();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [isPlaying, currentSlide]);
+
+  const currentCarousel = carouselSlides[currentSlide];
 
   return (
-    <div className="min-h-screen relative overflow-hidden">
-      {/* Hero Section with GridMotion Background */}
-      <section className="relative h-[70vh] min-h-[600px] flex items-center justify-center">
-        {/* GridMotion Background */}
-        <div className="absolute inset-0 z-0">
-          <GridMotion 
-            items={gridItems}
-            gradientColor="rgba(0, 0, 0, 0.8)"
-          />
-        </div>
-        
-        {/* Overlay Gradients */}
-        <div className="absolute inset-0 bg-gradient-to-br from-background/90 via-primary/20 to-accent/10 z-10" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-accent/20 via-transparent to-transparent z-10" />
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-primary/20 via-transparent to-transparent z-10" />
-        
-        {/* Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-20 text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/20 border border-accent/30 backdrop-blur-sm mb-6">
-            <Sparkles className="w-4 h-4 text-accent" />
-            <span className="text-sm font-semibold text-accent">
-              About ThreatOps
-            </span>
-          </div>
+    <div className="min-h-screen bg-zinc-950 text-white overflow-hidden">
+      <section ref={carouselRef} className="relative h-screen w-full overflow-hidden">
+        {/* Background Image */}
+        <div
+          ref={imageRef}
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: `url(${currentCarousel.image})`,
+            filter: 'brightness(0.4)'
+          }}
+        />
 
-          <h1 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-            About Us
-          </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed backdrop-blur-sm bg-background/30 rounded-2xl p-6">
-            Building cyber resilience through expert-led security solutions and adversary-focused testing
-          </p>
+        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent z-10" />
+
+        <div className="absolute inset-0 z-5 opacity-20">
+          <GridMotion items={gridItems} />
+        </div>
+
+        {/* Content */}
+        <div ref={contentRef} className="relative z-20 h-full flex items-center">
+          <div className="max-w-7xl mx-auto px-8 lg:px-16 w-full">
+            <div className="max-w-3xl">
+              {/* Badge */}
+              <div 
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-full border backdrop-blur-sm mb-8 shadow-lg"
+                style={{
+                  backgroundColor: "var(--primary)",
+                  color: "var(--foreground)",
+                }}
+              >
+                <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: "var(--foreground)" }} />
+                <span className="text-sm font-semibold uppercase tracking-wider">
+                  {currentCarousel.subtitle}
+                </span>
+              </div>
+
+              <h1 className="text-6xl lg:text-8xl font-bold mb-8 leading-none">
+                {currentCarousel.title}
+              </h1>
+
+              <p className="text-xl lg:text-2xl text-zinc-300 mb-12 leading-relaxed">
+                {currentCarousel.description}
+              </p>
+
+              <div className="flex flex-col sm:flex-row gap-4">
+                <button
+                  className="glow-accent animate-pulse-glow group cursor-pointer px-8 py-4 font-semibold rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
+                  style={{
+                    backgroundColor: "var(--primary)",
+                    color: "var(--foreground)",
+                  }}
+                >
+                  Start Your Security Assessment
+                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                </button>
+                
+                <button
+                  className="glass-effect bg-transparent border border-primary text-foreground hover:bg-primary hover:text-foreground transition-colors cursor-pointer px-8 py-4 font-semibold rounded-lg"
+                >
+                  View Our Services
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Enhanced Carousel Controls */}
+        <div className="absolute bottom-12 right-8 lg:right-16 z-30">
+          <div className="flex items-center gap-4 bg-black/50 backdrop-blur-sm border border-white/20 p-4 rounded-lg shadow-2xl">
+            <button
+              onClick={() => {
+                setIsPlaying(!isPlaying);
+                if (!isPlaying && progressRef.current) {
+                  gsap.to(progressRef.current, {
+                    duration: 5 - (gsap.getProperty(progressRef.current, "width") as number) / 100 * 5,
+                    width: '100%',
+                    ease: "none"
+                  });
+                }
+              }}
+              className="w-10 h-10 flex items-center justify-center hover:bg-white/10 transition-all duration-300 rounded-lg group"
+              title={isPlaying ? "Pause" : "Play"}
+            >
+              {isPlaying ? 
+                <Pause className="w-4 h-4 group-hover:scale-110 transition-transform" /> : 
+                <Play className="w-4 h-4 group-hover:scale-110 transition-transform" />
+              }
+            </button>
+
+            <button
+              onClick={prevSlide}
+              className="w-10 h-10 flex items-center justify-center hover:bg-white/10 transition-all duration-300 rounded-lg group"
+              title="Previous"
+            >
+              <ChevronLeft className="w-5 h-5 group-hover:scale-110 transition-transform" />
+            </button>
+
+            {/* Enhanced Dashes with GSAP hover effects */}
+            <div className="flex gap-1 mx-2">
+              {carouselSlides.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToSlide(index)}
+                  className={`relative overflow-hidden transition-all duration-300 ${
+                    index === currentSlide
+                      ? 'w-8 h-1 shadow-lg'
+                      : 'w-4 h-1 bg-white/30 hover:bg-white/50'
+                  }`}
+                  style={{
+                    backgroundColor: index === currentSlide ? "var(--primary)" : undefined,
+                  }}
+                  title={`Go to slide ${index + 1}`}
+                  onMouseEnter={(e) => {
+                    if (index !== currentSlide) {
+                      gsap.to(e.currentTarget, {
+                        duration: 0.3,
+                        scaleX: 1.2,
+                        ease: "power2.out"
+                      });
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (index !== currentSlide) {
+                      gsap.to(e.currentTarget, {
+                        duration: 0.3,
+                        scaleX: 1,
+                        ease: "power2.out"
+                      });
+                    }
+                  }}
+                />
+              ))}
+            </div>
+
+            <button
+              onClick={nextSlide}
+              className="w-10 h-10 flex items-center justify-center hover:bg-white/10 transition-all duration-300 rounded-lg group"
+              title="Next"
+            >
+              <ChevronRight className="w-5 h-5 group-hover:scale-110 transition-transform" />
+            </button>
+          </div>
+        </div>
+
+        {/* GSAP Controlled Progress Bar */}
+        <div className="absolute bottom-0 left-0 w-full h-1 bg-white/10 z-30">
+          <div
+            ref={progressRef}
+            className="h-full"
+            style={{
+              backgroundColor: "var(--primary)",
+            }}
+          />
         </div>
       </section>
 
-      {/* Rest of the About Page Content */}
-      <section className="py-24 px-4 sm:px-6 lg:px-8 relative">
-        <div className="absolute inset-0 bg-gradient-to-b from-background via-muted/10 to-background" />
-        <div className="max-w-7xl mx-auto relative z-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-20">
-            <div className="space-y-8">
-              <div className="space-y-4">
-                <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-muted/50 border border-border">
-                  <Users className="w-5 h-5 text-accent" />
-                  <span className="text-sm font-semibold text-accent">Company Introduction</span>
-                </div>
+      <FlowingMenu items={flowingItems} />
 
-                <h2 className="text-4xl md:text-5xl font-bold leading-tight">
-                  Expertise That <span className="bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent">Makes a Difference</span>
-                </h2>
-                
-                <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-                  At <span className="font-semibold text-accent">ThreatOps</span>, our strength comes from a team of highly qualified professionals who are passionate about cybersecurity. Our consultants and engineers hold leading industry certifications.
-                </p>
-
-                <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-                  This deep expertise ensures our clients receive not only world-class security solutions but also practical guidance that stands up to real-world threats.
-                </p>
-
-                <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-                  We are committed to advancing the state of cybersecurity for organizations of all sizes—empowering you to build resilience and confidently secure your digital assets.
-                </p>
+      <section className="py-32 px-8 lg:px-16">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-start mb-32">
+            <div className="space-y-8 sticky top-8">
+              {/* Expertise Badge */}
+              <div 
+                className="inline-flex items-center gap-3 px-4 py-2 border rounded-lg shadow-lg"
+                style={{
+                  backgroundColor: "var(--primary)",
+                  color: "var(--foreground)",
+                }}
+              >
+                <Users className="w-5 h-5" />
+                <span className="text-sm font-semibold uppercase tracking-wider">Expertise</span>
               </div>
 
-              {/* Stats Grid */}
-              <div className="grid grid-cols-2 gap-6">
+              <InteractiveTypography
+                text="Expertise That Makes a Difference"
+                className="text-5xl lg:text-7xl font-bold"
+                highlightColor="text-red-500"
+              />
+
+              <div 
+                className="w-20 h-1 rounded-full"
+                style={{
+                  backgroundColor: "var(--primary)",
+                }}
+              />
+            </div>
+
+            <div className="space-y-8">
+              <p className="text-xl text-zinc-300 leading-relaxed">
+                At <span style={{ color: "var(--primary)" }} className="font-semibold">Safegrey</span>, our strength comes from a team of highly qualified professionals who are passionate about cybersecurity. Our consultants and engineers hold leading industry certifications.
+              </p>
+
+              <p className="text-xl text-zinc-300 leading-relaxed">
+                This deep expertise ensures our clients receive not only world-class security solutions but also practical guidance that stands up to real-world threats.
+              </p>
+
+              <p className="text-xl text-zinc-300 leading-relaxed">
+                We are committed to advancing the state of cybersecurity for organizations of all sizes—empowering you to build resilience and confidently secure your digital assets.
+              </p>
+
+              <div className="grid grid-cols-2 gap-6 pt-8">
                 {teamStats.map((stat, index) => (
-                  <div key={index} className="text-center p-6 rounded-2xl bg-card/50 backdrop-blur-sm border border-border hover:border-accent/30 transition-all duration-300 hover:scale-105">
-                    <div className="text-3xl font-bold bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent">
+                  <div key={index} className="border border-zinc-800 bg-gradient-to-br from-zinc-900/50 to-zinc-800/30 p-8 hover:border-zinc-600 transition-all duration-300 group shadow-lg rounded-xl">
+                    <div 
+                      className="text-5xl font-bold mb-2 group-hover:scale-110 transition-transform"
+                      style={{
+                        color: "var(--primary)",
+                      }}
+                    >
                       {stat.number}
                     </div>
-                    <div className="text-sm text-muted-foreground font-medium mt-2">
+                    <div className="text-sm text-zinc-400 uppercase tracking-wider font-medium">
                       {stat.label}
                     </div>
                   </div>
                 ))}
               </div>
             </div>
-
-            <div className="relative">
-              <div className="aspect-[4/3] rounded-3xl bg-gradient-to-br from-accent/20 via-primary/20 to-accent/20 border border-border overflow-hidden shadow-2xl">
-                <div className="w-full h-full flex items-center justify-center">
-                  <Users className="w-48 h-48 text-foreground/10" strokeWidth={0.5} />
-                </div>
-              </div>
-              <div className="absolute -top-6 -right-6 w-32 h-32 bg-accent/20 rounded-full blur-3xl" />
-              <div className="absolute -bottom-6 -left-6 w-40 h-40 bg-primary/20 rounded-full blur-3xl" />
-            </div>
           </div>
 
-          {/* Our Approach Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center mb-20">
-            <div className="relative order-last lg:order-first">
-              <div className="aspect-[4/3] rounded-3xl bg-gradient-to-br from-primary/20 via-accent/20 to-primary/20 border border-border overflow-hidden shadow-2xl">
-                <div className="w-full h-full flex items-center justify-center">
-                  <Target className="w-48 h-48 text-foreground/10" strokeWidth={0.5} />
-                </div>
-              </div>
-              <div className="absolute -top-6 -left-6 w-32 h-32 bg-primary/20 rounded-full blur-3xl" />
-              <div className="absolute -bottom-6 -right-6 w-40 h-40 bg-accent/20 rounded-full blur-3xl" />
-            </div>
+          <div 
+            className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent mb-32"
+            style={{
+              background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
+            }}
+          />
 
-            <div className="space-y-8">
-              <div className="space-y-4">
-                <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-muted/50 border border-border">
-                  <Zap className="w-5 h-5 text-accent" />
-                  <span className="text-sm font-semibold text-accent">Our Approach</span>
-                </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-start mb-32">
+            <div className="space-y-8 order-last lg:order-first">
+              <p className="text-xl text-zinc-300 leading-relaxed">
+                At Safegrey, we go beyond checklists and automated scans. Our team works hand-in-hand with your organization, applying an adversary-focused mindset and real-world attack simulations to uncover true vulnerabilities.
+              </p>
 
-                <h2 className="text-4xl md:text-5xl font-bold leading-tight">
-                  Beyond <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Checklists</span>
-                </h2>
-                
-                <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-                  At ThreatOps, we go beyond checklists and automated scans. Our team works hand-in-hand with your organization, applying an adversary-focused mindset and real-world attack simulations to uncover true vulnerabilities.
-                </p>
+              <p className="text-xl text-zinc-300 leading-relaxed">
+                We believe every engagement should be collaborative, transparent, and tailored to your specific risks—empowering you with actionable insights and practical solutions that make a measurable difference.
+              </p>
 
-                <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-                  We believe every engagement should be collaborative, transparent, and tailored to your specific risks—empowering you with actionable insights and practical solutions that make a measurable difference.
-                </p>
-              </div>
-
-              {/* Values Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-8">
                 {values.map((value, index) => {
-                  const Icon = value.icon
+                  const Icon = value.icon;
                   return (
-                    <div key={index} className="flex items-start gap-3 p-4 rounded-xl bg-muted/30 border border-border hover:border-accent/30 transition-all duration-300 group">
-                      <div className="p-2 rounded-lg bg-accent/10 group-hover:bg-accent/20 transition-colors">
-                        <Icon className="w-5 h-5 text-accent" />
-                      </div>
-                      <div>
-                        <h4 className="font-semibold text-foreground mb-1">{value.title}</h4>
-                        <p className="text-sm text-muted-foreground">{value.description}</p>
-                      </div>
+                    <div key={index} className="border border-zinc-800 bg-gradient-to-br from-zinc-900/50 to-zinc-800/30 p-6 hover:border-zinc-600 transition-all duration-300 group shadow-lg rounded-xl">
+                      <Icon 
+                        className="w-8 h-8 mb-4 group-hover:scale-110 transition-transform"
+                        style={{
+                          color: "var(--primary)",
+                        }}
+                      />
+                      <h4 className="font-semibold text-lg mb-2">{value.title}</h4>
+                      <p className="text-sm text-zinc-400">{value.description}</p>
                     </div>
-                  )
+                  );
                 })}
               </div>
             </div>
+
+            <div className="space-y-8 sticky top-8">
+              {/* Approach Badge */}
+              <div 
+                className="inline-flex items-center gap-3 px-4 py-2 border rounded-lg shadow-lg"
+                style={{
+                  backgroundColor: "var(--primary)",
+                  color: "var(--foreground)",
+                }}
+              >
+                <Zap className="w-5 h-5" />
+                <span className="text-sm font-semibold uppercase tracking-wider">Our Approach</span>
+              </div>
+
+              <InteractiveTypography
+                text="Beyond Checklists"
+                className="text-5xl lg:text-7xl font-bold"
+                highlightColor="text-red-500"
+              />
+
+              <div 
+                className="w-20 h-1 rounded-full"
+                style={{
+                  backgroundColor: "var(--primary)",
+                }}
+              />
+
+              <div className="aspect-[4/3] relative overflow-hidden border border-zinc-800 rounded-xl shadow-2xl">
+                <img
+                  src="https://images.pexels.com/photos/5380664/pexels-photo-5380664.jpeg?auto=compress&cs=tinysrgb&w=800"
+                  alt="Security Operations"
+                  className="w-full h-full object-cover filter brightness-50 hover:brightness-75 transition-all duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
+                <div className="absolute bottom-8 left-8">
+                  <Target 
+                    className="w-16 h-16 drop-shadow-2xl"
+                    style={{
+                      color: "var(--primary)",
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* Mission & Vision Section */}
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            {/* Mission */}
-            <Card className="border-0 shadow-2xl bg-card/50 backdrop-blur-sm overflow-hidden group hover:scale-105 transition-transform duration-300">
-              <CardContent className="p-8 md:p-12">
-                <div className="space-y-6">
-                  <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-accent/10 border border-accent/20">
-                    <Heart className="w-5 h-5 text-accent" />
-                    <span className="text-sm font-semibold text-accent">Our Mission</span>
-                  </div>
+          <div 
+            className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent mb-32"
+            style={{
+              background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
+            }}
+          />
 
-                  <h3 className="text-3xl md:text-4xl font-bold leading-tight">
-                    Empower Through <span className="bg-gradient-to-r from-accent to-primary bg-clip-text text-transparent">Visibility</span>
-                  </h3>
-
-                  <p className="text-lg text-muted-foreground leading-relaxed">
-                    Empower clients and communities to defend against cyber threats through enhanced visibility and proactive countermeasures.
-                  </p>
-
-                  <div className="flex flex-wrap gap-3">
-                    {["Client Empowerment", "Community Defense", "Proactive Security", "Enhanced Visibility"].map((item, index) => (
-                      <div
-                        key={index}
-                        className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-muted/50 border border-border text-sm font-medium"
-                      >
-                        <div className="w-1.5 h-1.5 rounded-full bg-accent" />
-                        {item}
-                      </div>
-                    ))}
-                  </div>
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            <div className="border border-zinc-800 bg-gradient-to-br from-zinc-900/30 to-zinc-800/20 p-12 hover:border-zinc-600 transition-all duration-500 group relative overflow-hidden rounded-2xl shadow-2xl">
+              <div 
+                className="absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl group-hover:opacity-20 transition-all duration-500"
+                style={{
+                  backgroundColor: "var(--primary)",
+                  opacity: 0.05,
+                }}
+              />
+              <div className="relative z-10">
+                {/* Mission Badge */}
+                <div 
+                  className="inline-flex items-center gap-3 px-4 py-2 border rounded-lg mb-8 shadow-lg"
+                  style={{
+                    backgroundColor: "var(--primary)",
+                    color: "var(--foreground)",
+                  }}
+                >
+                  <Heart className="w-5 h-5" />
+                  <span className="text-sm font-semibold uppercase tracking-wider">Our Mission</span>
                 </div>
-              </CardContent>
-            </Card>
 
-            {/* Vision */}
-            <Card className="border-0 shadow-2xl bg-card/50 backdrop-blur-sm overflow-hidden group hover:scale-105 transition-transform duration-300">
-              <CardContent className="p-8 md:p-12">
-                <div className="space-y-6">
-                  <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-primary/10 border border-primary/20">
-                    <Globe className="w-5 h-5 text-primary" />
-                    <span className="text-sm font-semibold text-primary">Our Vision</span>
-                  </div>
+                <h3 className="text-4xl font-bold mb-6">
+                  Empower Through <span style={{ color: "var(--primary)" }}>Visibility</span>
+                </h3>
 
-                  <h3 className="text-3xl md:text-4xl font-bold leading-tight">
-                    A More <span className="bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">Secure World</span>
-                  </h3>
+                <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+                  Empower clients and communities to defend against cyber threats through enhanced visibility and proactive countermeasures.
+                </p>
 
-                  <p className="text-lg text-muted-foreground leading-relaxed">
-                    To build a more secure world by demystifying adversary tradecraft and making effective, actionable security approaches accessible to all.
-                  </p>
-
-                  <div className="flex flex-wrap gap-3">
-                    {["Demystifying Threats", "Accessible Security", "Actionable Approaches", "Global Impact"].map((item, index) => (
-                      <div
-                        key={index}
-                        className="inline-flex items-center gap-2 px-3 py-1 rounded-lg bg-muted/50 border border-border text-sm font-medium"
-                      >
-                        <div className="w-1.5 h-1.5 rounded-full bg-primary" />
-                        {item}
-                      </div>
-                    ))}
-                  </div>
+                <div className="flex flex-wrap gap-3">
+                  {["Client Empowerment", "Community Defense", "Proactive Security", "Enhanced Visibility"].map((item, index) => (
+                    <div
+                      key={index}
+                      className="px-4 py-2 bg-gradient-to-r from-zinc-800 to-zinc-700 border border-zinc-600 text-sm font-medium hover:border-zinc-400 transition-colors rounded-lg shadow-lg"
+                    >
+                      {item}
+                    </div>
+                  ))}
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </div>
+
+            <div className="border border-zinc-800 bg-gradient-to-br from-zinc-900/30 to-zinc-800/20 p-12 hover:border-zinc-600 transition-all duration-500 group relative overflow-hidden rounded-2xl shadow-2xl">
+              <div 
+                className="absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl group-hover:opacity-20 transition-all duration-500"
+                style={{
+                  backgroundColor: "var(--primary)",
+                  opacity: 0.05,
+                }}
+              />
+              <div className="relative z-10">
+                {/* Vision Badge */}
+                <div 
+                  className="inline-flex items-center gap-3 px-4 py-2 border rounded-lg mb-8 shadow-lg"
+                  style={{
+                    backgroundColor: "var(--primary)",
+                    color: "var(--foreground)",
+                  }}
+                >
+                  <Globe className="w-5 h-5" />
+                  <span className="text-sm font-semibold uppercase tracking-wider">Our Vision</span>
+                </div>
+
+                <h3 className="text-4xl font-bold mb-6">
+                  A More <span style={{ color: "var(--primary)" }}>Secure World</span>
+                </h3>
+
+                <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+                  To build a more secure world by demystifying adversary tradecraft and making effective, actionable security approaches accessible to all.
+                </p>
+
+                <div className="flex flex-wrap gap-3">
+                  {["Demystifying Threats", "Accessible Security", "Actionable Approaches", "Global Impact"].map((item, index) => (
+                    <div
+                      key={index}
+                      className="px-4 py-2 bg-gradient-to-r from-zinc-800 to-zinc-700 border border-zinc-600 text-sm font-medium hover:border-zinc-400 transition-colors rounded-lg shadow-lg"
+                    >
+                      {item}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
           </div>
 
-          {/* CTA Section */}
-          <div className="text-center mt-20">
-            <Button size="lg" className="bg-accent hover:bg-accent/90 text-accent-foreground px-8 py-6 text-lg rounded-xl">
+          <div className="text-center mt-32">
+            <button 
+              className="glow-accent animate-pulse-glow group cursor-pointer px-12 py-6 font-semibold text-lg rounded-xl transition-all duration-300 flex items-center justify-center gap-3 mx-auto"
+              style={{
+                backgroundColor: "var(--primary)",
+                color: "var(--foreground)",
+              }}
+            >
               Start Your Security Journey
-              <ArrowRight className="ml-2 w-5 h-5" />
-            </Button>
-            <p className="text-muted-foreground mt-4">
+              <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
+            </button>
+            <p className="text-zinc-400 mt-6 text-lg">
               Ready to strengthen your security posture? Let's talk.
             </p>
           </div>
         </div>
       </section>
     </div>
-  )
+  );
 }
