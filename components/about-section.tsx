@@ -59,7 +59,7 @@ export function AboutSection() {
       title: "24/7 Security Operations Center",
       subtitle: "Continuous Monitoring",
       description: "Round-the-clock surveillance and threat detection to keep your assets secure against emerging threats.",
-      image: "https://images.pexels.com/photos/1181354/pexels-photo-1181354.jpeg?auto=compress&cs=tinysrgb&w=1920"
+      image: "https://images.pexels.com/photos/17766789/pexels-photo-17766789.jpeg?auto=compress&cs=tinysrgb&w=1920"
     }
   ];
 
