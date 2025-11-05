@@ -50,7 +50,7 @@ export function AboutSection() {
       title: "Securing Your Digital Future",
       subtitle: "Advanced Threat Protection",
       description: "Comprehensive security services that protect your organization from evolving cyber threats with cutting-edge technology and expert oversight.",
-      image: "https://images.pexels.com/photos/5380664/pexels-photo-5380664.jpeg?auto=compress&cs=tinysrgb&w=1920"
+      image: "/bg.mp4"
     },
     {
       id: 2,
