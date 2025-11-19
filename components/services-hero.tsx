@@ -44,7 +44,22 @@ export function ServicesHero({ onServiceSelect }: ServicesHeroProps) {
      
       icon: Target,
       
+    },
+     {
+      id: "risk-management",
+      title: "Risk Management",
+     
+      icon: Target,
+      
+    },
+     {
+      id: "security-enablement",
+      title: "Security Enablement",
+     
+      icon: Target,
+      
     }
+    
   ]
 
   return (
@@ -78,7 +93,7 @@ export function ServicesHero({ onServiceSelect }: ServicesHeroProps) {
           {/* Services Navigation Tabs */}
           <div className="w-full items-center mb-12">
             <Tabs defaultValue="security-assessment" className="w-full items-center">
-              <TabsList className="grid grid-cols-2 md:grid-cols-4  gap-3 p-2 bg-card/50 backdrop-blur-sm rounded-2xl h-auto border border-border/50 shadow-xl mb-12">
+              <TabsList className="grid grid-cols-2 md:grid-cols-6  gap-3 p-2 bg-card/50 backdrop-blur-sm rounded-2xl h-auto border border-border/50 shadow-xl mb-12">
                 {services.map((service) => {
                   const Icon = service.icon
                   return (

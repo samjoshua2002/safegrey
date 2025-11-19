@@ -9,7 +9,7 @@ interface InteractiveTypographyProps {
 export default function InteractiveTypography({
   text,
   className = '',
-  highlightColor = 'text-red-500'
+  highlightColor = "text-red-800"
 }: InteractiveTypographyProps) {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 

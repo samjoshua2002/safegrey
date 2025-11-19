@@ -1,9 +1,11 @@
 "use client";
 import { useState, useEffect, useRef } from 'react';
-import { Users, Target, Shield, Eye, Lock, ArrowRight, Globe, Heart, Zap, ChevronLeft, ChevronRight, Play, Pause } from 'lucide-react';
+import { Users, Target, Shield, Eye, Sparkles, ArrowRight, Globe, Heart, Zap, ChevronLeft, ChevronRight, Play, Pause } from 'lucide-react';
 import { gsap } from 'gsap';
 import FlowingMenu from './FlowingMenu';
 import GridMotion from './GridMotion';
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
 import InteractiveTypography from './InteractiveTypography';
 
 export function AboutSection() {
@@ -88,7 +90,7 @@ export function AboutSection() {
   // GSAP Animations
   const animateSlideChange = (direction: 'next' | 'prev' | 'jump') => {
     const tl = gsap.timeline();
-    
+
     // Reset progress bar
     if (progressRef.current) {
       gsap.set(progressRef.current, { width: '0%' });
@@ -101,49 +103,49 @@ export function AboutSection() {
       opacity: 0,
       ease: "power2.inOut"
     })
-    .to(imageRef.current, {
-      duration: 0.8,
-      scale: 1.1,
-      opacity: 0.3,
-      ease: "power2.inOut"
-    }, 0)
-    // Update slide (this happens in the middle of the animation)
-    .add(() => {
-      if (direction === 'next') {
-        setCurrentSlide((prev) => (prev + 1) % carouselSlides.length);
-      } else if (direction === 'prev') {
-        setCurrentSlide((prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length);
-      }
-    }, 0.4)
-    // Enter animation for new content
-    .fromTo(imageRef.current, 
-      { scale: 1.1, opacity: 0.3 },
-      {
+      .to(imageRef.current, {
         duration: 0.8,
-        scale: 1,
-        opacity: 1,
-        ease: "power2.out"
-      }, 0.4
-    )
-    .fromTo(contentRef.current, 
-      { y: direction === 'next' ? 50 : -50, opacity: 0 },
-      {
-        duration: 0.6,
-        y: 0,
-        opacity: 1,
-        ease: "power2.out"
-      }, 0.6
-    )
-    // Restart progress bar animation if playing
-    .add(() => {
-      if (isPlaying && progressRef.current) {
-        gsap.to(progressRef.current, {
-          duration: 5,
-          width: '100%',
-          ease: "none"
-        });
-      }
-    }, 0.8);
+        scale: 1.1,
+        opacity: 0.3,
+        ease: "power2.inOut"
+      }, 0)
+      // Update slide (this happens in the middle of the animation)
+      .add(() => {
+        if (direction === 'next') {
+          setCurrentSlide((prev) => (prev + 1) % carouselSlides.length);
+        } else if (direction === 'prev') {
+          setCurrentSlide((prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length);
+        }
+      }, 0.4)
+      // Enter animation for new content
+      .fromTo(imageRef.current,
+        { scale: 1.1, opacity: 0.3 },
+        {
+          duration: 0.8,
+          scale: 1,
+          opacity: 1,
+          ease: "power2.out"
+        }, 0.4
+      )
+      .fromTo(contentRef.current,
+        { y: direction === 'next' ? 50 : -50, opacity: 0 },
+        {
+          duration: 0.6,
+          y: 0,
+          opacity: 1,
+          ease: "power2.out"
+        }, 0.6
+      )
+      // Restart progress bar animation if playing
+      .add(() => {
+        if (isPlaying && progressRef.current) {
+          gsap.to(progressRef.current, {
+            duration: 5,
+            width: '100%',
+            ease: "none"
+          });
+        }
+      }, 0.8);
 
     return tl;
   };
@@ -167,20 +169,20 @@ export function AboutSection() {
   useEffect(() => {
     if (contentRef.current && imageRef.current) {
       const tl = gsap.timeline();
-      tl.fromTo(carouselRef.current, 
+      tl.fromTo(carouselRef.current,
         { opacity: 0 },
         { duration: 1, opacity: 1, ease: "power2.out" }
       )
-      .fromTo(imageRef.current,
-        { scale: 1.2 },
-        { duration: 1.5, scale: 1, ease: "power2.out" },
-        0
-      )
-      .fromTo(contentRef.current,
-        { y: 30, opacity: 0 },
-        { duration: 1, y: 0, opacity: 1, ease: "power2.out" },
-        0.5
-      );
+        .fromTo(imageRef.current,
+          { scale: 1.2 },
+          { duration: 1.5, scale: 1, ease: "power2.out" },
+          0
+        )
+        .fromTo(contentRef.current,
+          { y: 30, opacity: 0 },
+          { duration: 1, y: 0, opacity: 1, ease: "power2.out" },
+          0.5
+        );
 
       // Initial progress bar animation
       if (isPlaying && progressRef.current) {
@@ -228,16 +230,10 @@ export function AboutSection() {
         <div ref={contentRef} className="relative z-20 h-full flex items-center">
           <div className="max-w-7xl mx-auto px-8 lg:px-16 w-full">
             <div className="max-w-3xl">
-              {/* Badge */}
-              <div 
-                className="inline-flex items-center gap-2 px-4 py-2 rounded-full border backdrop-blur-sm mb-8 shadow-lg"
-                style={{
-                  backgroundColor: "var(--primary)",
-                  color: "var(--foreground)",
-                }}
-              >
-                <div className="w-2 h-2 rounded-full animate-pulse" style={{ backgroundColor: "var(--foreground)" }} />
-                <span className="text-sm font-semibold uppercase tracking-wider">
+
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-accent/20 mb-6">
+                <Sparkles className="w-4 h-4 text-accent" />
+                <span className="text-sm font-semibold text-accent">
                   {currentCarousel.subtitle}
                 </span>
               </div>
@@ -250,110 +246,111 @@ export function AboutSection() {
                 {currentCarousel.description}
               </p>
 
-              <div className="flex flex-col sm:flex-row gap-4">
-                <button
-                  className="glow-accent animate-pulse-glow group cursor-pointer px-8 py-4 font-semibold rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
-                  style={{
-                    backgroundColor: "var(--primary)",
-                    color: "var(--foreground)",
-                  }}
+              <div className="flex flex-col sm:flex-row gap-4 ">
+                <Button
+                  size="lg"
+                  className="glow-accent animate-pulse-glow group cursor-pointer"
+                  style={{ backgroundColor: "var(--primary)", color: "var(--foreground)" }}
                 >
                   Start Your Security Assessment
-                  <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-                </button>
-                
-                <button
-                  className="glass-effect bg-transparent border border-primary text-foreground hover:bg-primary hover:text-foreground transition-colors cursor-pointer px-8 py-4 font-semibold rounded-lg"
-                >
-                  View Our Services
-                </button>
+                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+                </Button>
+
+                <Link href="/services" passHref legacyBehavior>
+                  <Button
+                    variant="outline"
+                    size="lg"
+                    className="glass-effect bg-transparent border border-primary text-foreground hover:bg-primary hover:text-foreground transition-colors cursor-pointer"
+                  >
+                    View Our Services
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
         </div>
 
-     {/* Enhanced Carousel Controls */}
-<div className="hidden md:absolute md:bottom-12 md:right-8 lg:right-16 md:z-30 md:flex">
-  <div className="flex items-center gap-4 bg-black/50 backdrop-blur-sm border border-white/20 p-4 rounded-lg shadow-2xl">
-    
-    {/* Play/Pause Button */}
-    <button
-      onClick={() => {
-        setIsPlaying(!isPlaying);
-        if (!isPlaying && progressRef.current) {
-          gsap.to(progressRef.current, {
-            duration: 5 - (gsap.getProperty(progressRef.current, "width") as number) / 100 * 5,
-            width: '100%',
-            ease: "none"
-          });
-        }
-      }}
-      className="w-10 h-10 flex items-center justify-center hover:bg-white/10 transition-all duration-300 rounded-lg group"
-      title={isPlaying ? "Pause" : "Play"}
-    >
-      {isPlaying ? 
-        <Pause className="w-4 h-4 group-hover:scale-110 transition-transform" /> : 
-        <Play className="w-4 h-4 group-hover:scale-110 transition-transform" />
-      }
-    </button>
+        {/* Enhanced Carousel Controls */}
+        <div className="hidden md:absolute md:bottom-12 md:right-8 lg:right-16 md:z-30 md:flex">
+          <div className="flex items-center gap-4 bg-black/50 backdrop-blur-sm border border-white/20 p-4 rounded-lg shadow-2xl">
 
-    {/* Previous Slide */}
-    <button
-      onClick={prevSlide}
-      className="w-10 h-10 flex items-center justify-center hover:bg-white/10 transition-all duration-300 rounded-lg group"
-      title="Previous"
-    >
-      <ChevronLeft className="w-5 h-5 group-hover:scale-110 transition-transform" />
-    </button>
+            {/* Play/Pause Button */}
+            <button
+              onClick={() => {
+                setIsPlaying(!isPlaying);
+                if (!isPlaying && progressRef.current) {
+                  gsap.to(progressRef.current, {
+                    duration: 5 - (gsap.getProperty(progressRef.current, "width") as number) / 100 * 5,
+                    width: '100%',
+                    ease: "none"
+                  });
+                }
+              }}
+              className="w-10 h-10 flex items-center justify-center hover:bg-white/10 transition-all duration-300 rounded-lg group"
+              title={isPlaying ? "Pause" : "Play"}
+            >
+              {isPlaying ?
+                <Pause className="w-4 h-4 group-hover:scale-110 transition-transform" /> :
+                <Play className="w-4 h-4 group-hover:scale-110 transition-transform" />
+              }
+            </button>
 
-    {/* Slide Dashes */}
-    <div className="flex gap-1 mx-2">
-      {carouselSlides.map((_, index) => (
-        <button
-          key={index}
-          onClick={() => goToSlide(index)}
-          className={`relative overflow-hidden transition-all duration-300 ${
-            index === currentSlide
-              ? 'w-8 h-1 shadow-lg'
-              : 'w-4 h-1 bg-white/30 hover:bg-white/50'
-          }`}
-          style={{
-            backgroundColor: index === currentSlide ? "var(--primary)" : undefined,
-          }}
-          title={`Go to slide ${index + 1}`}
-          onMouseEnter={(e) => {
-            if (index !== currentSlide) {
-              gsap.to(e.currentTarget, {
-                duration: 0.3,
-                scaleX: 1.2,
-                ease: "power2.out"
-              });
-            }
-          }}
-          onMouseLeave={(e) => {
-            if (index !== currentSlide) {
-              gsap.to(e.currentTarget, {
-                duration: 0.3,
-                scaleX: 1,
-                ease: "power2.out"
-              });
-            }
-          }}
-        />
-      ))}
-    </div>
+            {/* Previous Slide */}
+            <button
+              onClick={prevSlide}
+              className="w-10 h-10 flex items-center justify-center hover:bg-white/10 transition-all duration-300 rounded-lg group"
+              title="Previous"
+            >
+              <ChevronLeft className="w-5 h-5 group-hover:scale-110 transition-transform" />
+            </button>
 
-    {/* Next Slide */}
-    <button
-      onClick={nextSlide}
-      className="w-10 h-10 flex items-center justify-center hover:bg-white/10 transition-all duration-300 rounded-lg group"
-      title="Next"
-    >
-      <ChevronRight className="w-5 h-5 group-hover:scale-110 transition-transform" />
-    </button>
+            {/* Slide Dashes */}
+            <div className="flex gap-1 mx-2">
+              {carouselSlides.map((_, index) => (
+                <button
+                  key={index}
+                  onClick={() => goToSlide(index)}
+                  className={`relative overflow-hidden transition-all duration-300 ${index === currentSlide
+                      ? 'w-8 h-1 shadow-lg'
+                      : 'w-4 h-1 bg-white/30 hover:bg-white/50'
+                    }`}
+                  style={{
+                    backgroundColor: index === currentSlide ? "var(--primary)" : undefined,
+                  }}
+                  title={`Go to slide ${index + 1}`}
+                  onMouseEnter={(e) => {
+                    if (index !== currentSlide) {
+                      gsap.to(e.currentTarget, {
+                        duration: 0.3,
+                        scaleX: 1.2,
+                        ease: "power2.out"
+                      });
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (index !== currentSlide) {
+                      gsap.to(e.currentTarget, {
+                        duration: 0.3,
+                        scaleX: 1,
+                        ease: "power2.out"
+                      });
+                    }
+                  }}
+                />
+              ))}
+            </div>
 
-  </div>
-</div>
+            {/* Next Slide */}
+            <button
+              onClick={nextSlide}
+              className="w-10 h-10 flex items-center justify-center hover:bg-white/10 transition-all duration-300 rounded-lg group"
+              title="Next"
+            >
+              <ChevronRight className="w-5 h-5 group-hover:scale-110 transition-transform" />
+            </button>
+
+          </div>
+        </div>
         {/* GSAP Controlled Progress Bar */}
         <div className="absolute bottom-0 left-0 w-full h-1 bg-white/10 z-30">
           <div
@@ -373,24 +370,22 @@ export function AboutSection() {
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-start mb-32">
             <div className="space-y-8 sticky top-8">
               {/* Expertise Badge */}
-              <div 
-                className="inline-flex items-center gap-3 px-4 py-2 border rounded-lg shadow-lg"
-                style={{
-                  backgroundColor: "var(--primary)",
-                  color: "var(--foreground)",
-                }}
-              >
-                <Users className="w-5 h-5" />
-                <span className="text-sm font-semibold uppercase tracking-wider">Expertise</span>
+             
+
+                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-accent/20 mb-6">
+                <Users className="w-4 h-4" />
+                <span className="text-sm font-semibold text-accent">
+                Expertise
+                </span>
               </div>
 
               <InteractiveTypography
                 text="Expertise That Makes a Difference"
                 className="text-5xl lg:text-7xl font-bold"
-                highlightColor="text-red-500"
+            
               />
 
-              <div 
+              <div
                 className="w-20 h-1 rounded-full"
                 style={{
                   backgroundColor: "var(--primary)",
@@ -414,7 +409,7 @@ export function AboutSection() {
               <div className="grid grid-cols-2 gap-6 pt-8">
                 {teamStats.map((stat, index) => (
                   <div key={index} className="border border-zinc-800 bg-gradient-to-br from-zinc-900/50 to-zinc-800/30 p-8 hover:border-zinc-600 transition-all duration-300 group shadow-lg rounded-xl">
-                    <div 
+                    <div
                       className="text-5xl font-bold mb-2 group-hover:scale-110 transition-transform"
                       style={{
                         color: "var(--primary)",
@@ -431,7 +426,7 @@ export function AboutSection() {
             </div>
           </div>
 
-          <div 
+          <div
             className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent mb-32"
             style={{
               background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
@@ -453,7 +448,7 @@ export function AboutSection() {
                   const Icon = value.icon;
                   return (
                     <div key={index} className="border border-zinc-800 bg-gradient-to-br from-zinc-900/50 to-zinc-800/30 p-6 hover:border-zinc-600 transition-all duration-300 group shadow-lg rounded-xl">
-                      <Icon 
+                      <Icon
                         className="w-8 h-8 mb-4 group-hover:scale-110 transition-transform"
                         style={{
                           color: "var(--primary)",
@@ -469,7 +464,7 @@ export function AboutSection() {
 
             <div className="space-y-8 sticky top-8">
               {/* Approach Badge */}
-              <div 
+              <div
                 className="inline-flex items-center gap-3 px-4 py-2 border rounded-lg shadow-lg"
                 style={{
                   backgroundColor: "var(--primary)",
@@ -483,10 +478,10 @@ export function AboutSection() {
               <InteractiveTypography
                 text="Beyond Checklists"
                 className="text-5xl lg:text-7xl font-bold"
-                highlightColor="text-red-500"
+              
               />
 
-              <div 
+              <div
                 className="w-20 h-1 rounded-full"
                 style={{
                   backgroundColor: "var(--primary)",
@@ -501,7 +496,7 @@ export function AboutSection() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                 <div className="absolute bottom-8 left-8">
-                  <Target 
+                  <Target
                     className="w-16 h-16 drop-shadow-2xl"
                     style={{
                       color: "var(--primary)",
@@ -512,7 +507,7 @@ export function AboutSection() {
             </div>
           </div>
 
-          <div 
+          <div
             className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent mb-32"
             style={{
               background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
@@ -521,7 +516,7 @@ export function AboutSection() {
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
             <div className="border border-zinc-800 bg-gradient-to-br from-zinc-900/30 to-zinc-800/20 p-12 hover:border-zinc-600 transition-all duration-500 group relative overflow-hidden rounded-2xl shadow-2xl">
-              <div 
+              <div
                 className="absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl group-hover:opacity-20 transition-all duration-500"
                 style={{
                   backgroundColor: "var(--primary)",
@@ -530,7 +525,7 @@ export function AboutSection() {
               />
               <div className="relative z-10">
                 {/* Mission Badge */}
-                <div 
+                <div
                   className="inline-flex items-center gap-3 px-4 py-2 border rounded-lg mb-8 shadow-lg"
                   style={{
                     backgroundColor: "var(--primary)",
@@ -563,7 +558,7 @@ export function AboutSection() {
             </div>
 
             <div className="border border-zinc-800 bg-gradient-to-br from-zinc-900/30 to-zinc-800/20 p-12 hover:border-zinc-600 transition-all duration-500 group relative overflow-hidden rounded-2xl shadow-2xl">
-              <div 
+              <div
                 className="absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl group-hover:opacity-20 transition-all duration-500"
                 style={{
                   backgroundColor: "var(--primary)",
@@ -572,7 +567,7 @@ export function AboutSection() {
               />
               <div className="relative z-10">
                 {/* Vision Badge */}
-                <div 
+                <div
                   className="inline-flex items-center gap-3 px-4 py-2 border rounded-lg mb-8 shadow-lg"
                   style={{
                     backgroundColor: "var(--primary)",
@@ -606,16 +601,14 @@ export function AboutSection() {
           </div>
 
           <div className="text-center mt-32">
-            <button 
-              className="glow-accent animate-pulse-glow group cursor-pointer px-12 py-6 font-semibold text-lg rounded-xl transition-all duration-300 flex items-center justify-center gap-3 mx-auto"
-              style={{
-                backgroundColor: "var(--primary)",
-                color: "var(--foreground)",
-              }}
+            <Button
+              size="lg"
+              className="glow-accent animate-pulse-glow group cursor-pointer"
+              style={{ backgroundColor: "var(--primary)", color: "var(--foreground)" }}
             >
-              Get Started..
-              <ArrowRight className="w-6 h-6 group-hover:translate-x-2 transition-transform" />
-            </button>
+              Start Your Security Assessment
+              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+            </Button>
             <p className="text-zinc-400 mt-6 text-lg">
               Ready to strengthen your security posture? Let's talk.
             </p>
