@@ -8,7 +8,7 @@ export function ManagedSecurityServices() {
   
     {
       id: "siem",
-      title: "SIEM & Threat Detection",
+      title: "SIEM Detection",
       fullTitle: "SIEM Monitoring & Threat Detection",
       icon: Monitor,
       description: "Security incidents often begin with subtle indicators that are easy to miss without continuous monitoring. SIEM Monitoring & Threat Detection provides round-the-clock visibility into logs, events, and behavioural patterns across your environment. By identifying suspicious activity early, this service helps prevent small anomalies from turning into serious compromises. The goal is to ensure that threats are detected quickly, escalated appropriately, and addressed with clear guidance, giving organisations stronger control over their operational security.",

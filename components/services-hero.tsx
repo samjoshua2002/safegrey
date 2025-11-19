@@ -2,8 +2,9 @@
 
 import { Button } from "@/components/ui/button"
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { ArrowRight, Shield, Target, Bug, Eye, Cloud, Smartphone, Network, Server } from "lucide-react"
+import { ArrowRight, Shield, Target, Bug, Eye, Cloud, Smartphone, Network, Server, CloudCog, ShieldAlert, Lock } from "lucide-react"
 import { useEffect, useState } from "react"
+import { GrRisk, GrSecure } from "react-icons/gr"
 
 interface ServicesHeroProps {
   onServiceSelect: (serviceId: string) => void
@@ -35,28 +36,28 @@ export function ServicesHero({ onServiceSelect }: ServicesHeroProps) {
       id: "cloud-security",
       title: "Cloud Security",
      
-      icon: Target,
+      icon: CloudCog,
       
     },
     {
       id: "manage-security",
       title: "Managed Security",
      
-      icon: Target,
+      icon: ShieldAlert,
       
     },
      {
       id: "risk-management",
       title: "Risk Management",
      
-      icon: Target,
+      icon: GrRisk,
       
     },
      {
       id: "security-enablement",
       title: "Security Enablement",
      
-      icon: Target,
+      icon: Lock,
       
     }
     
