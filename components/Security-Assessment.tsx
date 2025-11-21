@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { CheckCircle, Shield, Smartphone, Cloud, Network, Server, ArrowRight, Sparkles, Download, Mail, User } from "lucide-react"
 import { toast } from "sonner"
+import InteractiveTypography from "./InteractiveTypography"
 
 // Download Dialog Component for Security Assessment
 interface SecurityDownloadDialogProps {
@@ -322,9 +323,13 @@ export function SecurityAssessment() {
           </div>
 
           <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
-            Security Assessments
+            <InteractiveTypography
+                          text=" Security  Assessments"
+                          className="text-5xl md:text-6xl lg:text-7xl font-bold"
+                      
+                        />
           </h2>
-          <p className="text-xl md:text-lg text-justify text-muted-foreground mx-auto leading-relaxed">
+          <p className="text-xl md:text-lg md:text-justify text-muted-foreground mx-auto leading-relaxed">
             Modern organisations operate in environments where a single weakness can lead to significant business disruption. Security Assessments help expose blind spots across applications, networks, and identity systems before adversaries discover them. These evaluations focus on real-world attack behaviours, uncovering both technical flaws and misaligned security controls. The outcome is a clear view of the organisation's true risk posture and a practical direction for strengthening defences with confidence. SafeGrey brings a balanced approach that helps teams understand exposure, prioritise what matters, and build resilience without slowing operations.
           </p>
         </div>
@@ -354,18 +359,13 @@ export function SecurityAssessment() {
                   <CardContent className="p-8 md:p-12">
                     {/* Header Section */}
                     <div className="space-y-4">
-                      <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-muted/50 border border-border">
-                        <Icon className="w-5 h-5 text-accent" />
-                        <span className="text-sm font-semibold text-accent">
-                          {type.title}
-                        </span>
-                      </div>
+                  
 
                       <h3 className="text-4xl md:text-5xl font-bold leading-tight">
                         {type.fullTitle}
                       </h3>
 
-                      <p className="text-lg md:text-lg text-justify text-muted-foreground leading-relaxed">
+                      <p className="text-lg md:text-lg md:text-justify text-muted-foreground leading-relaxed">
                         {type.description}
                       </p>
                     </div>
