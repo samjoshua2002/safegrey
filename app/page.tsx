@@ -119,9 +119,7 @@ export default function HomePage() {
       <div ref={logoRef}>
         <LogoSection />
       </div>
-      <div ref={ctaRef}>
-        <CTASection />
-      </div>
+      
       <Footer />
     </main>
   );

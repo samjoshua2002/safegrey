@@ -46,29 +46,33 @@ export function AboutSection() {
     }
   ];
 
-  const carouselSlides = [
-    {
-      id: 1,
-      title: "Securing Your Digital Future",
-      subtitle: "Advanced Threat Protection",
-      description: "Comprehensive security services that protect your organization from evolving cyber threats with cutting-edge technology and expert oversight.",
-      image: "https://images.pexels.com/photos/17766789/pexels-photo-17766789.jpeg?auto=compress&cs=tinysrgb&w=1920"
-    },
-    {
-      id: 2,
-      title: "Zero Trust Security Framework",
-      subtitle: "Modern Security Architecture",
-      description: "Implementing never trust, always verify principles across your entire digital ecosystem for maximum protection.",
-      image: "/b3.mp4"
-    },
-    {
-      id: 3,
-      title: "24/7 Security Operations Center",
-      subtitle: "Continuous Monitoring",
-      description: "Round-the-clock surveillance and threat detection to keep your assets secure against emerging threats.",
-      image: "/bg.mp4"
-    }
-  ];
+const carouselSlides = [
+  {
+    id: 1,
+    title: "Securing Your Digital Future",
+    subtitle: "Advanced Threat Protection",
+    description:
+      "Comprehensive security services that protect your organization from evolving cyber threats with cutting-edge technology and expert oversight.",
+    image: "https://images.pexels.com/photos/17766789/pexels-photo-17766789.jpeg?auto=compress&cs=tinysrgb&w=1920"
+  },
+  {
+    id: 2,
+    title: "Zero Trust Security Framework",
+    subtitle: "Modern Security Architecture",
+    description:
+    "Implementing never trust, always verify principles across your entire digital ecosystem for maximum protection.",
+    video: "/bg.mp4"
+  },
+  {
+    id: 3,
+    title: "24/7 Security Operations Center",
+    subtitle: "Continuous Monitoring",
+    description:
+    "Round-the-clock surveillance and threat detection to keep your assets secure against emerging threats.",
+  
+    image: "./img.png"
+  }
+];
 
   const gridItems = [
     "Security", "ThreatOps", "Cyber", "Defense",
@@ -211,14 +215,44 @@ export function AboutSection() {
     <div className="min-h-screen bg-zinc-950 text-white overflow-hidden">
       <section ref={carouselRef} className="relative h-screen w-full overflow-hidden">
         {/* Background Image */}
-        <div
-          ref={imageRef}
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: `url(${currentCarousel.image})`,
-            filter: 'brightness(0.4)'
-          }}
-        />
+     {/* Background Media */}
+<div className="absolute inset-0">
+  {/* If image exists */}
+  {currentCarousel.image && (
+    <div
+      ref={imageRef}
+      className="absolute inset-0 bg-cover bg-center"
+      style={{
+        backgroundImage:
+          typeof currentCarousel.image === "string"
+            ? `url(${currentCarousel.image})`
+            : `url(${URL.createObjectURL(currentCarousel.image)})`,
+        filter: "brightness(0.4)"
+      }}
+    />
+  )}
+
+  {/* If video exists */}
+  {currentCarousel.video && (
+    <video
+      className="absolute inset-0 w-full h-full object-cover"
+      autoPlay
+      muted
+      loop
+      playsInline
+      style={{ filter: "brightness(0.4)" }}
+    >
+      <source
+        src={
+          typeof currentCarousel.video === "string"
+            ? currentCarousel.video
+            : URL.createObjectURL(currentCarousel.video)
+        }
+        type="video/mp4"
+      />
+    </video>
+  )}
+</div>
 
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent z-10" />
 
@@ -490,7 +524,7 @@ export function AboutSection() {
 
               <div className="aspect-[4/3] relative overflow-hidden border border-zinc-800 rounded-xl shadow-2xl">
                 <img
-                  src="/b2.mp4"
+                  src="/image.png"
                   alt="Security Operations"
                   className="w-full h-full object-cover filter brightness-50 hover:brightness-75 transition-all duration-500"
                 />

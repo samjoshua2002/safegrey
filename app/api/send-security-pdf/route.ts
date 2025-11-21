@@ -5,7 +5,7 @@ import path from 'path';
 
 // Personal email domains to block
 const PERSONAL_EMAIL_DOMAINS = [
-
+    'gmail.com',
     'yahoo.com',
     'outlook.com',
     'hotmail.com',
