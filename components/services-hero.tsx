@@ -72,11 +72,11 @@ export function ServicesHero({ onServiceSelect }: ServicesHeroProps) {
           className={`transition-all duration-1000 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"}`}
         >
           {/* Header Section */}
-          <div className="text-center mb-16">
+          <div className="text-center mb-2">
            
 
-            {/* Main Headline */}
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+   
+            {/* <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
             
               
               <span className="text-white">Cybersecurity Services</span>
@@ -84,15 +84,15 @@ export function ServicesHero({ onServiceSelect }: ServicesHeroProps) {
              
             </h1>
 
-            {/* Subheadline */}
+         
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
               From proactive threat hunting to rapid incident response, we provide comprehensive cybersecurity solutions
               tailored to your business needs.
-            </p>
+            </p> */}
           </div>
 
           {/* Services Navigation Tabs */}
-          <div className="w-full items-center mb-12">
+          <div className="w-full items-center mb-2">
             <Tabs defaultValue="security-assessment" className="w-full items-center">
               <TabsList className="grid grid-cols-2 md:grid-cols-6  gap-3 p-2 bg-card/50 backdrop-blur-sm rounded-2xl h-auto border border-border/50 shadow-xl mb-12">
                 {services.map((service) => {

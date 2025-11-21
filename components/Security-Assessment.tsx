@@ -1,6 +1,6 @@
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { CheckCircle, Shield, Smartphone, Cloud, Network, Server, ArrowRight, Sparkles } from "lucide-react"
+import { CheckCircle, Shield, Smartphone, Cloud, Network, Server, ArrowRight, Sparkles, Download } from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 export function SecurityAssessment() {
@@ -19,7 +19,7 @@ export function SecurityAssessment() {
         "Reporting with prioritised remediation guidance",
 
       ],
-      highlights: ["Detailed Logic & Flow Inspection", "High-Value, Low-Noise Findings", "Strong Focus on Real Attack Paths", "Clear Business Risk Breakdown", "Structured Fix Recommendations"],
+      highlights: ["Logic Inspection", "High-Value, Low-Noise Finding", "Focus on Real Attack Paths", "Business Risk Breakdown", "Structured Fix Recommendations"],
       gradient: "from-accent/20 via-primary/20 to-accent/20"
     },
     {
@@ -30,13 +30,13 @@ export function SecurityAssessment() {
       description: "Mobile applications introduce unique exposure points, from insecure data storage to unsafe device interactions and weak API communication paths. This assessment examines how the app behaves under hostile conditions—how data is handled, how permissions are used, and how an attacker may misuse functions or intercept traffic. The goal is to identify weaknesses that could compromise user information or allow unauthorised access. Findings are translated into clear, actionable improvements that help strengthen both functionality and trust.",
       features: [
         "Review of storage practices, encryption use, and sensitive data exposure",
-        "Analysis of API communication, backend trust boundaries, and request integrity",
+        "Analysis of API communication, backend trust boundaries, request integrity",
         "Evaluation of login flows, session handling, and access controls",
         "Assessment of permissions, device interaction risks, and misuse potential",
         "Mapping against OWASP mobile testing principles"
       ],
       highlights: [
-        "In-Depth Mobile Behaviour Analysis",
+        "In-Depth Mobile  Analysis",
         "Privacy & Sensitive Data Protection",
         "Abuse-Case Testing",
         "Focus on Real Impact",
@@ -53,13 +53,13 @@ export function SecurityAssessment() {
         "Inspection of authentication, authorisation, and token handling",
         "Review of input validation, rate limiting, and error behaviour",
         "Analysis of data exposure, response structure, and trust boundaries",
-        "Testing against common exploitation paths (injection, bypasses, abuse cases)",
+        "Testing against common exploitation paths ",
         "Alignment with OWASP API Security standards"
       ],
       highlights: [
         "Deep Parameter & Endpoint Analysis",
-        "Strong Access Control Validation",
-        "Reliable Detection of High-Impact Flaws",
+        "Access Control Validation",
+        "Detection of Flaws",
         "Clear Exposure Mapping",
         "Action-Oriented Guidance"
       ],
@@ -83,7 +83,7 @@ export function SecurityAssessment() {
         "Lateral Movement Path Analysis",
         "Clear Network Risk Mapping",
         "Prioritised Findings",
-        "Effective Hardening Recommendations"
+        "Effective Hardening "
       ],
       gradient: "from-accent/20 via-primary/20 to-accent/20"
     },
@@ -96,7 +96,7 @@ export function SecurityAssessment() {
       features: [
         "Assessment of domain trusts, group memberships, and privilege structure",
         "Review of GPO configurations, authentication settings, and security controls",
-        "Identification of escalation paths, misconfigurations, and persistence vectors",
+        "Identification of escalation paths,misconfigurations, and persistence vectors",
         "Evaluation of password policies, delegation risks, and exposed identities",
         "Actionable reporting tailored to reduce identity-based threats"
       ],
@@ -112,13 +112,13 @@ export function SecurityAssessment() {
   ]
 
   return (
-    <section className="min-h-screen py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <section className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-background via-muted/20 to-background" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-accent/10 via-transparent to-transparent" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent" />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="text-center mb-20">
+        <div className="text-left mb-20">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-accent/20 mb-6">
             <Sparkles className="w-4 h-4 text-accent" />
             <span className="text-sm font-semibold text-accent">
@@ -129,7 +129,7 @@ export function SecurityAssessment() {
           <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
             Security Assessments
           </h2>
-          <p className="text-xl md:text-2xl text-muted-foreground  mx-auto leading-relaxed">
+          <p className="text-xl md:text-lg text-justify text-muted-foreground  mx-auto leading-relaxed">
             Modern organisations operate in environments where a single weakness can lead to significant business disruption. Security Assessments help expose blind spots across applications, networks, and identity systems before adversaries discover them. These evaluations focus on real-world attack behaviours, uncovering both technical flaws and misaligned security controls. The outcome is a clear view of the organisation's true risk posture and a practical direction for strengthening defences with confidence. SafeGrey brings a balanced approach that helps teams understand exposure, prioritise what matters, and build resilience without slowing operations.
 
           </p>
@@ -155,86 +155,91 @@ export function SecurityAssessment() {
           {assessmentTypes.map((type) => {
             const Icon = type.icon
             return (
-              <TabsContent key={type.id} value={type.id} className="mt-0">
-                <Card className="border-0 shadow-2xl bg-card/50 backdrop-blur-sm overflow-hidden">
-                  <CardContent className="p-8 md:p-12">
+             <TabsContent key={type.id} value={type.id} className="mt-0">
+  <Card className="border-0 shadow-2xl bg-card/50 backdrop-blur-sm overflow-hidden">
+    <CardContent className="p-8 md:p-12">
 
-                    {/* Header Section */}
-                    <div className="space-y-4">
-                      <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-muted/50 border border-border">
-                        <Icon className="w-5 h-5 text-accent" />
-                        <span className="text-sm font-semibold text-accent">
-                          {type.title}
-                        </span>
-                      </div>
+      {/* Header Section */}
+      <div className="space-y-4">
+        <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-muted/50 border border-border">
+          <Icon className="w-5 h-5 text-accent" />
+          <span className="text-sm font-semibold text-accent">
+            {type.title}
+          </span>
+        </div>
 
-                      <h3 className="text-4xl md:text-5xl font-bold leading-tight">
-                        {type.fullTitle}
-                      </h3>
+        <h3 className="text-4xl md:text-5xl font-bold leading-tight">
+          {type.fullTitle}
+        </h3>
 
-                      <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
-                        {type.description}
-                      </p>
-                    </div>
+        <p className="text-lg md:text-lg text-justify text-muted-foreground leading-relaxed">
+          {type.description}
+        </p>
+      </div>
 
-                    {/* Highlights */}
-                    <div className="flex flex-wrap gap-3 mt-6">
-                      {type.highlights.map((highlight, index) => (
-                        <div
-                          key={index}
-                          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-accent/10 border border-accent/20 hover:border-accent/40 transition-all duration-300 hover:scale-105"
-                        >
-                          <div className="w-1.5 h-1.5 rounded-full bg-accent" />
-                          <span className="text-sm font-semibold">{highlight}</span>
-                        </div>
-                      ))}
-                    </div>
+      {/* Highlights */}
+      <div className="flex flex-wrap gap-3 mt-6">
+        {type.highlights.map((highlight, index) => (
+          <div
+            key={index}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-accent/10 border border-accent/20 hover:border-accent/40 transition-all duration-300 hover:scale-105"
+          >
+            <div className="w-1.5 h-1.5 rounded-full bg-accent" />
+            <span className="text-sm font-semibold">{highlight}</span>
+          </div>
+        ))}
+      </div>
 
-                    {/* Grid Section */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-12">
+      {/* What's Included Grid */}
+      <div className="space-y-6 pt-10">
+        <div className="flex items-center gap-2 mb-4">
+          <CheckCircle className="w-6 h-6 text-accent" />
+          <h4 className="text-xl font-bold">What's Included</h4>
+        </div>
 
-                      {/* Left Side */}
-                      <div className="space-y-8">
-                        <div className="space-y-6">
-                          <div className="flex items-center gap-2">
-                            <CheckCircle className="w-6 h-6 text-accent" />
-                            <h4 className="text-xl font-bold">What's Included</h4>
-                          </div>
+        {/* 2-column layout */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
 
-                          <div className="grid grid-cols-1 gap-4">
-                            {type.features.map((feature, index) => (
-                              <div
-                                key={index}
-                                className="flex items-start gap-3 p-4 rounded-xl bg-muted/30 border border-border hover:border-accent/30 transition-all duration-300 hover:translate-x-1 group"
-                              >
-                                <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0 group-hover:scale-125 transition-transform" />
-                                <span className="text-muted-foreground group-hover:text-foreground transition-colors">
-                                  {feature}
-                                </span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
+          {/* Left column features (F1, F2, F3) */}
+          {type.features.slice(0, 3).map((feature, index) => (
+            <div
+              key={index}
+              className="flex items-start gap-3 p-4 rounded-xl bg-muted/30 border border-border hover:border-accent/30 transition-all duration-300 hover:translate-x-1 group"
+            >
+              <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0 group-hover:scale-125 transition-transform" />
+              <span className="text-muted-foreground group-hover:text-foreground transition-colors">
+                {feature}
+              </span>
+            </div>
+          ))}
 
-                      {/* Right Side */}
-                      <div className="relative lg:order-last order-first">
-                        <div className={`aspect-[4/3] rounded-3xl bg-gradient-to-br ${type.gradient} border border-border overflow-hidden shadow-2xl`}>
-                          <div className="w-full h-full flex items-center justify-center">
-                            <Icon className="w-48 h-48 text-foreground/10" strokeWidth={0.5} />
-                          </div>
-                        </div>
+          {/* Right column features (F4, F5) + Download button */}
+          {type.features.slice(3).map((feature, index) => (
+            <div
+              key={index}
+              className="flex items-start gap-3 p-4 rounded-xl bg-muted/30 border border-border hover:border-accent/30 transition-all duration-300 hover:translate-x-1 group"
+            >
+              <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0 group-hover:scale-125 transition-transform" />
+              <span className="text-muted-foreground group-hover:text-foreground transition-colors">
+                {feature}
+              </span>
+            </div>
+          ))}
 
-                        {/* Glow Orbs */}
-                        <div className="absolute -top-6 -right-6 w-32 h-32 bg-accent/20 rounded-full blur-3xl" />
-                        <div className="absolute -bottom-6 -left-6 w-40 h-40 bg-primary/20 rounded-full blur-3xl" />
-                      </div>
+          {/* Download PDF button */}
+          <div className="flex items-start pt-2">
+            <button className="flex items-center gap-2 justify-center text-white px-5 py-3 rounded-lg bg-accent font-semibold text-sm shadow hover:shadow-md hover:scale-[1.03] transition-all duration-300">
+              <Download className="w-4 h-4 text-white" />
+              Download PDF
+            </button>
+          </div>
 
-                    </div>
+        </div>
+      </div>
 
-                  </CardContent>
-                </Card>
-              </TabsContent>
+    </CardContent>
+  </Card>
+</TabsContent>
             )
           })}
         </Tabs>
