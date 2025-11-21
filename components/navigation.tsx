@@ -123,7 +123,7 @@ export function Navigation() {
               onMouseLeave={handleDropdownLeave}
             >
               <button className="flex items-center hover:text-[var(--primary)] transition-colors gap-1 cursor-pointer">
-                <Shield className="h-4 w-4" />
+                {/* <Shield className="h-4 w-4" /> */}
                 What We Do <ChevronDown className="ml-1 h-4 w-4" />
               </button>
 
@@ -230,7 +230,7 @@ export function Navigation() {
               onMouseLeave={handleDropdownLeave}
             >
               <button className="flex items-center hover:text-[var(--primary)] transition-colors gap-1 cursor-pointer">
-                <Users className="h-4 w-4" />
+                {/* <Users className="h-4 w-4" /> */}
                 Who We Are <ChevronDown className="ml-1 h-4 w-4" />
               </button>
 
@@ -265,7 +265,7 @@ export function Navigation() {
               onMouseLeave={handleDropdownLeave}
             >
               <button className="flex items-center hover:text-[var(--primary)] transition-colors gap-1 cursor-pointer">
-                <FolderGit2 className="h-4 w-4" />
+                {/* <FolderGit2 className="h-4 w-4" /> */}
                 Resources <ChevronDown className="ml-1 h-4 w-4" />
               </button>
 
