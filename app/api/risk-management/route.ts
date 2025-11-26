@@ -5,7 +5,6 @@ import path from 'path';
 
 // Personal email domains to block
 const PERSONAL_EMAIL_DOMAINS = [
-    
     'yahoo.com',
     'outlook.com',
     'hotmail.com',
@@ -22,14 +21,14 @@ function isPersonalEmail(email: string): boolean {
     return PERSONAL_EMAIL_DOMAINS.includes(domain);
 }
 
-function getEmailTemplate(name: string): string {
+function getEmailTemplate(name: string, serviceType: string): string {
     return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Security Assessment - SafeGrey</title>
+  <title>${serviceType} - SafeGrey</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5;">
   <table role="presentation" style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;">
@@ -44,7 +43,7 @@ function getEmailTemplate(name: string): string {
                 SafeGrey
               </h1>
               <p style="margin: 10px 0 0 0; color: rgba(255, 255, 255, 0.9); font-size: 16px;">
-                Security Assessment Services
+                Risk Management Services
               </p>
             </td>
           </tr>
@@ -53,99 +52,15 @@ function getEmailTemplate(name: string): string {
           <tr>
             <td style="padding: 40px 30px;">
               <h2 style="margin: 0 0 20px 0; color: #1a1a1a; font-size: 24px; font-weight: 600;">
-                Hello, ${name}! 🛡️
+                Hello, ${name}! 📋
               </h2>
               <p style="margin: 0 0 16px 0; color: #4a5568; font-size: 16px; line-height: 1.6;">
-                Thank you for your interest in our comprehensive Security Assessment services. We're committed to helping you identify and address vulnerabilities across your digital infrastructure.
+                Thank you for your interest in our ${serviceType} services. We're committed to helping you maintain compliance and manage risk effectively.
               </p>
               <p style="margin: 0 0 16px 0; color: #4a5568; font-size: 16px; line-height: 1.6;">
-                We've attached a detailed guide covering our assessment methodologies across various domains:
+                We've attached a detailed guide covering our consulting methodologies.
               </p>
               
-              <!-- Features List -->
-              <table role="presentation" style="width: 100%; margin: 20px 0;">
-                <tr>
-                  <td style="padding: 12px 0;">
-                    <table role="presentation">
-                      <tr>
-                        <td style="padding-right: 12px; vertical-align: top;">
-                          <div style="width: 24px; height: 24px; background-color: #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                            <span style="color: #ffffff; font-size: 14px; font-weight: bold;">✓</span>
-                          </div>
-                        </td>
-                        <td style="color: #4a5568; font-size: 15px; line-height: 1.5;">
-                          Web Application Security Testing
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding: 12px 0;">
-                    <table role="presentation">
-                      <tr>
-                        <td style="padding-right: 12px; vertical-align: top;">
-                          <div style="width: 24px; height: 24px; background-color: #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                            <span style="color: #ffffff; font-size: 14px; font-weight: bold;">✓</span>
-                          </div>
-                        </td>
-                        <td style="color: #4a5568; font-size: 15px; line-height: 1.5;">
-                          Mobile Application Assessment
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding: 12px 0;">
-                    <table role="presentation">
-                      <tr>
-                        <td style="padding-right: 12px; vertical-align: top;">
-                          <div style="width: 24px; height: 24px; background-color: #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                            <span style="color: #ffffff; font-size: 14px; font-weight: bold;">✓</span>
-                          </div>
-                        </td>
-                        <td style="color: #4a5568; font-size: 15px; line-height: 1.5;">
-                          API Security Evaluation
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding: 12px 0;">
-                    <table role="presentation">
-                      <tr>
-                        <td style="padding-right: 12px; vertical-align: top;">
-                          <div style="width: 24px; height: 24px; background-color: #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                            <span style="color: #ffffff; font-size: 14px; font-weight: bold;">✓</span>
-                          </div>
-                        </td>
-                        <td style="color: #4a5568; font-size: 15px; line-height: 1.5;">
-                          Network Infrastructure Analysis
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding: 12px 0;">
-                    <table role="presentation">
-                      <tr>
-                        <td style="padding-right: 12px; vertical-align: top;">
-                          <div style="width: 24px; height: 24px; background-color: #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                            <span style="color: #ffffff; font-size: 14px; font-weight: bold;">✓</span>
-                          </div>
-                        </td>
-                        <td style="color: #4a5568; font-size: 15px; line-height: 1.5;">
-                          Active Directory Security Review
-                        </td>
-                      </tr>
-                    </table>
-                  </td>
-                </tr>
-              </table>
-
               <p style="margin: 20px 0 0 0; color: #4a5568; font-size: 16px; line-height: 1.6;">
                 The attached guide provides comprehensive details on our approach, methodology, and deliverables.
               </p>
@@ -181,7 +96,7 @@ function getEmailTemplate(name: string): string {
                 <strong style="color: #4a5568;">SafeGrey</strong>
               </p>
               <p style="margin: 0 0 4px 0; color: #718096; font-size: 13px;">
-                Expert-Led Security Assessment Services
+                Expert-Led Risk Management Services
               </p>
               <p style="margin: 0; color: #a0aec0; font-size: 12px;">
                 © ${new Date().getFullYear()} SafeGrey. All rights reserved.
@@ -201,12 +116,12 @@ function getEmailTemplate(name: string): string {
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
-        const { name, email } = body;
+        const { name, email, serviceType } = body;
 
         // Validate inputs
-        if (!name || !email) {
+        if (!name || !email || !serviceType) {
             return NextResponse.json(
-                { error: 'Name and email are required' },
+                { error: 'Name, email, and service type are required' },
                 { status: 400 }
             );
         }
@@ -237,8 +152,12 @@ export async function POST(request: NextRequest) {
             },
         });
 
-        // Get PDF path
-        const pdfPath = path.join(process.cwd(), 'public', 'securityassessment.pdf');
+        // Get PDF path - handle special case for SOC 1/2
+        let pdfFilename = `${serviceType}.pdf`;
+        if (serviceType === 'SOC 1/2') {
+            pdfFilename = 'SOC 1_2.pdf';
+        }
+        const pdfPath = path.join(process.cwd(), 'public', 'risk-management', pdfFilename);
 
         // Check if PDF exists
         if (!fs.existsSync(pdfPath)) {
@@ -255,11 +174,11 @@ export async function POST(request: NextRequest) {
                 address: process.env.EMAIL_USER!,
             },
             to: email,
-            subject: 'Security Assessment Guide - SafeGrey',
-            html: getEmailTemplate(name),
+            subject: `${serviceType} Guide - SafeGrey`,
+            html: getEmailTemplate(name, serviceType),
             attachments: [
                 {
-                    filename: 'Security-Assessment-Guide.pdf',
+                    filename: pdfFilename,
                     path: pdfPath,
                 },
             ],
