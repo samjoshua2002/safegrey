@@ -1,9 +1,216 @@
+import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { CheckCircle, Shield, Monitor, Zap, Users, ArrowRight, Sparkles, Eye, AlertTriangle } from "lucide-react"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { CheckCircle, Shield, Monitor, Zap, Users, ArrowRight, Sparkles, Eye, AlertTriangle, Download, Mail, User } from "lucide-react"
+import { toast } from "sonner"
+import { Captcha } from "@/components/ui/captcha"
+
+// Download Dialog Component
+interface ServiceDownloadDialogProps {
+  isOpen: boolean
+  onOpenChange: (open: boolean) => void
+  formData: { name: string; email: string }
+  onFormChange: (data: { name: string; email: string }) => void
+  onSubmit: (e: React.FormEvent) => void
+  isLoading: boolean
+  serviceTitle: string
+}
+
+function ServiceDownloadDialog({ isOpen, onOpenChange, formData, onFormChange, onSubmit, isLoading, serviceTitle }: ServiceDownloadDialogProps) {
+  const [isCaptchaVerified, setIsCaptchaVerified] = useState(false)
+
+  // Reset captcha when dialog closes
+  useEffect(() => {
+    if (!isOpen) {
+      setIsCaptchaVerified(false)
+    }
+  }, [isOpen])
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogTrigger asChild>
+        <button className="flex items-center gap-2 justify-center text-white px-5 py-3 rounded-lg bg-gradient-to-r from-accent to-accent/90 hover:from-accent/90 hover:to-accent/80 font-semibold text-sm shadow-lg hover:shadow-xl hover:scale-[1.03] transition-all duration-300 group">
+          <Download className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
+          Download Datasheets
+        </button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md bg-card/80 backdrop-blur-sm border-border/50 shadow-2xl">
+        {/* Background gradient effects */}
+        <div className="absolute inset-0 bg-gradient-to-br from-background/50 via-card/30 to-accent/5 pointer-events-none rounded-lg" />
+
+        <DialogHeader className="relative z-10">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="p-2 rounded-full bg-accent/10 border border-accent/20">
+              <Download className="w-6 h-6 text-accent" />
+            </div>
+            <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
+              Download {serviceTitle} Guide
+            </DialogTitle>
+          </div>
+          <DialogDescription className="text-base text-muted-foreground leading-relaxed">
+            Get your comprehensive {serviceTitle.toLowerCase()} guide delivered directly to your inbox.
+          </DialogDescription>
+        </DialogHeader>
+
+        <form onSubmit={onSubmit} className="space-y-4 mt-6 relative z-10">
+          <div className="space-y-3">
+            <Label htmlFor="service-name" className="text-sm font-semibold flex items-center gap-2">
+              <User className="w-4 h-4 text-accent" />
+              Full Name
+            </Label>
+            <div className="relative">
+              <Input
+                id="service-name"
+                placeholder="John Doe"
+                value={formData.name}
+                onChange={(e) => onFormChange({ ...formData, name: e.target.value })}
+                required
+                className="h-11 pl-10 bg-background/50 border-border/70 focus:border-accent/50 transition-colors"
+              />
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <Label htmlFor="service-email" className="text-sm font-semibold flex items-center gap-2">
+              <Mail className="w-4 h-4 text-accent" />
+              Company Email
+            </Label>
+            <div className="relative">
+              <Input
+                id="service-email"
+                type="email"
+                placeholder="john@company.com"
+                value={formData.email}
+                onChange={(e) => onFormChange({ ...formData, email: e.target.value })}
+                required
+                className="h-11 pl-10 bg-background/50 border-border/70 focus:border-accent/50 transition-colors"
+              />
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            </div>
+            <p className="text-xs text-muted-foreground bg-muted/30 px-3 py-2 rounded-lg border border-border/30">
+              Please use your company email address for verification purposes.
+            </p>
+          </div>
+
+          <Captcha onVerify={setIsCaptchaVerified} />
+
+          <Button
+            type="submit"
+            className="w-full h-11 bg-gradient-to-r from-accent to-accent/90 hover:from-accent/90 hover:to-accent/80 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={isLoading || !isCaptchaVerified}
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+            {isLoading ? (
+              <div className="flex items-center gap-2 relative z-10">
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <span>Sending Guide...</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 relative z-10">
+                <Download className="w-4 h-4" />
+                <span>Send to Email</span>
+              </div>
+            )}
+          </Button>
+        </form>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+// Custom toast configuration
+const showSuccessToast = () => {
+  toast.success(
+    <div className="flex items-center gap-3">
+      <div className="p-1.5 rounded-full bg-green-500/20 border border-green-500/30">
+        <CheckCircle className="w-4 h-4 text-green-500" />
+      </div>
+      <div className="flex flex-col">
+        <span className="font-semibold text-foreground">Email Sent Successfully!</span>
+        <span className="text-sm text-muted-foreground">Check your inbox for the service guide</span>
+      </div>
+    </div>,
+    {
+      duration: 5000,
+      position: "top-right",
+      style: {
+        background: "hsl(var(--card))",
+        border: "1px solid hsl(var(--border))",
+        borderRadius: "12px",
+        boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+      },
+    }
+  )
+}
+
+const showErrorToast = (message: string) => {
+  toast.error(
+    <div className="flex items-center gap-3">
+      <div className="p-1.5 rounded-full bg-red-500/20 border border-red-500/30">
+        <div className="w-4 h-4 flex items-center justify-center">
+          <span className="text-red-500 font-bold text-sm">!</span>
+        </div>
+      </div>
+      <div className="flex flex-col">
+        <span className="font-semibold text-foreground">Failed to Send Email</span>
+        <span className="text-sm text-muted-foreground">{message}</span>
+      </div>
+    </div>,
+    {
+      duration: 5000,
+      position: "top-right",
+      style: {
+        background: "hsl(var(--card))",
+        border: "1px solid hsl(var(--border))",
+        borderRadius: "12px",
+        boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+      },
+    }
+  )
+}
 
 export function RiskManagementServices() {
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [formData, setFormData] = useState({ name: "", email: "" })
+  const [selectedService, setSelectedService] = useState("")
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
+
+    try {
+      const response = await fetch('/api/risk-management', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...formData, serviceType: selectedService }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        showErrorToast(data.error || 'Failed to send email. Please try again.')
+        setIsLoading(false)
+        return
+      }
+
+      showSuccessToast()
+      setIsDialogOpen(false)
+      setFormData({ name: "", email: "" })
+    } catch (error) {
+      showErrorToast('An unexpected error occurred. Please try again.')
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   const serviceTypes = [
     {
       id: "iso27001",
@@ -96,24 +303,17 @@ export function RiskManagementServices() {
   ]
 
   return (
-    <section className="min-h-screen py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <section className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-background via-muted/20 to-background" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-accent/10 via-transparent to-transparent" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent" />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="text-center mb-20">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-accent/20 mb-6">
-            <Sparkles className="w-4 h-4 text-accent" />
-            <span className="text-sm font-semibold text-accent">
-              Governance & Compliance
-            </span>
-          </div>
-
+        <div className="text-left mb-20">
           <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
             Risk Management
           </h2>
-          <p className="text-xl md:text-2xl text-muted-foreground mx-auto leading-relaxed">
+          <p className="text-xl md:text-lg md:text-justify text-muted-foreground mx-auto leading-relaxed">
             Strong governance and compliance are essential for maintaining trust, meeting regulatory obligations, and ensuring long-term operational stability. Risk Management services help organisations understand where their controls stand, how well policies align with industry requirements, and which areas need improvement. These assessments evaluate people, processes, and technical safeguards to confirm whether the organisation is prepared to meet standards such as ISO, SOC, HIPAA, and GDPR. The insights support clearer decision-making, reduced compliance exposure, and a more structured approach to managing risk across the business.
           </p>
         </div>
@@ -144,16 +344,11 @@ export function RiskManagementServices() {
 
                     {/* Header Section */}
                     <div className="space-y-4">
-                      <div className="inline-flex items-center gap-3 px-4 py-2 rounded-full bg-muted/50 border border-border">
-                        <Icon className="w-5 h-5 text-accent" />
-                        <span className="text-sm font-semibold text-accent">{service.title}</span>
-                      </div>
-
                       <h3 className="text-4xl md:text-5xl font-bold leading-tight">
                         {service.fullTitle}
                       </h3>
 
-                      <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
+                      <p className="text-lg md:text-lg md:text-justify text-muted-foreground leading-relaxed">
                         {service.description}
                       </p>
                     </div>
@@ -171,46 +366,59 @@ export function RiskManagementServices() {
                       ))}
                     </div>
 
-                    {/* Features & Illustration Grid */}
-                    <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center mt-12">
+                    {/* What's Included Grid */}
+                    <div className="space-y-6 pt-10">
+                      <div className="flex items-center gap-2 mb-4">
+                        <CheckCircle className="w-6 h-6 text-accent" />
+                        <h4 className="text-xl font-bold">What's Included</h4>
+                      </div>
 
-                      {/* Left Side: Features */}
-                      <div className="space-y-8">
-                        <div className="space-y-6">
-                          <div className="flex items-center gap-2">
-                            <CheckCircle className="w-6 h-6 text-accent" />
-                            <h4 className="text-xl font-bold">What's Included</h4>
+                      {/* 2-column layout */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
+                        {/* Left column features (F1, F2, F3) */}
+                        {service.features.slice(0, 3).map((feature, index) => (
+                          <div
+                            key={index}
+                            className="flex items-start gap-3 p-4 rounded-xl bg-muted/30 border border-border hover:border-accent/30 transition-all duration-300 hover:translate-x-1 group"
+                          >
+                            <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0 group-hover:scale-125 transition-transform" />
+                            <span className="text-muted-foreground group-hover:text-foreground transition-colors">
+                              {feature}
+                            </span>
                           </div>
+                        ))}
 
-                          <div className="grid grid-cols-1 gap-4">
-                            {service.features.map((feature, index) => (
-                              <div
-                                key={index}
-                                className="flex items-start gap-3 p-4 rounded-xl bg-muted/30 border border-border hover:border-accent/30 transition-all duration-300 hover:translate-x-1 group"
-                              >
-                                <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0 group-hover:scale-125 transition-transform" />
-                                <span className="text-muted-foreground group-hover:text-foreground transition-colors">
-                                  {feature}
-                                </span>
-                              </div>
-                            ))}
+                        {/* Right column features (F4, F5) + Download button */}
+                        {service.features.slice(3).map((feature, index) => (
+                          <div
+                            key={index}
+                            className="flex items-start gap-3 p-4 rounded-xl bg-muted/30 border border-border hover:border-accent/30 transition-all duration-300 hover:translate-x-1 group"
+                          >
+                            <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0 group-hover:scale-125 transition-transform" />
+                            <span className="text-muted-foreground group-hover:text-foreground transition-colors">
+                              {feature}
+                            </span>
+                          </div>
+                        ))}
+
+                        {/* Download PDF button */}
+                        <div className="flex items-start pt-2">
+                          <div onClick={() => setSelectedService(service.title)}>
+                            <ServiceDownloadDialog
+                              isOpen={isDialogOpen && selectedService === service.title}
+                              onOpenChange={(open) => {
+                                setIsDialogOpen(open)
+                                if (!open) setSelectedService("")
+                              }}
+                              formData={formData}
+                              onFormChange={setFormData}
+                              onSubmit={handleSubmit}
+                              isLoading={isLoading}
+                              serviceTitle={service.title}
+                            />
                           </div>
                         </div>
                       </div>
-
-                      {/* Right Side: Illustration */}
-                      <div className="relative lg:order-last order-first">
-                        <div className={`aspect-[4/3] rounded-3xl bg-gradient-to-br ${service.gradient} border border-border overflow-hidden shadow-2xl`}>
-                          <div className="w-full h-full flex items-center justify-center">
-                            <Icon className="w-48 h-48 text-foreground/10" strokeWidth={0.5} />
-                          </div>
-                        </div>
-
-                        {/* Decorative Orbs */}
-                        <div className="absolute -top-6 -right-6 w-32 h-32 bg-accent/20 rounded-full blur-3xl" />
-                        <div className="absolute -bottom-6 -left-6 w-40 h-40 bg-primary/20 rounded-full blur-3xl" />
-                      </div>
-
                     </div>
 
                   </CardContent>

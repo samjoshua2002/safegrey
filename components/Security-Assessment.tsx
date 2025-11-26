@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -9,7 +9,8 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { CheckCircle, Shield, Smartphone, Cloud, Network, Server, ArrowRight, Sparkles, Download, Mail, User } from "lucide-react"
 import { toast } from "sonner"
-import InteractiveTypography from "./InteractiveTypography"
+import { Captcha } from "@/components/ui/captcha"
+
 
 // Download Dialog Component for Security Assessment
 interface SecurityDownloadDialogProps {
@@ -19,35 +20,45 @@ interface SecurityDownloadDialogProps {
   onFormChange: (data: { name: string; email: string }) => void
   onSubmit: (e: React.FormEvent) => void
   isLoading: boolean
+  assessmentTitle: string
 }
 
-function SecurityDownloadDialog({ isOpen, onOpenChange, formData, onFormChange, onSubmit, isLoading }: SecurityDownloadDialogProps) {
+function SecurityDownloadDialog({ isOpen, onOpenChange, formData, onFormChange, onSubmit, isLoading, assessmentTitle }: SecurityDownloadDialogProps) {
+  const [isCaptchaVerified, setIsCaptchaVerified] = useState(false)
+
+  // Reset captcha when dialog closes
+  useEffect(() => {
+    if (!isOpen) {
+      setIsCaptchaVerified(false)
+    }
+  }, [isOpen])
+
   return (
     <Dialog open={isOpen} onOpenChange={onOpenChange}>
       <DialogTrigger asChild>
         <button className="flex items-center gap-2 justify-center text-white px-5 py-3 rounded-lg bg-gradient-to-r from-accent to-accent/90 hover:from-accent/90 hover:to-accent/80 font-semibold text-sm shadow-lg hover:shadow-xl hover:scale-[1.03] transition-all duration-300 group">
           <Download className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
-          Download PDF
+          Download Datasheets
         </button>
       </DialogTrigger>
       <DialogContent className="sm:max-w-md bg-card/80 backdrop-blur-sm border-border/50 shadow-2xl">
         {/* Background gradient effects */}
         <div className="absolute inset-0 bg-gradient-to-br from-background/50 via-card/30 to-accent/5 pointer-events-none rounded-lg" />
-        
+
         <DialogHeader className="relative z-10">
           <div className="flex items-center gap-3 mb-4">
             <div className="p-2 rounded-full bg-accent/10 border border-accent/20">
               <Download className="w-6 h-6 text-accent" />
             </div>
             <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
-              Download Assessment Guide
+              Download {assessmentTitle} Guide
             </DialogTitle>
           </div>
           <DialogDescription className="text-base text-muted-foreground leading-relaxed">
-            Get your comprehensive security assessment guide delivered directly to your inbox.
+            Get your comprehensive {assessmentTitle.toLowerCase()} guide delivered directly to your inbox.
           </DialogDescription>
         </DialogHeader>
-        
+
         <form onSubmit={onSubmit} className="space-y-4 mt-6 relative z-10">
           <div className="space-y-3">
             <Label htmlFor="security-name" className="text-sm font-semibold flex items-center gap-2">
@@ -66,7 +77,7 @@ function SecurityDownloadDialog({ isOpen, onOpenChange, formData, onFormChange, 
               <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             </div>
           </div>
-          
+
           <div className="space-y-3">
             <Label htmlFor="security-email" className="text-sm font-semibold flex items-center gap-2">
               <Mail className="w-4 h-4 text-accent" />
@@ -88,11 +99,13 @@ function SecurityDownloadDialog({ isOpen, onOpenChange, formData, onFormChange, 
               Please use your company email address for verification purposes.
             </p>
           </div>
-          
+
+          <Captcha onVerify={setIsCaptchaVerified} />
+
           <Button
             type="submit"
-            className="w-full h-11 bg-gradient-to-r from-accent to-accent/90 hover:from-accent/90 hover:to-accent/80 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 group relative overflow-hidden"
-            disabled={isLoading}
+            className="w-full h-11 bg-gradient-to-r from-accent to-accent/90 hover:from-accent/90 hover:to-accent/80 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={isLoading || !isCaptchaVerified}
           >
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
             {isLoading ? (
@@ -168,18 +181,19 @@ export function SecurityAssessment() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({ name: "", email: "" })
+  const [selectedAssessment, setSelectedAssessment] = useState("")
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsLoading(true)
 
     try {
-      const response = await fetch('/api/send-security-pdf', {
+      const response = await fetch('/api/security-assessment', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify({ ...formData, assessmentType: selectedAssessment }),
       })
 
       const data = await response.json()
@@ -236,7 +250,7 @@ export function SecurityAssessment() {
         "Abuse-Case Testing",
         "Focus on Real Impact",
         "Practical Remediation Paths"
-      ], 
+      ],
       gradient: "from-accent/20 via-primary/20 to-accent/20"
     },
     {
@@ -315,9 +329,9 @@ export function SecurityAssessment() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-left mb-20">
-         
 
-         <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+
+          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
             Security Assessment
           </h2>
           <p className="text-xl md:text-lg md:text-justify text-muted-foreground mx-auto leading-relaxed">
@@ -350,7 +364,7 @@ export function SecurityAssessment() {
                   <CardContent className="p-8 md:p-12">
                     {/* Header Section */}
                     <div className="space-y-4">
-                  
+
 
                       <h3 className="text-4xl md:text-5xl font-bold leading-tight">
                         {type.fullTitle}
@@ -411,14 +425,20 @@ export function SecurityAssessment() {
 
                         {/* Download PDF button */}
                         <div className="flex items-start pt-2">
-                          <SecurityDownloadDialog
-                            isOpen={isDialogOpen}
-                            onOpenChange={setIsDialogOpen}
-                            formData={formData}
-                            onFormChange={setFormData}
-                            onSubmit={handleSubmit}
-                            isLoading={isLoading}
-                          />
+                          <div onClick={() => setSelectedAssessment(type.title)}>
+                            <SecurityDownloadDialog
+                              isOpen={isDialogOpen && selectedAssessment === type.title}
+                              onOpenChange={(open) => {
+                                setIsDialogOpen(open)
+                                if (!open) setSelectedAssessment("")
+                              }}
+                              formData={formData}
+                              onFormChange={setFormData}
+                              onSubmit={handleSubmit}
+                              isLoading={isLoading}
+                              assessmentTitle={type.title}
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -429,6 +449,6 @@ export function SecurityAssessment() {
           })}
         </Tabs>
       </div>
-    </section>
+    </section >
   )
 }

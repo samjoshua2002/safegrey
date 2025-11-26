@@ -1,9 +1,216 @@
+import { useState, useEffect } from "react"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { CheckCircle, Shield, User, Target, Bug, ArrowRight, Sparkles, Eye, Lock } from "lucide-react"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { CheckCircle, Shield, User, Target, Bug, ArrowRight, Sparkles, Eye, Lock, Download, Mail } from "lucide-react"
+import { toast } from "sonner"
+import { Captcha } from "@/components/ui/captcha"
+
+// Download Dialog Component for Security Posture Assessment
+interface SecurityDownloadDialogProps {
+  isOpen: boolean
+  onOpenChange: (open: boolean) => void
+  formData: { name: string; email: string }
+  onFormChange: (data: { name: string; email: string }) => void
+  onSubmit: (e: React.FormEvent) => void
+  isLoading: boolean
+  assessmentTitle: string
+}
+
+function SecurityDownloadDialog({ isOpen, onOpenChange, formData, onFormChange, onSubmit, isLoading, assessmentTitle }: SecurityDownloadDialogProps) {
+  const [isCaptchaVerified, setIsCaptchaVerified] = useState(false)
+
+  // Reset captcha when dialog closes
+  useEffect(() => {
+    if (!isOpen) {
+      setIsCaptchaVerified(false)
+    }
+  }, [isOpen])
+
+  return (
+    <Dialog open={isOpen} onOpenChange={onOpenChange}>
+      <DialogTrigger asChild>
+        <button className="flex items-center gap-2 justify-center text-white px-5 py-3 rounded-lg bg-gradient-to-r from-accent to-accent/90 hover:from-accent/90 hover:to-accent/80 font-semibold text-sm shadow-lg hover:shadow-xl hover:scale-[1.03] transition-all duration-300 group">
+          <Download className="w-4 h-4 text-white group-hover:scale-110 transition-transform" />
+          Download Datasheets
+        </button>
+      </DialogTrigger>
+      <DialogContent className="sm:max-w-md bg-card/80 backdrop-blur-sm border-border/50 shadow-2xl">
+        {/* Background gradient effects */}
+        <div className="absolute inset-0 bg-gradient-to-br from-background/50 via-card/30 to-accent/5 pointer-events-none rounded-lg" />
+
+        <DialogHeader className="relative z-10">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="p-2 rounded-full bg-accent/10 border border-accent/20">
+              <Download className="w-6 h-6 text-accent" />
+            </div>
+            <DialogTitle className="text-2xl font-bold bg-gradient-to-r from-foreground to-foreground/80 bg-clip-text text-transparent">
+              Download {assessmentTitle} Guide
+            </DialogTitle>
+          </div>
+          <DialogDescription className="text-base text-muted-foreground leading-relaxed">
+            Get your comprehensive {assessmentTitle.toLowerCase()} guide delivered directly to your inbox.
+          </DialogDescription>
+        </DialogHeader>
+
+        <form onSubmit={onSubmit} className="space-y-4 mt-6 relative z-10">
+          <div className="space-y-3">
+            <Label htmlFor="security-name" className="text-sm font-semibold flex items-center gap-2">
+              <User className="w-4 h-4 text-accent" />
+              Full Name
+            </Label>
+            <div className="relative">
+              <Input
+                id="security-name"
+                placeholder="John Doe"
+                value={formData.name}
+                onChange={(e) => onFormChange({ ...formData, name: e.target.value })}
+                required
+                className="h-11 pl-10 bg-background/50 border-border/70 focus:border-accent/50 transition-colors"
+              />
+              <User className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            <Label htmlFor="security-email" className="text-sm font-semibold flex items-center gap-2">
+              <Mail className="w-4 h-4 text-accent" />
+              Company Email
+            </Label>
+            <div className="relative">
+              <Input
+                id="security-email"
+                type="email"
+                placeholder="john@company.com"
+                value={formData.email}
+                onChange={(e) => onFormChange({ ...formData, email: e.target.value })}
+                required
+                className="h-11 pl-10 bg-background/50 border-border/70 focus:border-accent/50 transition-colors"
+              />
+              <Mail className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            </div>
+            <p className="text-xs text-muted-foreground bg-muted/30 px-3 py-2 rounded-lg border border-border/30">
+              Please use your company email address for verification purposes.
+            </p>
+          </div>
+
+          <Captcha onVerify={setIsCaptchaVerified} />
+
+          <Button
+            type="submit"
+            className="w-full h-11 bg-gradient-to-r from-accent to-accent/90 hover:from-accent/90 hover:to-accent/80 text-white font-semibold shadow-lg hover:shadow-xl transition-all duration-300 group relative overflow-hidden disabled:opacity-50 disabled:cursor-not-allowed"
+            disabled={isLoading || !isCaptchaVerified}
+          >
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
+            {isLoading ? (
+              <div className="flex items-center gap-2 relative z-10">
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                <span>Sending Guide...</span>
+              </div>
+            ) : (
+              <div className="flex items-center gap-2 relative z-10">
+                <Download className="w-4 h-4" />
+                <span>Send to Email</span>
+              </div>
+            )}
+          </Button>
+        </form>
+      </DialogContent>
+    </Dialog>
+  )
+}
+
+// Custom toast configuration
+const showSuccessToast = () => {
+  toast.success(
+    <div className="flex items-center gap-3">
+      <div className="p-1.5 rounded-full bg-green-500/20 border border-green-500/30">
+        <CheckCircle className="w-4 h-4 text-green-500" />
+      </div>
+      <div className="flex flex-col">
+        <span className="font-semibold text-foreground">Email Sent Successfully!</span>
+        <span className="text-sm text-muted-foreground">Check your inbox for the assessment guide</span>
+      </div>
+    </div>,
+    {
+      duration: 5000,
+      position: "top-right",
+      style: {
+        background: "hsl(var(--card))",
+        border: "1px solid hsl(var(--border))",
+        borderRadius: "12px",
+        boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+      },
+    }
+  )
+}
+
+const showErrorToast = (message: string) => {
+  toast.error(
+    <div className="flex items-center gap-3">
+      <div className="p-1.5 rounded-full bg-red-500/20 border border-red-500/30">
+        <div className="w-4 h-4 flex items-center justify-center">
+          <span className="text-red-500 font-bold text-sm">!</span>
+        </div>
+      </div>
+      <div className="flex flex-col">
+        <span className="font-semibold text-foreground">Failed to Send Email</span>
+        <span className="text-sm text-muted-foreground">{message}</span>
+      </div>
+    </div>,
+    {
+      duration: 5000,
+      position: "top-right",
+      style: {
+        background: "hsl(var(--card))",
+        border: "1px solid hsl(var(--border))",
+        borderRadius: "12px",
+        boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
+      },
+    }
+  )
+}
 
 
 export function SecurityPostureAssessment() {
+  const [isDialogOpen, setIsDialogOpen] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [formData, setFormData] = useState({ name: "", email: "" })
+  const [selectedAssessment, setSelectedAssessment] = useState("")
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault()
+    setIsLoading(true)
+
+    try {
+      const response = await fetch('/api/security-posture-assessment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...formData, assessmentType: selectedAssessment }),
+      })
+
+      const data = await response.json()
+
+      if (!response.ok) {
+        showErrorToast(data.error || 'Failed to send email. Please try again.')
+        setIsLoading(false)
+        return
+      }
+
+      showSuccessToast()
+      setIsDialogOpen(false)
+      setFormData({ name: "", email: "" })
+    } catch (error) {
+      showErrorToast('An unexpected error occurred. Please try again.')
+    } finally {
+      setIsLoading(false)
+    }
+  }
   const assessmentTypes = [
     {
       id: "phishing-campaign",
@@ -12,19 +219,19 @@ export function SecurityPostureAssessment() {
       icon: User,
       description: "Phishing remains one of the most effective entry points for attackers, exploiting human behaviour rather than technical flaws. This assessment measures how employees react to deceptive emails, links, and requests crafted to mirror real attack patterns. The campaign helps identify behavioural gaps, high-risk user groups, and weaknesses in internal awareness. The insights provide a clear direction for improving training, reducing exposure, and strengthening organisational readiness against social engineering threats.",
       features: [
-  "Deployment of tailored phishing scenarios based on industry relevance",
-  "Measurement of click-through, credential submission & reporting behaviour",
-  "Identification of high-risk users and recurring patterns",
-  "Analysis of user responses, escalation choices & awareness gaps",
-  "Reporting with targeted training and mitigation recommendations"
-],
+        "Deployment of tailored phishing scenarios based on industry relevance",
+        "Measurement of click-through, credential submission & reporting behaviour",
+        "Identification of high-risk users and recurring patterns",
+        "Analysis of user responses, escalation choices & awareness gaps",
+        "Reporting with targeted training and mitigation recommendations"
+      ],
       highlights: [
-  "Behaviour-Focused Assessment",
-  "Realistic and Customised Scenarios",
-  "Clear User Risk Segmentation",
-  
-  "Actionable Awareness Improvements"
-],
+        "Behaviour-Focused Assessment",
+        "Realistic and Customised Scenarios",
+        "Clear User Risk Segmentation",
+
+        "Actionable Awareness Improvements"
+      ],
       gradient: "from-accent/20 via-primary/20 to-accent/20"
     },
     {
@@ -34,22 +241,22 @@ export function SecurityPostureAssessment() {
       icon: Eye,
       description: "Physical access often becomes the quickest path to sensitive systems when entry controls are weak or inconsistently enforced. The Mystery Guest assessment evaluates how easily an unauthorised individual can navigate your workplace, interact with staff, or access restricted areas without raising suspicion. This exercise highlights gaps in visitor management, badge enforcement, staff awareness, and on-ground security procedures. The results provide clarity on how well your organisation can detect and deter physical intrusion attempts.",
       features: [
-       
-  "Covert entry attempts aligned with approved scope and safety guidelines",
-  "Evaluation of badge checks, reception workflows, and tailgating exposure",
-  "Observation of staff reactions, escalation responses, and trust behaviours",
-  "Review of physical access controls, signage, and monitoring coverage",
-  "Reporting with actionable recommendations to strengthen on-site security"
 
-        
+        "Covert entry attempts aligned with approved scope and safety guidelines",
+        "Evaluation of badge checks, reception workflows, and tailgating exposure",
+        "Observation of staff reactions, escalation responses, and trust behaviours",
+        "Review of physical access controls, signage, and monitoring coverage",
+        "Reporting with actionable recommendations to strengthen on-site security"
+
+
       ],
-     highlights: [
-  " On-Site Intrusion Simulation",
-  "Staff Awareness & Response Evaluation",
-  
-  "Clear Findings with Operational Impact",
-  "Practical Physical Security Enhancements"
-],
+      highlights: [
+        " On-Site Intrusion Simulation",
+        "Staff Awareness & Response Evaluation",
+
+        "Clear Findings with Operational Impact",
+        "Practical Physical Security Enhancements"
+      ],
       gradient: "from-accent/20 via-primary/20 to-accent/20"
     },
     {
@@ -58,20 +265,20 @@ export function SecurityPostureAssessment() {
       fullTitle: "Assumed Breach ",
       icon: Bug,
       description: "Assumed Breach assessments begin with the premise that an attacker has already gained a foothold inside your environment. Instead of proving entry, the focus shifts to what an intruder can do next, how far they can move, what they can access, and how quickly they can escalate privileges. This approach reveals the true impact of a compromised user, system, or endpoint. The outcome gives security teams a realistic view of internal exposure and the concrete steps needed to limit movement, contain threats, and strengthen detection across the organisation.",
-     features: [
-  "Evaluation of internal access from a controlled initial foothold",
-  "Identification of escalation paths, credential exposure, and reachable assets",
-  "Analysis of segmentation gaps, trust relationships & monitoring blind spots",
-  "Testing of defensive controls, alerts, and containment capabilities",
-  "Comprehensive reporting focused on reducing internal risk and impact"
-],
+      features: [
+        "Evaluation of internal access from a controlled initial foothold",
+        "Identification of escalation paths, credential exposure, and reachable assets",
+        "Analysis of segmentation gaps, trust relationships & monitoring blind spots",
+        "Testing of defensive controls, alerts, and containment capabilities",
+        "Comprehensive reporting focused on reducing internal risk and impact"
+      ],
       highlights: [
-  " Post-Compromise Exploration",
-  "Lateral Movement & Privilege Path Mapping",
-  "Clear Visibility into Internal Exposure",
-  
-  "Prioritised Hardening Guidance"
-],
+        " Post-Compromise Exploration",
+        "Lateral Movement & Privilege Path Mapping",
+        "Clear Visibility into Internal Exposure",
+
+        "Prioritised Hardening Guidance"
+      ],
       gradient: "from-accent/20 via-primary/20 to-accent/20"
     },
     {
@@ -80,21 +287,21 @@ export function SecurityPostureAssessment() {
       fullTitle: "Traditional Red Team ",
       icon: Target,
       description: "FA Traditional Red Team engagement emulates the tactics and objectives of a focused adversary targeting your organisation. Instead of checking individual components, it evaluates how well people, processes, and technology work together to prevent, detect, and respond to a coordinated attack. The assessment uncovers weaknesses across digital, physical, and human layers, highlighting how an attacker could achieve meaningful impact. The results provide leadership with a realistic view of organisational readiness and the improvements needed to strengthen overall defence capability.",
-     highlights: [
-  "Full-Scope Adversary Simulation",
-  "Multi-Layer Attack Chain Exploration",
-  "Realistic Objective-Based Scenarios",
-  "Clear Strengths & Weakness Mapping",
-  
-],
+      highlights: [
+        "Full-Scope Adversary Simulation",
+        "Multi-Layer Attack Chain Exploration",
+        "Realistic Objective-Based Scenarios",
+        "Clear Strengths & Weakness Mapping",
 
-features: [
-  "Planning and execution of tailored threat scenarios",
-  "Testing across initial access, privilege abuse, persistence & objective pursuit",
-  "Evaluation of monitoring effectiveness and response workflows",
-  "Identification of control gaps across infrastructure, identity & user behaviour",
-  "Comprehensive reporting with strategic and technical recommendations"
-],
+      ],
+
+      features: [
+        "Planning and execution of tailored threat scenarios",
+        "Testing across initial access, privilege abuse, persistence & objective pursuit",
+        "Evaluation of monitoring effectiveness and response workflows",
+        "Identification of control gaps across infrastructure, identity & user behaviour",
+        "Comprehensive reporting with strategic and technical recommendations"
+      ],
       gradient: "from-accent/20 via-primary/20 to-accent/20"
     }
   ]
@@ -107,13 +314,13 @@ features: [
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-left mb-20">
-        
 
-            <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+
+          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
             Security Posture Assessment
           </h2>
-        <p className="text-xl md:text-lg md:text-justify text-muted-foreground mx-auto leading-relaxed">
-         Understanding how your organisation responds to threats requires more than technical testing. It demands insight into behaviour, processes, and real-world preparedness. Security Posture Assessments reveal how well teams, controls, and systems hold up when faced with targeted attacks or deceptive scenarios. These assessments expose gaps in response workflows, monitoring effectiveness, and internal security awareness. The outcome is a clear picture of your organisation’s current readiness and practical steps to strengthen detection, decision-making, and overall security maturity.
+          <p className="text-xl md:text-lg md:text-justify text-muted-foreground mx-auto leading-relaxed">
+            Understanding how your organisation responds to threats requires more than technical testing. It demands insight into behaviour, processes, and real-world preparedness. Security Posture Assessments reveal how well teams, controls, and systems hold up when faced with targeted attacks or deceptive scenarios. These assessments expose gaps in response workflows, monitoring effectiveness, and internal security awareness. The outcome is a clear picture of your organisation’s current readiness and practical steps to strengthen detection, decision-making, and overall security maturity.
 
           </p>
         </div>
@@ -138,79 +345,92 @@ features: [
           {assessmentTypes.map((type) => {
             const Icon = type.icon
             return (
-               <TabsContent key={type.id} value={type.id} className="mt-0">
-                              <Card className="border-0 shadow-2xl bg-card/50 backdrop-blur-sm overflow-hidden">
-                                <CardContent className="p-8 md:p-12">
-                                  {/* Header Section */}
-                                  <div className="space-y-4">
-                                
-              
-                                    <h3 className="text-4xl md:text-5xl font-bold leading-tight">
-                                      {type.fullTitle}
-                                    </h3>
-              
-                                    <p className="text-lg md:text-lg md:text-justify text-muted-foreground leading-relaxed">
-                                      {type.description}
-                                    </p>
-                                  </div>
-              
-                                  {/* Highlights */}
-                                  <div className="flex flex-wrap gap-3 mt-6">
-                                    {type.highlights.map((highlight, index) => (
-                                      <div
-                                        key={index}
-                                        className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-accent/10 border border-accent/20 hover:border-accent/40 transition-all duration-300 hover:scale-105"
-                                      >
-                                        <div className="w-1.5 h-1.5 rounded-full bg-accent" />
-                                        <span className="text-sm font-semibold">{highlight}</span>
-                                      </div>
-                                    ))}
-                                  </div>
-              
-                                  {/* What's Included Grid */}
-                                  <div className="space-y-6 pt-10">
-                                    <div className="flex items-center gap-2 mb-4">
-                                      <CheckCircle className="w-6 h-6 text-accent" />
-                                      <h4 className="text-xl font-bold">What's Included</h4>
-                                    </div>
-              
-                                    {/* 2-column layout */}
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
-                                      {/* Left column features (F1, F2, F3) */}
-                                      {type.features.slice(0, 3).map((feature, index) => (
-                                        <div
-                                          key={index}
-                                          className="flex items-start gap-3 p-4 rounded-xl bg-muted/30 border border-border hover:border-accent/30 transition-all duration-300 hover:translate-x-1 group"
-                                        >
-                                          <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0 group-hover:scale-125 transition-transform" />
-                                          <span className="text-muted-foreground group-hover:text-foreground transition-colors">
-                                            {feature}
-                                          </span>
-                                        </div>
-                                      ))}
-              
-                                      {/* Right column features (F4, F5) + Download button */}
-                                      {type.features.slice(3).map((feature, index) => (
-                                        <div
-                                          key={index}
-                                          className="flex items-start gap-3 p-4 rounded-xl bg-muted/30 border border-border hover:border-accent/30 transition-all duration-300 hover:translate-x-1 group"
-                                        >
-                                          <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0 group-hover:scale-125 transition-transform" />
-                                          <span className="text-muted-foreground group-hover:text-foreground transition-colors">
-                                            {feature}
-                                          </span>
-                                        </div>
-                                      ))}
-              
-                                      {/* Download PDF button */}
-                                      <div className="flex items-start pt-2">
-                                        
-                                      </div>
-                                    </div>
-                                  </div>
-                                </CardContent>
-                              </Card>
-                            </TabsContent>
+              <TabsContent key={type.id} value={type.id} className="mt-0">
+                <Card className="border-0 shadow-2xl bg-card/50 backdrop-blur-sm overflow-hidden">
+                  <CardContent className="p-8 md:p-12">
+                    {/* Header Section */}
+                    <div className="space-y-4">
+
+
+                      <h3 className="text-4xl md:text-5xl font-bold leading-tight">
+                        {type.fullTitle}
+                      </h3>
+
+                      <p className="text-lg md:text-lg md:text-justify text-muted-foreground leading-relaxed">
+                        {type.description}
+                      </p>
+                    </div>
+
+                    {/* Highlights */}
+                    <div className="flex flex-wrap gap-3 mt-6">
+                      {type.highlights.map((highlight, index) => (
+                        <div
+                          key={index}
+                          className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-accent/10 border border-accent/20 hover:border-accent/40 transition-all duration-300 hover:scale-105"
+                        >
+                          <div className="w-1.5 h-1.5 rounded-full bg-accent" />
+                          <span className="text-sm font-semibold">{highlight}</span>
+                        </div>
+                      ))}
+                    </div>
+
+                    {/* What's Included Grid */}
+                    <div className="space-y-6 pt-10">
+                      <div className="flex items-center gap-2 mb-4">
+                        <CheckCircle className="w-6 h-6 text-accent" />
+                        <h4 className="text-xl font-bold">What's Included</h4>
+                      </div>
+
+                      {/* 2-column layout */}
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 items-start">
+                        {/* Left column features (F1, F2, F3) */}
+                        {type.features.slice(0, 3).map((feature, index) => (
+                          <div
+                            key={index}
+                            className="flex items-start gap-3 p-4 rounded-xl bg-muted/30 border border-border hover:border-accent/30 transition-all duration-300 hover:translate-x-1 group"
+                          >
+                            <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0 group-hover:scale-125 transition-transform" />
+                            <span className="text-muted-foreground group-hover:text-foreground transition-colors">
+                              {feature}
+                            </span>
+                          </div>
+                        ))}
+
+                        {/* Right column features (F4, F5) + Download button */}
+                        {type.features.slice(3).map((feature, index) => (
+                          <div
+                            key={index}
+                            className="flex items-start gap-3 p-4 rounded-xl bg-muted/30 border border-border hover:border-accent/30 transition-all duration-300 hover:translate-x-1 group"
+                          >
+                            <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0 group-hover:scale-125 transition-transform" />
+                            <span className="text-muted-foreground group-hover:text-foreground transition-colors">
+                              {feature}
+                            </span>
+                          </div>
+                        ))}
+
+                        {/* Download PDF button */}
+                        <div className="flex items-start pt-2">
+                          <div onClick={() => setSelectedAssessment(type.title)}>
+                            <SecurityDownloadDialog
+                              isOpen={isDialogOpen && selectedAssessment === type.title}
+                              onOpenChange={(open) => {
+                                setIsDialogOpen(open)
+                                if (!open) setSelectedAssessment("")
+                              }}
+                              formData={formData}
+                              onFormChange={setFormData}
+                              onSubmit={handleSubmit}
+                              isLoading={isLoading}
+                              assessmentTitle={type.title}
+                            />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </TabsContent>
             )
           })}
         </Tabs>

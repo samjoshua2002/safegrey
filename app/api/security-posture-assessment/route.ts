@@ -5,7 +5,6 @@ import path from 'path';
 
 // Personal email domains to block
 const PERSONAL_EMAIL_DOMAINS = [
-   
     'yahoo.com',
     'outlook.com',
     'hotmail.com',
@@ -22,14 +21,14 @@ function isPersonalEmail(email: string): boolean {
     return PERSONAL_EMAIL_DOMAINS.includes(domain);
 }
 
-function getEmailTemplate(name: string): string {
+function getEmailTemplate(name: string, assessmentType: string): string {
     return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Security Posture Assessment - SafeGrey</title>
+  <title>${assessmentType} - SafeGrey</title>
 </head>
 <body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #f5f5f5;">
   <table role="presentation" style="width: 100%; border-collapse: collapse; background-color: #f5f5f5;">
@@ -39,12 +38,12 @@ function getEmailTemplate(name: string): string {
           
           <!-- Header with gradient -->
           <tr>
-            <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 30px; text-align: center; border-radius: 16px 16px 0 0;">
+            <td style="background: linear-gradient(135deg, #3a3f47ff 0%, #df1010ff 100%); padding: 40px 30px; text-align: center; border-radius: 16px 16px 0 0;">
               <h1 style="margin: 0; color: #ffffff; font-size: 32px; font-weight: 700; letter-spacing: -0.5px;">
                 SafeGrey
               </h1>
               <p style="margin: 10px 0 0 0; color: rgba(255, 255, 255, 0.9); font-size: 16px;">
-                Security Posture Assessment
+                Security Assessment Services
               </p>
             </td>
           </tr>
@@ -53,13 +52,13 @@ function getEmailTemplate(name: string): string {
           <tr>
             <td style="padding: 40px 30px;">
               <h2 style="margin: 0 0 20px 0; color: #1a1a1a; font-size: 24px; font-weight: 600;">
-                Welcome, ${name}! 👋
+                Hello, ${name}! 🛡️
               </h2>
               <p style="margin: 0 0 16px 0; color: #4a5568; font-size: 16px; line-height: 1.6;">
-                Thank you for your interest in our Security Posture Assessment services. We're excited to help you strengthen your organization's security posture.
+                Thank you for your interest in our comprehensive ${assessmentType} services. We're committed to helping you identify and address vulnerabilities across your digital infrastructure.
               </p>
               <p style="margin: 0 0 16px 0; color: #4a5568; font-size: 16px; line-height: 1.6;">
-                As requested, we've attached a comprehensive overview of our assessment methodologies and approach. This document will give you detailed insights into:
+                We've attached a detailed guide covering our assessment methodologies:
               </p>
               
               <!-- Features List -->
@@ -69,12 +68,12 @@ function getEmailTemplate(name: string): string {
                     <table role="presentation">
                       <tr>
                         <td style="padding-right: 12px; vertical-align: top;">
-                          <div style="width: 24px; height: 24px; background-color: #667eea; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                          <div style="width: 24px; height: 24px; background-color: #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                             <span style="color: #ffffff; font-size: 14px; font-weight: bold;">✓</span>
                           </div>
                         </td>
                         <td style="color: #4a5568; font-size: 15px; line-height: 1.5;">
-                          Phishing Campaign Simulations
+                          Phishing Campaign Assessment
                         </td>
                       </tr>
                     </table>
@@ -85,12 +84,12 @@ function getEmailTemplate(name: string): string {
                     <table role="presentation">
                       <tr>
                         <td style="padding-right: 12px; vertical-align: top;">
-                          <div style="width: 24px; height: 24px; background-color: #667eea; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                          <div style="width: 24px; height: 24px; background-color: #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                             <span style="color: #ffffff; font-size: 14px; font-weight: bold;">✓</span>
                           </div>
                         </td>
                         <td style="color: #4a5568; font-size: 15px; line-height: 1.5;">
-                          Mystery Guest Physical Security Testing
+                          Mystery Guest (Physical Security)
                         </td>
                       </tr>
                     </table>
@@ -101,12 +100,12 @@ function getEmailTemplate(name: string): string {
                     <table role="presentation">
                       <tr>
                         <td style="padding-right: 12px; vertical-align: top;">
-                          <div style="width: 24px; height: 24px; background-color: #667eea; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                          <div style="width: 24px; height: 24px; background-color: #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                             <span style="color: #ffffff; font-size: 14px; font-weight: bold;">✓</span>
                           </div>
                         </td>
                         <td style="color: #4a5568; font-size: 15px; line-height: 1.5;">
-                          Assumed Breach Assessments
+                          Assumed Breach Assessment
                         </td>
                       </tr>
                     </table>
@@ -117,12 +116,12 @@ function getEmailTemplate(name: string): string {
                     <table role="presentation">
                       <tr>
                         <td style="padding-right: 12px; vertical-align: top;">
-                          <div style="width: 24px; height: 24px; background-color: #667eea; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                          <div style="width: 24px; height: 24px; background-color: #3b82f6; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
                             <span style="color: #ffffff; font-size: 14px; font-weight: bold;">✓</span>
                           </div>
                         </td>
                         <td style="color: #4a5568; font-size: 15px; line-height: 1.5;">
-                          Traditional Red Team Operations
+                          Traditional Red Team Assessment
                         </td>
                       </tr>
                     </table>
@@ -131,7 +130,7 @@ function getEmailTemplate(name: string): string {
               </table>
 
               <p style="margin: 20px 0 0 0; color: #4a5568; font-size: 16px; line-height: 1.6;">
-                Please find the detailed assessment guide attached to this email.
+                The attached guide provides comprehensive details on our approach, methodology, and deliverables.
               </p>
             </td>
           </tr>
@@ -141,9 +140,9 @@ function getEmailTemplate(name: string): string {
             <td style="padding: 0 30px 40px 30px; text-align: center;">
               <table role="presentation" style="margin: 0 auto;">
                 <tr>
-                  <td style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 8px; padding: 16px 32px;">
+                  <td style="background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%); border-radius: 8px; padding: 16px 32px;">
                     <a href="mailto:contact@safegrey.com" style="color: #ffffff; text-decoration: none; font-size: 16px; font-weight: 600; display: inline-block;">
-                      Get in Touch
+                      Schedule a Consultation
                     </a>
                   </td>
                 </tr>
@@ -165,7 +164,7 @@ function getEmailTemplate(name: string): string {
                 <strong style="color: #4a5568;">SafeGrey</strong>
               </p>
               <p style="margin: 0 0 4px 0; color: #718096; font-size: 13px;">
-                Advanced Security Testing & Assessment
+                Expert-Led Security Assessment Services
               </p>
               <p style="margin: 0; color: #a0aec0; font-size: 12px;">
                 © ${new Date().getFullYear()} SafeGrey. All rights reserved.
@@ -185,12 +184,12 @@ function getEmailTemplate(name: string): string {
 export async function POST(request: NextRequest) {
     try {
         const body = await request.json();
-        const { name, email } = body;
+        const { name, email, assessmentType } = body;
 
         // Validate inputs
-        if (!name || !email) {
+        if (!name || !email || !assessmentType) {
             return NextResponse.json(
-                { error: 'Name and email are required' },
+                { error: 'Name, email, and assessment type are required' },
                 { status: 400 }
             );
         }
@@ -222,7 +221,8 @@ export async function POST(request: NextRequest) {
         });
 
         // Get PDF path
-        const pdfPath = path.join(process.cwd(), 'public', 'dummy.pdf');
+        const pdfFilename = `${assessmentType}.pdf`;
+        const pdfPath = path.join(process.cwd(), 'public', 'security-posture-assessment', pdfFilename);
 
         // Check if PDF exists
         if (!fs.existsSync(pdfPath)) {
@@ -239,11 +239,11 @@ export async function POST(request: NextRequest) {
                 address: process.env.EMAIL_USER!,
             },
             to: email,
-            subject: 'Security Posture Assessment Guide - SafeGrey',
-            html: getEmailTemplate(name),
+            subject: `${assessmentType} Guide - SafeGrey`,
+            html: getEmailTemplate(name, assessmentType),
             attachments: [
                 {
-                    filename: 'Security-Posture-Assessment-Guide.pdf',
+                    filename: pdfFilename,
                     path: pdfPath,
                 },
             ],
