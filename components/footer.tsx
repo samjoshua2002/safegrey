@@ -40,11 +40,13 @@ export function Footer() {
               </div>
               <div className="flex items-center text-sm text-[var(--theme-text-secondary)]">
                 <Phone className="w-4 h-4 mr-2 text-[var(--theme-accent)]" />
-                1-800-SAFEGREY
+                +91 7540081007
               </div>
               <div className="flex items-center text-sm text-[var(--theme-text-secondary)]">
                 <MapPin className="w-4 h-4 mr-2 text-[var(--theme-accent)]" />
-                San Francisco, CA
+                No. 50 & 51, TEJA RESIDENCY - 1, <br /> COCONUT GARDEN,
+KODIGEHALLI MAIN ROAD, <br />AYYAPPA NAGAR,
+K.R PURAM, <br /> BANGALORE - 560036
               </div>
             </div>
           </div>

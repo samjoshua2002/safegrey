@@ -72,22 +72,58 @@ export default function ServicesPage() {
       <div ref={securityAssessmentRef}>
         <SecurityAssessment />
       </div>
+            <div
+            className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent mt-20"
+            style={{
+              background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
+            }}
+          />
       
       <div ref={postureAssessmentRef}>
        <SecurityPostureAssessment/>
       </div>
+       <div
+            className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent mt-20"
+            style={{
+              background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
+            }}
+          />
        <div ref={CloudAssessmentRef}>
        <CloudSecurityAssessment/>
       </div>
+       <div
+            className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent mt-20"
+            style={{
+              background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
+            }}
+          />
       <div ref={ManangeSecurityRef}>
        <ManagedSecurityServices/>
       </div>
+       <div
+            className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent mt-20"
+            style={{
+              background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
+            }}
+          />
       <div ref={RiskManagementRef}>
        <RiskManagementServices/>
       </div>
+       <div
+            className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent mt-20"
+            style={{
+              background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
+            }}
+          />
       <div ref={SecurityEnablementRef}>
        <SecurityEnablementServices/>
       </div>
+       <div
+            className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent mt-20"
+            style={{
+              background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
+            }}
+          />
       
       <Footer />
     </main>
