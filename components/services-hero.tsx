@@ -76,7 +76,7 @@ export function ServicesHero({ onServiceSelect }: ServicesHeroProps) {
            
 
    
-            {/* <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
+            <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
             
               
               <span className="text-white">Cybersecurity Services</span>
@@ -88,7 +88,7 @@ export function ServicesHero({ onServiceSelect }: ServicesHeroProps) {
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
               From proactive threat hunting to rapid incident response, we provide comprehensive cybersecurity solutions
               tailored to your business needs.
-            </p> */}
+            </p>
           </div>
 
           {/* Services Navigation Tabs */}

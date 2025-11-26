@@ -67,19 +67,26 @@ export default function ServicesPage() {
   return (
     <main className="min-h-screen">
       <Navigation />
+      
       <ServicesHero onServiceSelect={handleServiceSelect} />
-
-      <div ref={securityAssessmentRef} className="scroll-mt-32">
-        <SecurityAssessment />
-      </div>
-      <div
+       <div
         className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent mt-20"
         style={{
           background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
         }}
       />
 
-      <div ref={postureAssessmentRef} className="scroll-mt-32 ">
+      <div ref={securityAssessmentRef} className="scroll-mt-32">
+        <SecurityAssessment />
+      </div>
+    <div
+        className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent mt-20"
+        style={{
+          background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
+        }}
+      />
+
+      <div ref={postureAssessmentRef} className="scroll-mt-32  ">
         <SecurityPostureAssessment />
       </div>
       <div
@@ -89,7 +96,7 @@ export default function ServicesPage() {
         }}
       />
 
-      <div ref={CloudAssessmentRef} className="mt-10 scroll-mt-32">
+      <div ref={CloudAssessmentRef} className="scroll-mt-32">
         <CloudSecurityAssessment />
       </div>
       <div

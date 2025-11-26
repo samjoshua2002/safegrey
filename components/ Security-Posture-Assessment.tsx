@@ -250,13 +250,12 @@ export function SecurityPostureAssessment() {
 
 
       ],
-      highlights: [
-        " On-Site Intrusion Simulation",
-        "Staff Awareness & Response Evaluation",
-
-        "Clear Findings with Operational Impact",
-        "Practical Physical Security Enhancements"
-      ],
+   highlights: [
+  "On-Site Intrusion Simulation",
+  "Staff Response Evaluation",  // Removed "Awareness &"
+  "Findings with Operational Impact",  // Removed "Clear"
+  "Practical Physical Security Enhancements"
+],
       gradient: "from-accent/20 via-primary/20 to-accent/20"
     },
     {
@@ -307,7 +306,7 @@ export function SecurityPostureAssessment() {
   ]
 
   return (
-    <section className="min-h-screen py-24 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+    <section className="min-h-screen py-10 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
       <div className="absolute inset-0 bg-gradient-to-br from-background via-muted/20 to-background" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-accent/10 via-transparent to-transparent" />
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent" />
