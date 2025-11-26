@@ -228,8 +228,8 @@ export function CloudSecurityAssessment() {
       features: [
         "Assessment of IAM roles, policies, and trust relationships",
         "Review of storage permissions, encryption controls, and data access paths",
-        "Evaluation of network configurations, security groups, and public-facing assets",
-        "Inspection of logging, monitoring, and alerting coverage across cloud services",
+        "Evaluation of network configurations, security groups & public-facing assets",
+        "Inspection of logging, monitoring & alerting coverage across cloud services",
         "Reporting with structured guidance aligned to cloud security best practices"
       ],
       gradient: "from-accent/20 via-primary/20 to-accent/20"
@@ -251,7 +251,7 @@ export function CloudSecurityAssessment() {
       features: [
         "Review of container images, base layers, and dependency risks",
         "Evaluation of runtime controls, isolation boundaries, and privilege levels",
-        "Assessment of secrets handling, environment variables, and storage practices",
+        "Assessment of secrets handling, environment variables & storage practices",
         "Analysis of network exposure, communication paths, and service interaction",
         "Reporting with structured steps to strengthen container deployments"
       ],
@@ -272,11 +272,11 @@ export function CloudSecurityAssessment() {
       ],
 
       features: [
-        "Review of cluster configuration, control plane security, and namespace structure",
+        "Review of cluster configuration, control plane  & namespace structure",
         "Analysis of RBAC roles, permissions, and identity bindings",
         "Evaluation of network policies, service exposure, and traffic flows",
         "Inspection of pod security, workload behaviour, and privilege settings",
-        "Reporting with practical guidance aligned to Kubernetes hardening best practices"
+        "Actionable reports following Kubernetes hardening guidelines"
       ],
       gradient: "from-accent/20 via-primary/20 to-accent/20"
     },

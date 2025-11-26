@@ -274,8 +274,8 @@ export function ManagedSecurityServices() {
       ],
 
       features: [
-        "Execution of curated attacker techniques mapped to frameworks like MITRE ATT&CK",
-        "Joint analysis of detection coverage, alert behaviour, and response workflow",
+        "Execution of curated attacker techniques mapped to frameworks",
+        "Joint analysis of detection coverage, alert behaviour & response workflow",
         "Identification of monitoring gaps and tuning opportunities",
         "Hands-on improvement sessions for SOC and defensive teams",
         "Detailed reporting with validated controls and targeted enhancements"

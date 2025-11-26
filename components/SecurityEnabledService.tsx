@@ -272,7 +272,7 @@ export function SecurityEnablementServices() {
       features: [
         "Cloud-based generator for EXE, DLL, and packaged output formats",
         "Options to apply trusted signing profiles or self-generated signatures",
-        "Built-in countermeasures against debugging, sandboxing, and analysis tools",
+        "Built-in countermeasures against debugging, sandboxing & analysis tools",
         "Target-scoped execution controls to limit accidental exposure",
         "Evolutionary evasion techniques refined through ongoing research"
       ],

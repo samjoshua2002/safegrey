@@ -251,8 +251,8 @@ export function RiskManagementServices() {
         "Evaluation of PHI handling, storage, and access procedures",
         "Review of administrative, technical, and physical safeguards",
         "Gap analysis aligned with HIPAA Security & Privacy Rules",
-        "Recommendations for policies, controls, and documentation improvements",
-        "Support for remediation planning and compliance readiness"
+        "Recommendations for policies, controls & documentation improvements",
+        "Support for remediation planning & compliance readiness"
       ],
       gradient: "from-accent/20 via-primary/20 to-accent/20"
     },
@@ -272,8 +272,8 @@ export function RiskManagementServices() {
       features: [
         "Review of data collection, processing activities, and retention practices",
         "Gap analysis aligned with GDPR principles and legal requirements",
-        "Evaluation of consent handling, subject rights workflows, and security controls",
-        "Recommendations for policy updates, documentation, and governance processes",
+        "Evaluation of consent handling, subject rights workflows & security controls",
+        "Recommendations for policy updates & governance processes",
         "Support for building a sustainable privacy and compliance framework"
       ],
       gradient: "from-accent/20 via-primary/20 to-accent/20"

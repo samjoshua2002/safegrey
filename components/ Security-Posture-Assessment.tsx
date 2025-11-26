@@ -250,13 +250,12 @@ export function SecurityPostureAssessment() {
 
 
       ],
-      highlights: [
-        " On-Site Intrusion Simulation",
-        "Staff Awareness & Response Evaluation",
-
-        "Clear Findings with Operational Impact",
-        "Practical Physical Security Enhancements"
-      ],
+   highlights: [
+  "On-Site Intrusion Simulation",
+  "Staff Response Evaluation",  // Removed "Awareness &"
+  "Findings with Operational Impact",  // Removed "Clear"
+  "Practical Physical Security Enhancements"
+],
       gradient: "from-accent/20 via-primary/20 to-accent/20"
     },
     {
