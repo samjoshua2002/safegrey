@@ -38,181 +38,174 @@ export default function EcosystemSection() {
   const [active, setActive] = React.useState<TabKey>("protect");
   const [paused, setPaused] = React.useState(false);
 
+  // At the top of your component
+  const progressValues = useRef(TABS.map(() => motionValue(0)));
+  const controlsArray = useRef(TABS.map(() => useAnimationControls()));
 
+  React.useEffect(() => {
+    if (paused) return;
 
-// At the top of your component
-const progressValues = useRef(TABS.map(() => motionValue(0)));
-const controlsArray = useRef(TABS.map(() => useAnimationControls()));
+    const interval = setInterval(() => {
+      setActive((current) => {
+        if (current === "protect") return "detect";
+        if (current === "detect") return "respond";
+        return "protect";
+      });
+    }, 5000);
 
-
-React.useEffect(() => {
-  if (paused) return;
-
-  const interval = setInterval(() => {
-    setActive((current) => {
-      if (current === "protect") return "detect";
-      if (current === "detect") return "respond";
-      return "protect";
-    });
-  }, 5000);
-
-  return () => clearInterval(interval);
-}, [paused]);
-
+    return () => clearInterval(interval);
+  }, [paused]);
 
   return (
     <TooltipProvider delayDuration={80}>
       <div className="bg-[var(--theme-dark-base)]">
-      <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-36 overflow-hidden ">
-        {/* Dotted background */}
-        <div className="absolute inset-0 opacity-20 pointer-events-none">
-          <div className="absolute inset-0 grid grid-cols-4 gap-24 transform -rotate-6 scale-150">
-            {[...Array(16)].map((_, i) => (
-              <div key={i} className="flex items-center justify-center">
-                <div className="w-2 h-2 rounded-full bg-[var(--theme-accent)]" />
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Floating accent blobs */}
-        <motion.div
-          className="absolute top-10 left-20 w-48 h-48 rounded-full bg-[var(--theme-accent)]/10 blur-3xl animate-float"
-          transition={{ duration: 6, repeat: Infinity, repeatType: "mirror" }}
-        />
-        <motion.div
-          className="absolute bottom-10 right-20 w-56 h-56 rounded-full bg-[var(--theme-accent-dim)]/10 blur-3xl animate-float"
-          transition={{ duration: 8, repeat: Infinity, repeatType: "mirror" }}
-        />
-
-        {/* Existing Content */}
-        <div className="relative z-10 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-start mb-12 ">
-          <div className="md:col-span-3">
-            <div className="flex items-center gap-3">
-              <div className="w-3 h-3 bg-white mb-3" />
-              <div>
-                <div className="text-xl text-muted-foreground font-medium">
-                  Ecosystem
+        <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-36 overflow-hidden ">
+          {/* Dotted background */}
+          <div className="absolute inset-0 opacity-20 pointer-events-none">
+            <div className="absolute inset-0 grid grid-cols-4 gap-24 transform -rotate-6 scale-150">
+              {[...Array(16)].map((_, i) => (
+                <div key={i} className="flex items-center justify-center">
+                  <div className="w-2 h-2 rounded-full bg-[var(--theme-accent)]" />
                 </div>
-                <div className="text-2xl font-bold text-foreground">
-                  THE SAFEGREY <span className="text-[#E5453D]">ECOSYSTEM</span>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
 
-          <div className="md:col-span-9">
-            <div className="flex items-center gap-2 justify-between mt-5 ">
-              {TABS.map((tab, index) => {
-                const isActive = active === tab.key;
-                const isCompleted =
-                  TABS.findIndex((t) => t.key === active) > index;
-                  const progress = useMotionValue(0);
-const controls = useAnimationControls();
+          {/* Floating accent blobs */}
+          <motion.div
+            className="absolute top-10 left-20 w-48 h-48 rounded-full bg-[var(--theme-accent)]/10 blur-3xl animate-float"
+            transition={{ duration: 6, repeat: Infinity, repeatType: "mirror" }}
+          />
+          <motion.div
+            className="absolute bottom-10 right-20 w-56 h-56 rounded-full bg-[var(--theme-accent-dim)]/10 blur-3xl animate-float"
+            transition={{ duration: 8, repeat: Infinity, repeatType: "mirror" }}
+          />
 
-useEffect(() => {
-  if (isActive) {
-    controls.start({
-      width: "100%",
-      transition: { duration: 5, ease: "linear" },
-    });
-  } else {
-    controls.stop();
-    progress.set(isCompleted ? 100 : 0);
-  }
-}, [isActive]);
-
-useEffect(() => {
-  if (paused) {
-    controls.stop(); // freeze
-  } else if (isActive) {
-    controls.start({
-      width: "100%",
-      transition: { duration: 5, ease: "linear" },
-    });
-  }
-}, [paused]);
-
-                return (
-                  <div key={tab.key} className="flex-1 text-center">
-                    <div className="flex gap-2 mb-2">
-              <button
-  onMouseEnter={() => setPaused(true)}
-  onMouseLeave={() => setPaused(false)}
-  onClick={() => {
-    setActive(tab.key);
-    setPaused(true);     // <-- freeze after clicking
-  }}
-  className={cn(
-    "flex items-center gap-2 text-lg font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer",
-    isActive ? "text-white" : "text-gray-400"
-  )}
->
-
-                        <div
-                          className={cn(
-                            "w-2 h-2 transition-colors duration-300",
-                            isActive ? "bg-white" : "bg-gray-400"
-                          )}
-                        />
-                        {tab.label}
-                      </button>
-                    </div>
-
-                    <div className="relative h-1 bg-gray-600 rounded-full overflow-hidden">
-                     <motion.div
-  className={cn(
-    "absolute top-0 left-0 h-full rounded-full",
-    isActive ? "bg-white" : "bg-transparent"
-
-  )}
-  style={{ width: progress }}
-  animate={controls}
-/>
-
-                    </div>
+          {/* Existing Content */}
+          <div className="relative z-10 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-start mb-12 ">
+            <div className="md:col-span-3">
+              <div className="flex items-center gap-3">
+                <div className="w-3 h-3 bg-white mb-3" />
+                <div>
+                  <div className="text-xl text-muted-foreground font-medium">
+                    Ecosystem
                   </div>
-                );
-              })}
+                  <div className="text-2xl font-bold text-foreground">
+                    THE SAFEGREY{" "}
+                    <span className="text-[#E5453D]">ECOSYSTEM</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div className="md:col-span-9">
+              <div className="flex items-center gap-2 justify-between mt-5 ">
+                {TABS.map((tab, index) => {
+                  const isActive = active === tab.key;
+                  const isCompleted =
+                    TABS.findIndex((t) => t.key === active) > index;
+                  const progress = useMotionValue(0);
+                  const controls = useAnimationControls();
+
+                  useEffect(() => {
+                    if (isActive) {
+                      controls.start({
+                        width: "100%",
+                        transition: { duration: 5, ease: "linear" },
+                      });
+                    } else {
+                      controls.stop();
+                      progress.set(isCompleted ? 100 : 0);
+                    }
+                  }, [isActive]);
+
+                  useEffect(() => {
+                    if (paused) {
+                      controls.stop(); // freeze
+                    } else if (isActive) {
+                      controls.start({
+                        width: "100%",
+                        transition: { duration: 5, ease: "linear" },
+                      });
+                    }
+                  }, [paused]);
+
+                  return (
+                    <div key={tab.key} className="flex-1 text-center">
+                      <div className="flex gap-2 mb-2">
+                        <button
+                          onMouseEnter={() => setPaused(true)}
+                          onMouseLeave={() => setPaused(false)}
+                          onClick={() => {
+                            setActive(tab.key);
+                            setPaused(true); // <-- freeze after clicking
+                          }}
+                          className={cn(
+                            "flex items-center gap-2 text-lg font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer",
+                            isActive ? "text-white" : "text-gray-400"
+                          )}
+                        >
+                          <div
+                            className={cn(
+                              "w-2 h-2 transition-colors duration-300",
+                              isActive ? "bg-white" : "bg-gray-400"
+                            )}
+                          />
+                          {tab.label}
+                        </button>
+                      </div>
+
+                      <div className="relative h-1 bg-gray-600 rounded-full overflow-hidden">
+                        <motion.div
+                          className={cn(
+                            "absolute top-0 left-0 h-full rounded-full",
+                            isActive ? "bg-white" : "bg-transparent"
+                          )}
+                          style={{ width: progress }}
+                          animate={controls}
+                        />
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start relative z-10 ">
+            <div className="lg:col-span-5 mt-14">
+              <AnimatePresence mode="wait">
+                {TABS.map(
+                  (t) =>
+                    t.key === active && (
+                      <motion.div
+                        key={t.key}
+                        initial={{ opacity: 0, x: -10 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: 10 }}
+                        transition={{ duration: 0.35, ease: "easeOut" }}
+                        className="space-y-4"
+                      >
+                        <h3 className="text-2xl font-bold text-foreground">
+                          {t.label}
+                        </h3>
+                        <p className="text-lg leading-8 text-muted-foreground">
+                          {t.desc}
+                        </p>
+                      </motion.div>
+                    )
+                )}
+              </AnimatePresence>
+            </div>
+            <div className="lg:col-span-7">
+              <IsometricStack active={active} />
             </div>
           </div>
         </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start relative z-10 ">
-          <div className="lg:col-span-5 mt-14">
-            <AnimatePresence mode="wait">
-              {TABS.map(
-                (t) =>
-                  t.key === active && (
-                    <motion.div
-                      key={t.key}
-                      initial={{ opacity: 0, x: -10 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 10 }}
-                      transition={{ duration: 0.35, ease: "easeOut" }}
-                      className="space-y-4"
-                    >
-                      <h3 className="text-2xl font-bold text-foreground">
-                        {t.label}
-                      </h3>
-                      <p className="text-lg leading-8 text-muted-foreground">
-                        {t.desc}
-                      </p>
-                    </motion.div>
-                  )
-              )}
-            </AnimatePresence>
-          </div>
-          <div className="lg:col-span-7">
-            <IsometricStack active={active} />
-          </div>
-        </div>
-      </div>
       </div>
     </TooltipProvider>
   );
 }
-
 
 // Other components (IsometricStack, IsometricLayer, SignalBoard, ProtectSignalBoards, DetectSignalBoards, RespondSignalBoards, GraphDots, DotMatrix, ResearchNodes, FloatingParticles, AnimatedMatrix)
 // remain exactly the same but with minimal transition adjustments for smoother motion
@@ -262,7 +255,7 @@ function IsometricStack({ active }: { active: TabKey }) {
               offsetY={5}
             >
               <DetectSignalBoards />
-              <GraphDots  />
+              <GraphDots />
             </IsometricLayer>
           </motion.div>
         )}
@@ -419,29 +412,28 @@ function ProtectSignalBoards() {
 
 function DetectSignalBoards() {
   const items = [
-  {
-    x: "15%",
-    y: "65%",
-    label: "MONITOR",
-    color: "var(--threatops-neutral)",
-    tooltip: "Continuous SIEM Monitoring",
-  },
-  {
-    x: "40%",
-    y: "20%",
-    label: "PHISH",
-    color: "var(--threatops-neutral)",
-    tooltip: "Targeted Phishing Campaigns",
-  },
-  {
-    x: "70%",
-    y: "65%",
-    label: "HUNT",
-    color: "var(--threatops-neutral)",
-    tooltip: "Threat Hunting & Red Team Exercises",
-  },
-];
-
+    {
+      x: "15%",
+      y: "65%",
+      label: "MONITOR",
+      color: "var(--threatops-neutral)",
+      tooltip: "Continuous SIEM Monitoring",
+    },
+    {
+      x: "40%",
+      y: "20%",
+      label: "PHISH",
+      color: "var(--threatops-neutral)",
+      tooltip: "Targeted Phishing Campaigns",
+    },
+    {
+      x: "70%",
+      y: "65%",
+      label: "HUNT",
+      color: "var(--threatops-neutral)",
+      tooltip: "Threat Hunting & Red Team Exercises",
+    },
+  ];
 
   return (
     <div className="absolute inset-0">
@@ -462,7 +454,7 @@ function DetectSignalBoards() {
 
       {/* Detect layer center marker */}
       <motion.div
-        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-amber-500/20 border-2 border-amber-500/50"
+        className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-4 h-4 rounded-full bg-white/20 border-2 border-white/50"
         animate={{ scale: [1, 1.3, 1], opacity: [0.7, 1, 0.7] }}
         transition={{ duration: 2.5, repeat: Number.POSITIVE_INFINITY }}
       />
@@ -619,7 +611,7 @@ function SignalBoard({
         {/* Connection lines animation */}
         <div className="absolute bottom-1.5 left-1/2 -translate-x-1/2 w-10 h-1 overflow-hidden">
           <motion.div
-            className="w-full h-0.5 rounded-full"
+            className="w-full h-0.5 rounded-full "
             style={{ backgroundColor: color }}
             initial={{ x: "-100%" }}
             animate={{ x: "100%" }}

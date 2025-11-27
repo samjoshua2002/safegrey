@@ -15,31 +15,31 @@ const services = [
         subTitle: "Web Application Security Assessment",
         description: "We uncover vulnerabilities across your web applications by simulating real-world attacks, from logic flaws to advanced injection vectors, ensuring every critical function is secure before attackers find it.",
         icon: Shield,
-        features: ["OWASP Top 10 Coverage", "Business Logic Testing", "API Endpoint Security"]
+      
       },
       {
         subTitle: "Mobile Application Security Assessment",
         description: "Our team tests your mobile applications from code to API calls, identifying insecure storage, communication leaks, and privilege misuse that could compromise user data or platform integrity.",
         icon: Zap,
-        features: ["iOS & Android Testing", "Reverse Engineering", "Secure Communication"]
+  
       },
       {
         subTitle: "API Security Assessment",
         description: "We analyze and exploit API endpoints to detect authentication gaps, data exposure risks, and logic abuses, ensuring your integrations remain secure across modern cloud and microservice environments.",
         icon: Lock,
-        features: ["REST & GraphQL Testing", "Authentication Bypass", "Rate Limit Testing"]
+       
       },
       {
         subTitle: "Network Security Assessment",
         description: "Through internal and external testing, we map and exploit realistic network attack paths to expose misconfigurations, weak segmentation, and exploitable services that could lead to complete compromise.",
         icon: Sparkles,
-        features: ["Port & Service Discovery", "Vulnerability Scanning", "Firewall Testing"]
+   
       },
       {
         subTitle: "Active Directory Security Assessment",
         description: "We emulate adversaries within your domain to uncover privilege escalation paths, misconfigurations, and credential exposures, helping you strengthen your identity and access controls before they are abused.",
         icon: Target,
-        features: ["Kerberoasting", "Golden Ticket Attacks", "Group Policy Analysis"]
+  
       },
     ],
   },
@@ -51,19 +51,19 @@ const services = [
         subTitle: "SIEM Monitoring & Threat Detection",
         description: "We provide continuous monitoring of your security events, correlating logs and detecting anomalies in real time to identify, contain, and respond to threats before they impact operations.",
         icon: Zap,
-        features: ["24/7 Monitoring", "Custom Detection Rules", "Incident Response"]
+     
       },
       {
         subTitle: "Vulnerability Management",
         description: "Our team continuously scans, prioritizes, and tracks vulnerabilities across your assets, ensuring timely remediation through actionable insights and risk-based reporting.",
         icon: ShieldCheck,
-        features: ["Automated Scanning", "Risk Prioritization", "Remediation Tracking"]
+   
       },
       {
         subTitle: "Purple Team",
         description: "We align offensive and defensive teams to validate and enhance your detection, response, and threat-hunting capabilities, ensuring your defenses evolve with real adversary tactics.",
         icon: Target,
-        features: ["Collaborative Exercises", "Detection Validation", "Capability Improvement"]
+      
       },
     ],
   },
@@ -75,25 +75,25 @@ const services = [
         subTitle: "Phishing Campaign",
         description: "We simulate targeted phishing attacks to measure user awareness, identify behavioral gaps, and help strengthen your organization's resilience against social engineering threats.",
         icon: Zap,
-        features: ["Custom Templates", "User Training", "Click-rate Analytics"]
+
       },
       {
         subTitle: "Mystery Guest (Physical Security)",
         description: "Our specialists perform controlled on-site intrusion attempts to assess physical security controls, employee awareness, and procedural readiness against real-world breaches.",
         icon: Lock,
-        features: ["Social Engineering", "Access Control Testing", "Tailgating Assessment"]
+      
       },
       {
         subTitle: "Assumed Breach",
         description: "We begin from a compromised state to evaluate internal detection, response, and containment capabilities, revealing how effectively your teams react once an attacker is inside.",
         icon: Shield,
-        features: ["Lateral Movement", "Privilege Escalation", "Data Exfiltration Testing"]
+ 
       },
       {
         subTitle: "Traditional Red Team",
         description: "Through multi-layered, goal-oriented operations, we emulate real adversaries to test your detection and defense capabilities across technical, human, and procedural layers.",
         icon: Target,
-        features: ["Multi-vector Attacks", "Covert Operations", "Full-scope Assessment"]
+        
       },
     ],
   },
@@ -105,19 +105,19 @@ const services = [
         subTitle: "Container Security Assessment",
         description: "We evaluate your containerized environments for misconfigurations, insecure images, and runtime risks, ensuring strong isolation and resilience across your DevOps pipelines.",
         icon: Shield,
-        features: ["Image Vulnerability Scan", "Runtime Security", "Orchestration Security"]
+      
       },
       {
         subTitle: "Kubernetes Security Assessment",
         description: "Our experts assess cluster configurations, role-based access, and network policies to identify privilege risks and attack paths within your Kubernetes environment.",
         icon: Zap,
-        features: ["RBAC Assessment", "Network Policy Review", "Cluster Hardening"]
+
       },
       {
         subTitle: "Cloud Infrastructure Security Assessment",
         description: "We review your cloud architecture, identity controls, and deployed assets to uncover configuration weaknesses, excessive privileges, and exposure risks across AWS, Azure, and GCP.",
         icon: Cloud,
-        features: ["CIS Benchmarking", "IAM Role Analysis", "Storage Security"]
+
       },
     ],
   },
@@ -129,25 +129,25 @@ const services = [
         subTitle: "ISO 27001 Consulting",
         description: "We guide your organization through the ISO 27001 implementation and certification process, aligning people, processes, and technology to build a sustainable information security framework.",
         icon: ShieldCheck,
-        features: ["Gap Analysis", "Documentation", "Certification Support"]
+
       },
       {
         subTitle: "HIPAA Compliance",
         description: "Our experts help you identify gaps, implement safeguards, and validate compliance with HIPAA requirements to ensure the protection of sensitive healthcare data.",
         icon: Lock,
-        features: ["Risk Assessment", "Policy Development", "Technical Safeguards"]
+
       },
       {
         subTitle: "GDPR Consulting",
         description: "We assist in evaluating data handling practices, consent management, and cross-border transfers to ensure compliance with GDPR while maintaining business efficiency.",
         icon: FileCheck,
-        features: ["Data Mapping", "DPIA Conducting", "Compliance Monitoring"]
+
       },
       {
         subTitle: "SOC 1 / SOC 2 Readiness",
         description: "We perform readiness assessments to identify control gaps, streamline documentation, and prepare your organization for successful SOC 1 and SOC 2 audits.",
         icon: Target,
-        features: ["Control Testing", "Evidence Collection", "Auditor Liaison"]
+
       },
     ],
   },
@@ -159,13 +159,13 @@ const services = [
         subTitle: "Security Subscriptions",
         description: "A continuous engagement model that keeps your defenses evolving. Choose recurring pentesting, red teaming, or purple teaming plans that deliver scheduled assessments, prioritized remediation, and measurable posture improvement.",
         icon: Repeat,
-        features: ["Continuous Testing", "Priority Support", "Progress Tracking"]
+
       },
       {
         subTitle: "CryptX - Evasion Platform for Red Teams",
         description: "CryptX is an evasion-as-a-service platform that accelerates red-team operations by automating payload obfuscation, delivery hardening, and bypass techniques - letting teams spend less time on R&D and more time on validated engagements.",
         icon: Zap,
-        features: ["Payload Generation", "AV Evasion", "Custom Loaders"]
+
       },
     ],
   },
@@ -280,17 +280,7 @@ function AccordionItem({
                       </div>
                     </div>
 
-                    {/* Features badges */}
-                    {section.features && (
-                      <div className="flex flex-wrap">
-                        {section.features.map((feature, featureIdx) => (
-                          <FeatureBadge 
-                            key={featureIdx} 
-                            text={feature} 
-                          />
-                        ))}
-                      </div>
-                    )}
+                    
                   </div>
                 );
               })}
