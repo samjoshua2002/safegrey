@@ -1,6 +1,10 @@
 "use client";
 
 import * as React from "react";
+import { useEffect, useRef } from "react";
+import { useMotionValue } from "framer-motion";
+import { motionValue } from "framer-motion";
+import { useAnimationControls } from "framer-motion";
 import { motion, AnimatePresence } from "framer-motion";
 import { cn } from "@/lib/utils";
 import {
@@ -32,22 +36,34 @@ const TABS: { key: TabKey; label: string; desc: string }[] = [
 
 export default function EcosystemSection() {
   const [active, setActive] = React.useState<TabKey>("protect");
+  const [paused, setPaused] = React.useState(false);
 
-  React.useEffect(() => {
-    const interval = setInterval(() => {
-      setActive((current) => {
-        if (current === "protect") return "detect";
-        if (current === "detect") return "respond";
-        return "protect";
-      });
-    }, 5000);
-    return () => clearInterval(interval);
-  }, []);
+
+
+// At the top of your component
+const progressValues = useRef(TABS.map(() => motionValue(0)));
+const controlsArray = useRef(TABS.map(() => useAnimationControls()));
+
+
+React.useEffect(() => {
+  if (paused) return;
+
+  const interval = setInterval(() => {
+    setActive((current) => {
+      if (current === "protect") return "detect";
+      if (current === "detect") return "respond";
+      return "protect";
+    });
+  }, 5000);
+
+  return () => clearInterval(interval);
+}, [paused]);
+
 
   return (
     <TooltipProvider delayDuration={80}>
       <div className="bg-[var(--theme-dark-base)]">
-      <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-28 overflow-hidden ">
+      <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-36 overflow-hidden ">
         {/* Dotted background */}
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <div className="absolute inset-0 grid grid-cols-4 gap-24 transform -rotate-6 scale-150">
@@ -91,16 +107,48 @@ export default function EcosystemSection() {
                 const isActive = active === tab.key;
                 const isCompleted =
                   TABS.findIndex((t) => t.key === active) > index;
+                  const progress = useMotionValue(0);
+const controls = useAnimationControls();
+
+useEffect(() => {
+  if (isActive) {
+    controls.start({
+      width: "100%",
+      transition: { duration: 5, ease: "linear" },
+    });
+  } else {
+    controls.stop();
+    progress.set(isCompleted ? 100 : 0);
+  }
+}, [isActive]);
+
+useEffect(() => {
+  if (paused) {
+    controls.stop(); // freeze
+  } else if (isActive) {
+    controls.start({
+      width: "100%",
+      transition: { duration: 5, ease: "linear" },
+    });
+  }
+}, [paused]);
+
                 return (
                   <div key={tab.key} className="flex-1 text-center">
                     <div className="flex gap-2 mb-2">
-                      <button
-                        onClick={() => setActive(tab.key)}
-                        className={cn(
-                          "flex items-center gap-2 text-lg font-bold uppercase tracking-wider transition-all duration-300",
-                          isActive ? "text-white" : "text-gray-400"
-                        )}
-                      >
+              <button
+  onMouseEnter={() => setPaused(true)}
+  onMouseLeave={() => setPaused(false)}
+  onClick={() => {
+    setActive(tab.key);
+    setPaused(true);     // <-- freeze after clicking
+  }}
+  className={cn(
+    "flex items-center gap-2 text-lg font-bold uppercase tracking-wider transition-all duration-300 cursor-pointer",
+    isActive ? "text-white" : "text-gray-400"
+  )}
+>
+
                         <div
                           className={cn(
                             "w-2 h-2 transition-colors duration-300",
@@ -112,31 +160,16 @@ export default function EcosystemSection() {
                     </div>
 
                     <div className="relative h-1 bg-gray-600 rounded-full overflow-hidden">
-                      <motion.div
-                        className={cn(
-                          "absolute top-0 left-0 h-full rounded-full",
-                          isActive
-                            ? "bg-white"
-                            : isCompleted
-                            ? "bg-gray-400"
-                            : "bg-transparent"
-                        )}
-                        initial={{
-                          width: isActive ? "0%" : isCompleted ? "100%" : "0%",
-                        }}
-                        animate={{
-                          width: isActive
-                            ? "100%"
-                            : isCompleted
-                            ? "100%"
-                            : "0%",
-                        }}
-                        transition={{
-                          duration: isActive ? 5 : 0.3,
-                          ease: "easeOut",
-                        }}
-                        key={active + tab.key}
-                      />
+                     <motion.div
+  className={cn(
+    "absolute top-0 left-0 h-full rounded-full",
+    isActive ? "bg-white" : "bg-transparent"
+
+  )}
+  style={{ width: progress }}
+  animate={controls}
+/>
+
                     </div>
                   </div>
                 );

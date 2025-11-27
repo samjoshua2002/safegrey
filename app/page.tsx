@@ -7,6 +7,7 @@ import { StatsSection } from "@/components/stats-section";
 import { TestimonialsSection } from "@/components/testimonials-section";
 import { CTASection } from "@/components/cta-section";
 import { ServicesSection } from "@/components/ui/services-section";
+import { ServicesAccordion } from "@/components/services-home";
 import { Footer } from "@/components/footer";
 import EcosystemSection from "@/components/ui/ecosystem-section";
 import { useEffect, useRef } from "react";
@@ -28,6 +29,7 @@ export default function HomePage() {
   const ctaRef = useRef(null);
   const servicesSectionRef = useRef(null);
   const logoRef = useRef(null);
+  const servicesAccordionRef = useRef(null);
 
   useEffect(() => {
     const sections = [
@@ -95,32 +97,85 @@ export default function HomePage() {
   }, []);
 
   return (
-    <main className="min-h-screen">
-      <Navigation />
-      <div ref={heroRef}>
-        <HeroSection />
-      </div>
-      <div ref={servicesRef}>
-        <ServicesOverview />
-      </div>
-      {/* <div ref={statsRef}>
-        <StatsSection />
-      </div> */}
-      <div ref={ecosystemRef}>
-        <EcosystemSection />
-      </div>
-      <div ref={testimonialsRef}>
-        <TestimonialsSection />
-      </div>
+ <main className="min-h-screen">
+  <Navigation />
 
-      <div ref={servicesSectionRef}>
-        <ServicesSection />
-      </div>
-      <div ref={logoRef}>
-        <LogoSection />
-      </div>
-      
-      <Footer />
-    </main>
+  <div ref={heroRef}>
+    <HeroSection />
+  </div>
+  <div
+    className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent"
+    style={{
+      background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
+    }}
+  />
+
+  <div ref={servicesRef}>
+    <ServicesOverview />
+  </div>
+  <div
+    className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent"
+    style={{
+      background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
+    }}
+  />
+
+  {/* <div ref={statsRef}>
+    <StatsSection />
+  </div>
+  <div
+    className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent mt-20"
+    style={{
+      background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
+    }}
+  /> */}
+
+  <div ref={ecosystemRef}>
+    <EcosystemSection />
+  </div>
+  <div
+    className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent"
+    style={{
+      background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
+    }}
+  />
+
+  <div ref={testimonialsRef}>
+    <TestimonialsSection />
+  </div>
+  <div
+    className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent"
+    style={{
+      background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
+    }}
+  />
+
+  {/* <div ref={servicesSectionRef}>
+    <ServicesSection />
+  </div> */}
+
+  <div ref={servicesAccordionRef}>
+    <ServicesAccordion />
+  </div>
+  <div
+    className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent"
+    style={{
+      background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
+    }}
+  />
+
+  <div ref={logoRef}>
+    <LogoSection />
+  </div>
+  <div
+    className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent"
+    style={{
+      background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
+    }}
+  />
+
+  <Footer />
+</main>
+
   );
 }
