@@ -4,6 +4,13 @@ import { ContactForm } from "@/components/contact-form"
 import { ContactInfo } from "@/components/contact-info"
 import { Footer } from "@/components/footer"
 
+import { Metadata } from "next"
+
+export const metadata: Metadata = {
+  title: "Contact Us",
+  description: "Get in touch with Safegrey for expert cybersecurity consultation, services, and support. We are here to secure your digital assets.",
+}
+
 export default function ContactPage() {
   return (
     <main className="min-h-screen">

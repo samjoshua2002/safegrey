@@ -45,8 +45,8 @@ export function Footer() {
               <div className="flex items-center text-sm text-[var(--theme-text-secondary)]">
                 <MapPin className="w-4 h-4 mr-2 text-[var(--theme-accent)]" />
                 No. 50 & 51, TEJA RESIDENCY - 1, <br /> COCONUT GARDEN,
-KODIGEHALLI MAIN ROAD, <br />AYYAPPA NAGAR,
-K.R PURAM, <br /> BANGALORE - 560036
+                KODIGEHALLI MAIN ROAD, <br />AYYAPPA NAGAR,
+                K.R PURAM, <br /> BANGALORE - 560036
               </div>
             </div>
           </div>
@@ -74,23 +74,29 @@ K.R PURAM, <br /> BANGALORE - 560036
         <div className="border-t border-[var(--theme-border)] mt-12 pt-8 flex flex-col md:flex-row justify-between items-center">
           <p className="text-sm text-[var(--theme-text-secondary)]">© 2024 SafeGrey. All rights reserved.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            <Link 
-              href="/privacy" 
+            <Link
+              href="/privacy"
               className="text-sm text-[var(--theme-text-secondary)] hover:text-[var(--theme-accent)] transition-colors"
             >
               Privacy Policy
             </Link>
-            <Link 
-              href="/terms" 
+            <Link
+              href="/terms"
               className="text-sm text-[var(--theme-text-secondary)] hover:text-[var(--theme-accent)] transition-colors"
             >
               Terms of Service
             </Link>
-            <Link 
-              href="/security" 
+            <Link
+              href="/security"
               className="text-sm text-[var(--theme-text-secondary)] hover:text-[var(--theme-accent)] transition-colors"
             >
               Security
+            </Link>
+            <Link
+              href="/sitemap.xml"
+              className="text-sm text-[var(--theme-text-secondary)] hover:text-[var(--theme-accent)] transition-colors"
+            >
+              Sitemap
             </Link>
           </div>
         </div>
