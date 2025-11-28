@@ -7,6 +7,7 @@ import GridMotion from './GridMotion';
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import InteractiveTypography from './InteractiveTypography';
+import { motion } from 'framer-motion';
 
 export function AboutSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -46,33 +47,33 @@ export function AboutSection() {
     }
   ];
 
-const carouselSlides = [
-  {
-    id: 1,
-    title: "Securing Your Digital Future",
-    subtitle: "Advanced Threat Protection",
-    description:
-      "Comprehensive security services that protect your organization from evolving cyber threats with cutting-edge technology and expert oversight.",
-    image: "https://images.pexels.com/photos/17766789/pexels-photo-17766789.jpeg?auto=compress&cs=tinysrgb&w=1920"
-  },
-  {
-    id: 2,
-    title: "Zero Trust Security Framework",
-    subtitle: "Modern Security Architecture",
-    description:
-    "Implementing never trust, always verify principles across your entire digital ecosystem for maximum protection.",
-    video: "/bg.mp4"
-  },
-  {
-    id: 3,
-    title: "24/7 Security Operations Center",
-    subtitle: "Continuous Monitoring",
-    description:
-    "Round-the-clock surveillance and threat detection to keep your assets secure against emerging threats.",
-  
-    image: "./img.png"
-  }
-];
+  const carouselSlides = [
+    {
+      id: 1,
+      title: "Securing Your Digital Future",
+      subtitle: "Advanced Threat Protection",
+      description:
+        "Comprehensive security services that protect your organization from evolving cyber threats with cutting-edge technology and expert oversight.",
+      image: "https://images.pexels.com/photos/17766789/pexels-photo-17766789.jpeg?auto=compress&cs=tinysrgb&w=1920"
+    },
+    {
+      id: 2,
+      title: "Zero Trust Security Framework",
+      subtitle: "Modern Security Architecture",
+      description:
+        "Implementing never trust, always verify principles across your entire digital ecosystem for maximum protection.",
+      video: "/bg.mp4"
+    },
+    {
+      id: 3,
+      title: "24/7 Security Operations Center",
+      subtitle: "Continuous Monitoring",
+      description:
+        "Round-the-clock surveillance and threat detection to keep your assets secure against emerging threats.",
+
+      image: "./img.png"
+    }
+  ];
 
   const gridItems = [
     "Security", "ThreatOps", "Cyber", "Defense",
@@ -212,47 +213,47 @@ const carouselSlides = [
   const currentCarousel = carouselSlides[currentSlide];
 
   return (
-    <div className="min-h-screen bg-zinc-950 text-white overflow-hidden">
+    <div className="min-h-screen bg-[var(--theme-dark-base)] text-[var(--foreground)] overflow-hidden">
       <section ref={carouselRef} className="relative h-screen w-full overflow-hidden">
         {/* Background Image */}
-     {/* Background Media */}
-<div className="absolute inset-0">
-  {/* If image exists */}
-  {currentCarousel.image && (
-    <div
-      ref={imageRef}
-      className="absolute inset-0 bg-cover bg-center"
-      style={{
-        backgroundImage:
-          typeof currentCarousel.image === "string"
-            ? `url(${currentCarousel.image})`
-            : `url(${URL.createObjectURL(currentCarousel.image)})`,
-        filter: "brightness(0.4)"
-      }}
-    />
-  )}
+        {/* Background Media */}
+        <div className="absolute inset-0">
+          {/* If image exists */}
+          {currentCarousel.image && (
+            <div
+              ref={imageRef}
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage:
+                  typeof currentCarousel.image === "string"
+                    ? `url(${currentCarousel.image})`
+                    : `url(${URL.createObjectURL(currentCarousel.image)})`,
+                filter: "brightness(0.4)"
+              }}
+            />
+          )}
 
-  {/* If video exists */}
-  {currentCarousel.video && (
-    <video
-      className="absolute inset-0 w-full h-full object-cover"
-      autoPlay
-      muted
-      loop
-      playsInline
-      style={{ filter: "brightness(0.4)" }}
-    >
-      <source
-        src={
-          typeof currentCarousel.video === "string"
-            ? currentCarousel.video
-            : URL.createObjectURL(currentCarousel.video)
-        }
-        type="video/mp4"
-      />
-    </video>
-  )}
-</div>
+          {/* If video exists */}
+          {currentCarousel.video && (
+            <video
+              className="absolute inset-0 w-full h-full object-cover"
+              autoPlay
+              muted
+              loop
+              playsInline
+              style={{ filter: "brightness(0.4)" }}
+            >
+              <source
+                src={
+                  typeof currentCarousel.video === "string"
+                    ? currentCarousel.video
+                    : URL.createObjectURL(currentCarousel.video)
+                }
+                type="video/mp4"
+              />
+            </video>
+          )}
+        </div>
 
         <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent z-10" />
 
@@ -265,18 +266,18 @@ const carouselSlides = [
           <div className="max-w-7xl mx-auto px-8 lg:px-16 w-full">
             <div className="max-w-3xl">
 
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-accent/20 mb-6">
-                <Sparkles className="w-4 h-4 text-accent" />
-                <span className="text-sm font-semibold text-accent">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--theme-accent)]/10 border border-[var(--theme-accent)]/20 mb-6">
+                <Sparkles className="w-4 h-4 text-[var(--theme-accent)]" />
+                <span className="text-sm font-semibold text-[var(--theme-accent)]">
                   {currentCarousel.subtitle}
                 </span>
               </div>
 
-              <h1 className="text-6xl lg:text-8xl font-bold mb-8 leading-none">
+              <h1 className="text-6xl lg:text-8xl font-bold mb-8 leading-none text-[var(--foreground)]">
                 {currentCarousel.title}
               </h1>
 
-              <p className="text-xl lg:text-2xl text-zinc-300 mb-12 leading-relaxed">
+              <p className="text-xl lg:text-2xl text-[var(--muted-foreground)] mb-12 leading-relaxed">
                 {currentCarousel.description}
               </p>
 
@@ -345,8 +346,8 @@ const carouselSlides = [
                   key={index}
                   onClick={() => goToSlide(index)}
                   className={`relative overflow-hidden transition-all duration-300 ${index === currentSlide
-                      ? 'w-8 h-1 shadow-lg'
-                      : 'w-4 h-1 bg-white/30 hover:bg-white/50'
+                    ? 'w-8 h-1 shadow-lg'
+                    : 'w-4 h-1 bg-white/30 hover:bg-white/50'
                     }`}
                   style={{
                     backgroundColor: index === currentSlide ? "var(--primary)" : undefined,
@@ -399,24 +400,45 @@ const carouselSlides = [
 
       <FlowingMenu items={flowingItems} />
 
-      <section className="py-32 px-8 lg:px-16">
-        <div className="max-w-7xl mx-auto">
+      <section className="relative py-32 px-8 lg:px-16 overflow-hidden">
+        {/* Dotted Background */}
+        <div className="absolute inset-0 opacity-20 pointer-events-none">
+          <div className="absolute inset-0 grid grid-cols-4 gap-24 transform -rotate-6 scale-150">
+            {[...Array(16)].map((_, i) => (
+              <div key={i} className="flex items-center justify-center">
+                <div className="w-2 h-2 rounded-full bg-[var(--theme-accent)]" />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Floating accent blobs */}
+        <motion.div
+          className="absolute top-10 left-20 w-48 h-48 rounded-full bg-[var(--theme-accent)]/10 blur-3xl animate-float"
+          transition={{ duration: 6, repeat: Infinity, repeatType: "mirror" }}
+        />
+        <motion.div
+          className="absolute bottom-10 right-20 w-56 h-56 rounded-full bg-[var(--theme-accent-dim)]/10 blur-3xl animate-float"
+          transition={{ duration: 8, repeat: Infinity, repeatType: "mirror" }}
+        />
+
+        <div className="relative z-10 max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-start mb-32">
             <div className="space-y-8 sticky top-8">
               {/* Expertise Badge */}
-             
 
-                <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-accent/10 border border-accent/20 mb-6">
-                <Users className="w-4 h-4" />
-                <span className="text-sm font-semibold text-accent">
-                Expertise
+
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--theme-accent)]/10 border border-[var(--theme-accent)]/20 mb-6">
+                <Users className="w-4 h-4 text-[var(--theme-accent)]" />
+                <span className="text-sm font-semibold text-[var(--theme-accent)]">
+                  Expertise
                 </span>
               </div>
 
               <InteractiveTypography
                 text="Expertise That Makes a Difference"
-                className="text-5xl lg:text-7xl font-bold"
-            
+                className="text-5xl lg:text-7xl font-bold text-[var(--foreground)]"
+
               />
 
               <div
@@ -428,21 +450,21 @@ const carouselSlides = [
             </div>
 
             <div className="space-y-8">
-              <p className="text-xl text-zinc-300 leading-relaxed">
+              <p className="text-xl text-[var(--muted-foreground)] leading-relaxed">
                 At <span style={{ color: "var(--primary)" }} className="font-semibold">Safegrey</span>, our strength comes from a team of highly qualified professionals who are passionate about cybersecurity. Our consultants and engineers hold leading industry certifications.
               </p>
 
-              <p className="text-xl text-zinc-300 leading-relaxed">
+              <p className="text-xl text-[var(--muted-foreground)] leading-relaxed">
                 This deep expertise ensures our clients receive not only world-class security solutions but also practical guidance that stands up to real-world threats.
               </p>
 
-              <p className="text-xl text-zinc-300 leading-relaxed">
+              <p className="text-xl text-[var(--muted-foreground)] leading-relaxed">
                 We are committed to advancing the state of cybersecurity for organizations of all sizes—empowering you to build resilience and confidently secure your digital assets.
               </p>
 
               <div className="grid grid-cols-2 gap-6 pt-8">
                 {teamStats.map((stat, index) => (
-                  <div key={index} className="border border-zinc-800 bg-gradient-to-br from-zinc-900/50 to-zinc-800/30 p-8 hover:border-zinc-600 transition-all duration-300 group shadow-lg rounded-xl">
+                  <div key={index} className="border border-[var(--theme-border)] bg-[var(--theme-dark-secondary)]/50 p-8 hover:border-[var(--theme-accent)]/50 transition-all duration-300 group shadow-lg rounded-xl backdrop-blur-sm">
                     <div
                       className="text-5xl font-bold mb-2 group-hover:scale-110 transition-transform"
                       style={{
@@ -451,7 +473,7 @@ const carouselSlides = [
                     >
                       {stat.number}
                     </div>
-                    <div className="text-sm text-zinc-400 uppercase tracking-wider font-medium">
+                    <div className="text-sm text-[var(--muted-foreground)] uppercase tracking-wider font-medium">
                       {stat.label}
                     </div>
                   </div>
@@ -469,11 +491,11 @@ const carouselSlides = [
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-24 items-start mb-32">
             <div className="space-y-8 order-last lg:order-first">
-              <p className="text-xl text-zinc-300 leading-relaxed">
+              <p className="text-xl text-[var(--muted-foreground)] leading-relaxed">
                 At Safegrey, we go beyond checklists and automated scans. Our team works hand-in-hand with your organization, applying an adversary-focused mindset and real-world attack simulations to uncover true vulnerabilities.
               </p>
 
-              <p className="text-xl text-zinc-300 leading-relaxed">
+              <p className="text-xl text-[var(--muted-foreground)] leading-relaxed">
                 We believe every engagement should be collaborative, transparent, and tailored to your specific risks—empowering you with actionable insights and practical solutions that make a measurable difference.
               </p>
 
@@ -481,15 +503,15 @@ const carouselSlides = [
                 {values.map((value, index) => {
                   const Icon = value.icon;
                   return (
-                    <div key={index} className="border border-zinc-800 bg-gradient-to-br from-zinc-900/50 to-zinc-800/30 p-6 hover:border-zinc-600 transition-all duration-300 group shadow-lg rounded-xl">
+                    <div key={index} className="border border-[var(--theme-border)] bg-[var(--theme-dark-secondary)]/50 p-6 hover:border-[var(--theme-accent)]/50 transition-all duration-300 group shadow-lg rounded-xl backdrop-blur-sm">
                       <Icon
                         className="w-8 h-8 mb-4 group-hover:scale-110 transition-transform"
                         style={{
                           color: "var(--primary)",
                         }}
                       />
-                      <h4 className="font-semibold text-lg mb-2">{value.title}</h4>
-                      <p className="text-sm text-zinc-400">{value.description}</p>
+                      <h4 className="font-semibold text-lg mb-2 text-[var(--foreground)]">{value.title}</h4>
+                      <p className="text-sm text-[var(--muted-foreground)]">{value.description}</p>
                     </div>
                   );
                 })}
@@ -511,8 +533,8 @@ const carouselSlides = [
 
               <InteractiveTypography
                 text="Beyond Checklists"
-                className="text-5xl lg:text-7xl font-bold"
-              
+                className="text-5xl lg:text-7xl font-bold text-[var(--foreground)]"
+
               />
 
               <div
@@ -522,7 +544,7 @@ const carouselSlides = [
                 }}
               />
 
-              <div className="aspect-[4/3] relative overflow-hidden border border-zinc-800 rounded-xl shadow-2xl">
+              <div className="aspect-[4/3] relative overflow-hidden border border-[var(--theme-border)] rounded-xl shadow-2xl">
                 <img
                   src="/image.png"
                   alt="Security Operations"
@@ -549,7 +571,7 @@ const carouselSlides = [
           />
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <div className="border border-zinc-800 bg-gradient-to-br from-zinc-900/30 to-zinc-800/20 p-12 hover:border-zinc-600 transition-all duration-500 group relative overflow-hidden rounded-2xl shadow-2xl">
+            <div className="border border-[var(--theme-border)] bg-[var(--theme-dark-secondary)]/50 p-12 hover:border-[var(--theme-accent)]/50 transition-all duration-500 group relative overflow-hidden rounded-2xl shadow-2xl backdrop-blur-sm">
               <div
                 className="absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl group-hover:opacity-20 transition-all duration-500"
                 style={{
@@ -570,11 +592,11 @@ const carouselSlides = [
                   <span className="text-sm font-semibold uppercase tracking-wider">Our Mission</span>
                 </div>
 
-                <h3 className="text-4xl font-bold mb-6">
+                <h3 className="text-4xl font-bold mb-6 text-[var(--foreground)]">
                   Empower Through <span style={{ color: "var(--primary)" }}>Visibility</span>
                 </h3>
 
-                <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+                <p className="text-lg text-[var(--muted-foreground)] leading-relaxed mb-8">
                   Empower clients and communities to defend against cyber threats through enhanced visibility and proactive countermeasures.
                 </p>
 
@@ -582,7 +604,7 @@ const carouselSlides = [
                   {["Client Empowerment", "Community Defense", "Proactive Security", "Enhanced Visibility"].map((item, index) => (
                     <div
                       key={index}
-                      className="px-4 py-2 bg-gradient-to-r from-zinc-800 to-zinc-700 border border-zinc-600 text-sm font-medium hover:border-zinc-400 transition-colors rounded-lg shadow-lg"
+                      className="px-4 py-2 bg-[var(--theme-dark-base)] border border-[var(--theme-border)] text-sm font-medium hover:border-[var(--theme-accent)] transition-colors rounded-lg shadow-lg text-[var(--foreground)]"
                     >
                       {item}
                     </div>
@@ -591,7 +613,7 @@ const carouselSlides = [
               </div>
             </div>
 
-            <div className="border border-zinc-800 bg-gradient-to-br from-zinc-900/30 to-zinc-800/20 p-12 hover:border-zinc-600 transition-all duration-500 group relative overflow-hidden rounded-2xl shadow-2xl">
+            <div className="border border-[var(--theme-border)] bg-[var(--theme-dark-secondary)]/50 p-12 hover:border-[var(--theme-accent)]/50 transition-all duration-500 group relative overflow-hidden rounded-2xl shadow-2xl backdrop-blur-sm">
               <div
                 className="absolute top-0 right-0 w-64 h-64 rounded-full blur-3xl group-hover:opacity-20 transition-all duration-500"
                 style={{
@@ -612,11 +634,11 @@ const carouselSlides = [
                   <span className="text-sm font-semibold uppercase tracking-wider">Our Vision</span>
                 </div>
 
-                <h3 className="text-4xl font-bold mb-6">
+                <h3 className="text-4xl font-bold mb-6 text-[var(--foreground)]">
                   A More <span style={{ color: "var(--primary)" }}>Secure World</span>
                 </h3>
 
-                <p className="text-lg text-zinc-300 leading-relaxed mb-8">
+                <p className="text-lg text-[var(--muted-foreground)] leading-relaxed mb-8">
                   To build a more secure world by demystifying adversary tradecraft and making effective, actionable security approaches accessible to all.
                 </p>
 
@@ -624,7 +646,7 @@ const carouselSlides = [
                   {["Demystifying Threats", "Accessible Security", "Actionable Approaches", "Global Impact"].map((item, index) => (
                     <div
                       key={index}
-                      className="px-4 py-2 bg-gradient-to-r from-zinc-800 to-zinc-700 border border-zinc-600 text-sm font-medium hover:border-zinc-400 transition-colors rounded-lg shadow-lg"
+                      className="px-4 py-2 bg-[var(--theme-dark-base)] border border-[var(--theme-border)] text-sm font-medium hover:border-[var(--theme-accent)] transition-colors rounded-lg shadow-lg text-[var(--foreground)]"
                     >
                       {item}
                     </div>
@@ -643,7 +665,7 @@ const carouselSlides = [
               Start Your Security Assessment
               <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
-            <p className="text-zinc-400 mt-6 text-lg">
+            <p className="text-[var(--muted-foreground)] mt-6 text-lg">
               Ready to strengthen your security posture? Let's talk.
             </p>
           </div>
