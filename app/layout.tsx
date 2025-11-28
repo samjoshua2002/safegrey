@@ -4,6 +4,7 @@ import { Analytics } from "@vercel/analytics/next";
 import { Suspense } from "react";
 import "./globals.css";
 import localFont from "next/font/local";
+import { CursorGlow } from "@/components/ui/cursor-glow";
 
 // Import Satoshi font
 const satoshi = localFont({
@@ -40,6 +41,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body className={`${satoshi.variable} antialiased`}>
+        <CursorGlow />
         <Suspense fallback={null}>{children}</Suspense>
         <Analytics />
       </body>

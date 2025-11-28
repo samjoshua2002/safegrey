@@ -3,10 +3,9 @@
 import { Navigation } from "@/components/navigation";
 import { HeroSection } from "@/components/hero-section";
 import { ServicesOverview } from "@/components/services-overview";
-import { StatsSection } from "@/components/stats-section";
+
 import { TestimonialsSection } from "@/components/testimonials-section";
-import { CTASection } from "@/components/cta-section";
-import { ServicesSection } from "@/components/ui/services-section";
+
 import { ServicesAccordion } from "@/components/services-home";
 import { Footer } from "@/components/footer";
 import EcosystemSection from "@/components/ui/ecosystem-section";
