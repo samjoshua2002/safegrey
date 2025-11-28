@@ -128,98 +128,98 @@ export function Navigation() {
               </button>
 
               {activeDropdown === "whatwedo" && (
-  <div className="absolute left-1/2 transform -translate-x-1/2 mt-3 bg-[var(--background)] border border-[var(--primary)]/20 rounded-xl p-6 shadow-lg w-[80vw] max-w-[900px] grid grid-cols-3 gap-6 pointer-events-auto">
-    {/* Pointer */}
-    <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-[var(--background)] border-l border-t border-[var(--primary)]/20 rotate-45"></div>
+                <div className="absolute left-1/2 transform -translate-x-1/2 mt-3 bg-[var(--background)] border border-[var(--primary)]/20 rounded-xl p-6 shadow-lg w-[80vw] max-w-[900px] grid grid-cols-3 gap-6 pointer-events-auto">
+                  {/* Pointer */}
+                  <div className="absolute -top-2 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-[var(--background)] border-l border-t border-[var(--primary)]/20 rotate-45"></div>
 
-    {/* Column 1 */}
-    <div className="flex flex-col justify-between h-full space-y-6">
-      {["Security Assessment", "Subscriptions"].map((title) => {
-        const section = whatWeDoSections.find((s) => s.title === title);
-        if (!section) return null;
-        const Icon = iconMap[section.title] ?? ShieldCheck;
-        return (
-          <div key={section.title} className="flex flex-col">
-            <h4 className="flex items-center gap-2 text-[var(--primary)] font-semibold mb-3 text-sm uppercase tracking-wide">
-              <Icon className="w-4 h-4" />
-              {section.title}
-            </h4>
-            <ul className="space-y-2 text-[var(--muted-foreground)]">
-              {section.links.map((link, i) => (
-                <li key={i}>
-                  <Link
-                    href="#"
-                    className="text-sm hover:text-[var(--primary)] transition-colors block py-1"
-                  >
-                    {link}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        );
-      })}
-    </div>
+                  {/* Column 1 */}
+                  <div className="flex flex-col justify-between h-full space-y-6">
+                    {["Security Assessment", "Subscriptions"].map((title) => {
+                      const section = whatWeDoSections.find((s) => s.title === title);
+                      if (!section) return null;
+                      const Icon = iconMap[section.title] ?? ShieldCheck;
+                      return (
+                        <div key={section.title} className="flex flex-col">
+                          <h4 className="flex items-center gap-2 text-[var(--primary)] font-semibold mb-3 text-sm uppercase tracking-wide">
+                            <Icon className="w-4 h-4" />
+                            {section.title}
+                          </h4>
+                          <ul className="space-y-2 text-[var(--muted-foreground)]">
+                            {section.links.map((link, i) => (
+                              <li key={i}>
+                                <Link
+                                  href="#"
+                                  className="text-sm hover:text-[var(--primary)] transition-colors block py-1"
+                                >
+                                  {link}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      );
+                    })}
+                  </div>
 
-    {/* Column 2 */}
-    <div className="flex flex-col justify-between h-full space-y-6">
-      {["Security Posture Assessment", "Cloud Security"].map((title) => {
-        const section = whatWeDoSections.find((s) => s.title === title);
-        if (!section) return null;
-        const Icon = iconMap[section.title] ?? ShieldCheck;
-        return (
-          <div key={section.title} className="flex flex-col">
-            <h4 className="flex items-center gap-2 text-[var(--primary)] font-semibold mb-3 text-sm uppercase tracking-wide">
-              <Icon className="w-4 h-4" />
-              {section.title}
-            </h4>
-            <ul className="space-y-2 text-[var(--muted-foreground)]">
-              {section.links.map((link, i) => (
-                <li key={i}>
-                  <Link
-                    href="#"
-                    className="text-sm hover:text-[var(--primary)] transition-colors block py-1"
-                  >
-                    {link}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        );
-      })}
-    </div>
+                  {/* Column 2 */}
+                  <div className="flex flex-col justify-between h-full space-y-6">
+                    {["Security Posture Assessment", "Cloud Security"].map((title) => {
+                      const section = whatWeDoSections.find((s) => s.title === title);
+                      if (!section) return null;
+                      const Icon = iconMap[section.title] ?? ShieldCheck;
+                      return (
+                        <div key={section.title} className="flex flex-col">
+                          <h4 className="flex items-center gap-2 text-[var(--primary)] font-semibold mb-3 text-sm uppercase tracking-wide">
+                            <Icon className="w-4 h-4" />
+                            {section.title}
+                          </h4>
+                          <ul className="space-y-2 text-[var(--muted-foreground)]">
+                            {section.links.map((link, i) => (
+                              <li key={i}>
+                                <Link
+                                  href="#"
+                                  className="text-sm hover:text-[var(--primary)] transition-colors block py-1"
+                                >
+                                  {link}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      );
+                    })}
+                  </div>
 
-    {/* Column 3 */}
-    <div className="flex flex-col justify-between h-full space-y-6">
-      {["Managed Security Services", "Risk Management"].map((title) => {
-        const section = whatWeDoSections.find((s) => s.title === title);
-        if (!section) return null;
-        const Icon = iconMap[section.title] ?? ShieldCheck;
-        return (
-          <div key={section.title} className="flex flex-col">
-            <h4 className="flex items-center gap-2 text-[var(--primary)] font-semibold mb-3 text-sm uppercase tracking-wide">
-              <Icon className="w-4 h-4" />
-              {section.title}
-            </h4>
-            <ul className="space-y-2 text-[var(--muted-foreground)]">
-              {section.links.map((link, i) => (
-                <li key={i}>
-                  <Link
-                    href="#"
-                    className="text-sm hover:text-[var(--primary)] transition-colors block py-1"
-                  >
-                    {link}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </div>
-        );
-      })}
-    </div>
-  </div>
-)}
+                  {/* Column 3 */}
+                  <div className="flex flex-col justify-between h-full space-y-6">
+                    {["Managed Security Services", "Risk Management"].map((title) => {
+                      const section = whatWeDoSections.find((s) => s.title === title);
+                      if (!section) return null;
+                      const Icon = iconMap[section.title] ?? ShieldCheck;
+                      return (
+                        <div key={section.title} className="flex flex-col">
+                          <h4 className="flex items-center gap-2 text-[var(--primary)] font-semibold mb-3 text-sm uppercase tracking-wide">
+                            <Icon className="w-4 h-4" />
+                            {section.title}
+                          </h4>
+                          <ul className="space-y-2 text-[var(--muted-foreground)]">
+                            {section.links.map((link, i) => (
+                              <li key={i}>
+                                <Link
+                                  href="#"
+                                  className="text-sm hover:text-[var(--primary)] transition-colors block py-1"
+                                >
+                                  {link}
+                                </Link>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
 
             </div>
 
@@ -329,9 +329,8 @@ export function Navigation() {
                   What We Do
                 </div>
                 <ChevronDown
-                  className={`h-5 w-5 transition-transform ${
-                    activeAccordion === "whatwedo" ? "rotate-180" : ""
-                  }`}
+                  className={`h-5 w-5 transition-transform ${activeAccordion === "whatwedo" ? "rotate-180" : ""
+                    }`}
                 />
               </button>
 
@@ -372,9 +371,8 @@ export function Navigation() {
                   Who We Are
                 </div>
                 <ChevronDown
-                  className={`h-5 w-5 transition-transform ${
-                    activeAccordion === "whoweare" ? "rotate-180" : ""
-                  }`}
+                  className={`h-5 w-5 transition-transform ${activeAccordion === "whoweare" ? "rotate-180" : ""
+                    }`}
                 />
               </button>
 
@@ -410,9 +408,8 @@ export function Navigation() {
                   Resources
                 </div>
                 <ChevronDown
-                  className={`h-5 w-5 transition-transform ${
-                    activeAccordion === "resources" ? "rotate-180" : ""
-                  }`}
+                  className={`h-5 w-5 transition-transform ${activeAccordion === "resources" ? "rotate-180" : ""
+                    }`}
                 />
               </button>
 
