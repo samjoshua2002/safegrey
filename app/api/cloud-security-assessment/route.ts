@@ -5,24 +5,24 @@ import path from 'path';
 
 // Personal email domains to block
 const PERSONAL_EMAIL_DOMAINS = [
-    'yahoo.com',
-    'outlook.com',
-    'hotmail.com',
-    'live.com',
-    'icloud.com',
-    'aol.com',
-    'protonmail.com',
-    'mail.com',
-    'zoho.com',
+  'yahoo.com',
+  'outlook.com',
+  'hotmail.com',
+  'live.com',
+  'icloud.com',
+  'aol.com',
+  'protonmail.com',
+  'mail.com',
+  'zoho.com',
 ];
 
 function isPersonalEmail(email: string): boolean {
-    const domain = email.split('@')[1]?.toLowerCase();
-    return PERSONAL_EMAIL_DOMAINS.includes(domain);
+  const domain = email.split('@')[1]?.toLowerCase();
+  return PERSONAL_EMAIL_DOMAINS.includes(domain);
 }
 
 function getEmailTemplate(name: string, assessmentType: string): string {
-    return `
+  return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -166,85 +166,85 @@ function getEmailTemplate(name: string, assessmentType: string): string {
 }
 
 export async function POST(request: NextRequest) {
-    try {
-        const body = await request.json();
-        const { name, email, assessmentType } = body;
+  try {
+    const body = await request.json();
+    const { name, email, assessmentType } = body;
 
-        // Validate inputs
-        if (!name || !email || !assessmentType) {
-            return NextResponse.json(
-                { error: 'Name, email, and assessment type are required' },
-                { status: 400 }
-            );
-        }
-
-        // Validate email format
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
-            return NextResponse.json(
-                { error: 'Invalid email format' },
-                { status: 400 }
-            );
-        }
-
-        // Check if email is personal
-        if (isPersonalEmail(email)) {
-            return NextResponse.json(
-                { error: 'Please use your company email address. Personal email addresses (Gmail, Outlook, Yahoo, etc.) are not accepted.' },
-                { status: 400 }
-            );
-        }
-
-        // Configure nodemailer
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: process.env.EMAIL_USER,
-                pass: process.env.EMAIL_PASS,
-            },
-        });
-
-        // Get PDF path
-        const pdfFilename = `${assessmentType}.pdf`;
-        const pdfPath = path.join(process.cwd(), 'public', 'cloud-security-assessment', pdfFilename);
-
-        // Check if PDF exists
-        if (!fs.existsSync(pdfPath)) {
-            return NextResponse.json(
-                { error: 'PDF file not found' },
-                { status: 500 }
-            );
-        }
-
-        // Email options
-        const mailOptions = {
-            from: {
-                name: 'SafeGrey Security',
-                address: process.env.EMAIL_USER!,
-            },
-            to: email,
-            subject: `${assessmentType} Guide - SafeGrey`,
-            html: getEmailTemplate(name, assessmentType),
-            attachments: [
-                {
-                    filename: pdfFilename,
-                    path: pdfPath,
-                },
-            ],
-        };
-
-        // Send email
-        await transporter.sendMail(mailOptions);
-
-        return NextResponse.json(
-            { message: 'Email sent successfully' },
-            { status: 200 }
-        );
-    } catch (error) {
-        console.error('Error sending email:', error);
-        return NextResponse.json(
-            { error: 'Failed to send email. Please try again later.' },
-            { status: 500 }
-        );
+    // Validate inputs
+    if (!name || !email || !assessmentType) {
+      return NextResponse.json(
+        { error: 'Name, email, and assessment type are required' },
+        { status: 400 }
+      );
     }
+
+    // Validate email format
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      return NextResponse.json(
+        { error: 'Invalid email format' },
+        { status: 400 }
+      );
+    }
+
+    // Check if email is personal
+    if (isPersonalEmail(email)) {
+      return NextResponse.json(
+        { error: 'Please use your company email address. Personal email addresses (Gmail, Outlook, Yahoo, etc.) are not accepted.' },
+        { status: 400 }
+      );
+    }
+
+    // Configure nodemailer
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    // Get PDF path
+    const pdfFilename = `${assessmentType}.pdf`;
+    const pdfPath = path.join(process.cwd(), 'public', 'cloud-security-assessment', pdfFilename);
+
+    // Check if PDF exists
+    if (!fs.existsSync(pdfPath)) {
+      return NextResponse.json(
+        { error: 'PDF file not found' },
+        { status: 500 }
+      );
+    }
+
+    // Email options
+    const mailOptions = {
+      from: {
+        name: 'SafeGrey Security',
+        address: process.env.EMAIL_USER!,
+      },
+      to: email,
+      subject: `${assessmentType} Guide - SafeGrey`,
+      html: getEmailTemplate(name, assessmentType),
+      attachments: [
+        {
+          filename: pdfFilename,
+          path: pdfPath,
+        },
+      ],
+    };
+
+    // Send email
+    await transporter.sendMail(mailOptions);
+
+    return NextResponse.json(
+      { message: 'Email sent successfully' },
+      { status: 200 }
+    );
+  } catch (error) {
+    console.error('Error sending email:', error);
+    return NextResponse.json(
+      { error: 'Failed to send email. Please try again later.' },
+      { status: 500 }
+    );
+  }
 }

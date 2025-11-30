@@ -2,9 +2,9 @@ import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 
 function getEmailTemplate(data: any): string {
-    const { firstName, lastName, email, company, designation, phone } = data;
+  const { firstName, lastName, email, company, designation, phone } = data;
 
-    return `
+  return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -93,7 +93,7 @@ function getEmailTemplate(data: any): string {
 }
 
 function getAutoReplyTemplate(firstName: string): string {
-    return `
+  return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -169,56 +169,56 @@ function getAutoReplyTemplate(firstName: string): string {
 }
 
 export async function POST(req: Request) {
-    try {
-        const body = await req.json();
-        const { firstName, lastName, email, company, designation, phone } = body;
+  try {
+    const body = await req.json();
+    const { firstName, lastName, email, company, designation, phone } = body;
 
-        // Basic validation
-        if (!firstName || !lastName || !email || !phone) {
-            return NextResponse.json(
-                { error: 'Missing required fields' },
-                { status: 400 }
-            );
-        }
-
-        // Configure transporter with new credentials
-        const transporter = nodemailer.createTransport({
-            service: 'gmail',
-            auth: {
-                user: process.env.contact_USER,
-                pass: process.env.contact_PASS,
-            },
-        });
-
-        // 1. Send notification to Admin
-        const adminMailOptions = {
-            from: `"Safegrey Website" <${process.env.contact_USER}>`,
-            to: process.env.contact_USER, // Sending to self/admin
-            replyTo: email,
-            subject: `New Contact: ${firstName} ${lastName} from ${company || 'Website'}`,
-            html: getEmailTemplate(body),
-        };
-
-        // 2. Send auto-reply to User
-        const userMailOptions = {
-            from: `"Safegrey Security" <${process.env.contact_USER}>`,
-            to: email,
-            subject: `We've received your message - Safegrey`,
-            html: getAutoReplyTemplate(firstName),
-        };
-
-        // Send both emails
-        await Promise.all([
-            transporter.sendMail(adminMailOptions),
-            transporter.sendMail(userMailOptions)
-        ]);
-
-        return NextResponse.json({ message: 'Messages sent successfully' }, { status: 200 });
-    } catch (error) {
-        console.error('Error processing contact form:', error);
-        return NextResponse.json(
-            { error: 'Internal server error' },
-            { status: 500 }
-        );
+    // Basic validation
+    if (!firstName || !lastName || !email || !phone) {
+      return NextResponse.json(
+        { error: 'Missing required fields' },
+        { status: 400 }
+      );
     }
+
+    // Configure transporter with new credentials
+    const transporter = nodemailer.createTransport({
+      service: 'gmail',
+      auth: {
+        user: process.env.contact_USER,
+        pass: process.env.contact_PASS,
+      },
+    });
+
+    // 1. Send notification to Admin
+    const adminMailOptions = {
+      from: `"Safegrey Website" <${process.env.contact_USER}>`,
+      to: process.env.contact_USER, // Sending to self/admin
+      replyTo: email,
+      subject: `New Contact: ${firstName} ${lastName} from ${company || 'Website'}`,
+      html: getEmailTemplate(body),
+    };
+
+    // 2. Send auto-reply to User
+    const userMailOptions = {
+      from: `"Safegrey Security" <${process.env.contact_USER}>`,
+      to: email,
+      subject: `We've received your message - Safegrey`,
+      html: getAutoReplyTemplate(firstName),
+    };
+
+    // Send both emails
+    await Promise.all([
+      transporter.sendMail(adminMailOptions),
+      transporter.sendMail(userMailOptions)
+    ]);
+
+    return NextResponse.json({ message: 'Messages sent successfully' }, { status: 200 });
+  } catch (error) {
+    console.error('Error processing contact form:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
 }
