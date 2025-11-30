@@ -15,6 +15,7 @@ export default function ContactPage() {
   return (
     <main className="min-h-screen bg-[var(--theme-dark-base)]">
       <Navigation />
+      
       <ContactHero />
       <div
         className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent"
