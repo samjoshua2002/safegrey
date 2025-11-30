@@ -13,13 +13,25 @@ export const metadata: Metadata = {
 
 export default function ContactPage() {
   return (
-    <main className="min-h-screen">
+    <main className="min-h-screen bg-[var(--theme-dark-base)]">
       <Navigation />
       <ContactHero />
+      <div
+        className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent"
+        style={{
+          background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
+        }}
+      />
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
         <ContactForm />
         <ContactInfo />
       </div>
+      <div
+        className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent"
+        style={{
+          background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
+        }}
+      />
       <Footer />
     </main>
   )

@@ -7,37 +7,73 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
-import { Send, CheckCircle } from "lucide-react"
+import { Send, CheckCircle, AlertCircle } from "lucide-react"
+import { Captcha } from "@/components/ui/captcha"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
 
 export function ContactForm() {
   const [isSubmitted, setIsSubmitted] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
+  const [isCaptchaVerified, setIsCaptchaVerified] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+
+    if (!isCaptchaVerified) {
+      setError("Please complete the security verification.")
+      return
+    }
+
     setIsLoading(true)
+    setError(null)
 
-    // Simulate form submission
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    const formData = new FormData(e.currentTarget)
+    const data = {
+      firstName: formData.get("firstName"),
+      lastName: formData.get("lastName"),
+      email: formData.get("email"),
+      company: formData.get("company"),
+      designation: formData.get("designation"),
+      phone: formData.get("phone"),
+    }
 
-    setIsLoading(false)
-    setIsSubmitted(true)
+    try {
+      const response = await fetch("/api/contact", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      })
+
+      if (!response.ok) {
+        throw new Error("Failed to send message")
+      }
+
+      setIsSubmitted(true)
+    } catch (err) {
+      setError("Something went wrong. Please try again later.")
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   if (isSubmitted) {
     return (
-      <Card className="glass-effect glow-accent">
+      <Card className="border border-[var(--theme-border)] bg-[var(--theme-dark-secondary)]/50 backdrop-blur-sm glow-accent">
         <CardContent className="p-12 text-center">
-          <CheckCircle className="w-16 h-16 text-accent mx-auto mb-6" />
-          <h3 className="text-2xl font-bold mb-4">Thank You!</h3>
-          <p className="text-muted-foreground mb-6">
+          <CheckCircle className="w-16 h-16 text-[var(--theme-accent)] mx-auto mb-6" />
+          <h3 className="text-2xl font-bold mb-4 text-[var(--foreground)]">Thank You!</h3>
+          <p className="text-[var(--muted-foreground)] mb-6">
             We've received your message and will get back to you within 24 hours. Our security experts are reviewing
             your requirements.
           </p>
-          <Button onClick={() => setIsSubmitted(false)} variant="outline" className="glass-effect bg-transparent">
+          <Button
+            onClick={() => setIsSubmitted(false)}
+            variant="outline"
+            className="glass-effect bg-transparent border-[var(--theme-accent)] text-[var(--foreground)] hover:bg-[var(--theme-accent)]/10"
+          >
             Send Another Message
           </Button>
         </CardContent>
@@ -46,10 +82,10 @@ export function ContactForm() {
   }
 
   return (
-    <Card className="glass-effect hover:glow-accent transition-all duration-300">
+    <Card className="border border-[var(--theme-border)] bg-[var(--theme-dark-secondary)]/50 backdrop-blur-sm hover:border-[var(--theme-accent)]/50 transition-all duration-300">
       <CardHeader>
-        <CardTitle className="text-2xl">Get Your Free Security Assessment</CardTitle>
-        <CardDescription className="text-base">
+        <CardTitle className="text-2xl text-[var(--foreground)]">Get Your Free Security Assessment</CardTitle>
+        <CardDescription className="text-base text-[var(--muted-foreground)]">
           Fill out the form below and our security experts will contact you to discuss your cybersecurity needs.
         </CardDescription>
       </CardHeader>
@@ -57,102 +93,71 @@ export function ContactForm() {
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="firstName">First Name *</Label>
-              <Input id="firstName" placeholder="John" required className="glass-effect bg-transparent" />
+              <Label htmlFor="firstName" className="text-[var(--foreground)]">First Name *</Label>
+              <Input name="firstName" id="firstName" placeholder="John" required className="glass-effect bg-transparent border-[var(--theme-border)] text-[var(--foreground)]" />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="lastName">Last Name *</Label>
-              <Input id="lastName" placeholder="Doe" required className="glass-effect bg-transparent" />
+              <Label htmlFor="lastName" className="text-[var(--foreground)]">Last Name *</Label>
+              <Input name="lastName" id="lastName" placeholder="Doe" required className="glass-effect bg-transparent border-[var(--theme-border)] text-[var(--foreground)]" />
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="email">Email Address *</Label>
+            <Label htmlFor="email" className="text-[var(--foreground)]">Work Email *</Label>
             <Input
+              name="email"
               id="email"
               type="email"
               placeholder="john@company.com"
               required
-              className="glass-effect bg-transparent"
+              className="glass-effect bg-transparent border-[var(--theme-border)] text-[var(--foreground)]"
             />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="company">Company Name *</Label>
-            <Input id="company" placeholder="Your Company" required className="glass-effect bg-transparent" />
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="company" className="text-[var(--foreground)]">Company Name</Label>
+              <Input name="company" id="company" placeholder="Your Company" className="glass-effect bg-transparent border-[var(--theme-border)] text-[var(--foreground)]" />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="designation" className="text-[var(--foreground)]">Designation</Label>
+              <Input name="designation" id="designation" placeholder="Job Title" className="glass-effect bg-transparent border-[var(--theme-border)] text-[var(--foreground)]" />
+            </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="phone">Phone Number</Label>
-            <Input id="phone" type="tel" placeholder="+1 (555) 123-4567" className="glass-effect bg-transparent" />
+            <Label htmlFor="phone" className="text-[var(--foreground)]">Phone Number *</Label>
+            <Input name="phone" id="phone" type="tel" placeholder="+1 (555) 123-4567" required className="glass-effect bg-transparent border-[var(--theme-border)] text-[var(--foreground)]" />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="companySize">Company Size</Label>
-            <Select>
-              <SelectTrigger className="glass-effect bg-transparent">
-                <SelectValue placeholder="Select company size" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="1-10">1-10 employees</SelectItem>
-                <SelectItem value="11-50">11-50 employees</SelectItem>
-                <SelectItem value="51-200">51-200 employees</SelectItem>
-                <SelectItem value="201-1000">201-1000 employees</SelectItem>
-                <SelectItem value="1000+">1000+ employees</SelectItem>
-              </SelectContent>
-            </Select>
+          <div className="space-y-4 pt-2">
+            <Captcha onVerify={setIsCaptchaVerified} className="w-full" />
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="services">Services Interested In</Label>
-            <Select>
-              <SelectTrigger className="glass-effect bg-transparent">
-                <SelectValue placeholder="Select services" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="threat-hunting">Threat Hunting</SelectItem>
-                <SelectItem value="incident-response">Incident Response</SelectItem>
-                <SelectItem value="security-consulting">Security Consulting</SelectItem>
-                <SelectItem value="security-training">Security Training</SelectItem>
-                <SelectItem value="all-services">All Services</SelectItem>
-              </SelectContent>
-            </Select>
+          {error && (
+            <Alert variant="destructive" className="bg-red-900/20 border-red-900/50 text-red-200">
+              <AlertCircle className="h-4 w-4" />
+              <AlertTitle>Error</AlertTitle>
+              <AlertDescription>{error}</AlertDescription>
+            </Alert>
+          )}
+
+          <div className="space-y-4 text-sm text-[var(--muted-foreground)] border-t border-[var(--theme-border)] pt-6">
+            <p>
+              By clicking here, you acknowledge that you have read and understood our <a href="/privacy" className="text-[var(--theme-accent)] hover:underline">Privacy Policy</a>, and you agree to be bound by its terms.
+            </p>
+            <p className="text-xs">
+              Disclaimer: Please read these documents carefully before proceeding. Continued use of this website constitutes your agreement to all terms and conditions set forth therein.
+            </p>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="message">Message *</Label>
-            <Textarea
-              id="message"
-              placeholder="Tell us about your cybersecurity needs and challenges..."
-              required
-              rows={4}
-              className="glass-effect bg-transparent"
-            />
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <Checkbox id="newsletter" />
-            <Label htmlFor="newsletter" className="text-sm text-muted-foreground">
-              Subscribe to our security newsletter and threat intelligence updates
-            </Label>
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <Checkbox id="privacy" required />
-            <Label htmlFor="privacy" className="text-sm text-muted-foreground">
-              I agree to the{" "}
-              <a href="/privacy" className="text-accent hover:underline">
-                Privacy Policy
-              </a>{" "}
-              and
-              <a href="/terms" className="text-accent hover:underline ml-1">
-                Terms of Service
-              </a>{" "}
-              *
-            </Label>
-          </div>
-
-          <Button type="submit" size="lg" className="w-full glow-accent group" disabled={isLoading}>
+          <Button
+            type="submit"
+            size="lg"
+            className="w-full glow-accent animate-pulse-glow group"
+            style={{ backgroundColor: "var(--primary)", color: "var(--foreground)" }}
+            disabled={isLoading || !isCaptchaVerified}
+          >
             {isLoading ? (
               "Sending..."
             ) : (

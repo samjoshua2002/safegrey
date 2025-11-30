@@ -115,7 +115,7 @@ export function TestimonialsSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
               >
-                <Card className="h-full glass-effect border border-[var(--theme-border)] hover:glow-accent hover:scale-[1.03] transition-all duration-300 flex flex-col text-left p-6">
+                <Card className="h-full glass-effect border border-[var(--theme-border)] hover:glow-accent hover:scale-[1.03] transition-all duration-300 flex flex-col text-left p-6  hover:border-[var(--theme-accent)]/50 transition-all duration-300">
                   <CardContent className="flex flex-col justify-start h-full p-0">
                     {/* Icon */}
                     <div className="mb-4">
@@ -151,7 +151,7 @@ export function TestimonialsSection() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: (index + 3) * 0.1 }}
               >
-                <Card className="h-full glass-effect border border-[var(--theme-border)] hover:glow-accent hover:scale-[1.03] transition-all duration-300 flex flex-col text-left p-6">
+                <Card className="h-full glass-effect border border-[var(--theme-border)] hover:glow-accent hover:scale-[1.03] transition-all duration-300 flex flex-col text-left p-6 hover:border-[var(--theme-accent)]/50 transition-all duration-300">
                   <CardContent className="flex flex-col justify-start h-full p-0">
                     {/* Icon */}
                     <div className="mb-4">

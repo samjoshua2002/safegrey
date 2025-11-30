@@ -1,147 +1,66 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Mail, Phone, MapPin, Clock, MessageCircle, Calendar } from "lucide-react"
+import { Star } from "lucide-react"
 
 export function ContactInfo() {
-  const contactMethods = [
-    {
-      icon: Phone,
-      title: "Emergency Hotline",
-      description: "24/7 incident response",
-      value: "1-800-THREATOPS",
-      action: "Call Now",
-    },
-    {
-      icon: Mail,
-      title: "General Inquiries",
-      description: "Sales and support",
-      value: "contact@threatops.com",
-      action: "Send Email",
-    },
-    {
-      icon: MessageCircle,
-      title: "Live Chat",
-      description: "Instant support",
-      value: "Available 9 AM - 6 PM PST",
-      action: "Start Chat",
-    },
-  ]
-
-  const officeHours = [
-    { day: "Monday - Friday", hours: "9:00 AM - 6:00 PM PST" },
-    { day: "Saturday", hours: "10:00 AM - 4:00 PM PST" },
-    { day: "Sunday", hours: "Emergency Support Only" },
-  ]
-
   return (
-    <div className="space-y-8">
-      {/* Contact Methods */}
-      <Card className="glass-effect">
-        <CardHeader>
-          <CardTitle className="text-xl">Get in Touch</CardTitle>
-          <CardDescription>Multiple ways to reach our cybersecurity experts</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-6">
-          {contactMethods.map((method, index) => (
-            <div
-              key={index}
-              className="flex items-start space-x-4 p-4 glass-effect rounded-lg hover:glow-accent transition-all duration-300"
-            >
-              <div className="p-2 rounded-lg bg-accent/10">
-                <method.icon className="w-5 h-5 text-accent" />
-              </div>
-              <div className="flex-1">
-                <h4 className="font-semibold">{method.title}</h4>
-                <p className="text-sm text-muted-foreground mb-1">{method.description}</p>
-                <p className="text-sm font-medium mb-2">{method.value}</p>
-                <Button size="sm" variant="outline" className="glass-effect bg-transparent">
-                  {method.action}
-                </Button>
-              </div>
-            </div>
-          ))}
-        </CardContent>
-      </Card>
+    <div className="border border-[var(--theme-border)] bg-[var(--theme-dark-secondary)]/50 backdrop-blur-sm rounded-xl p-8 shadow-2xl hover:border-[var(--theme-accent)]/50 transition-all duration-300">
+      {/* Paper-style content */}
+      <div className="space-y-6 text-[var(--foreground)]">
+        <p className="text-base leading-relaxed text-[var(--muted-foreground)]">
+          At <span className="font-semibold" style={{ color: "var(--primary)" }}>Safegrey</span>, we combine the power of Cyber Intelligence, Brand Monitoring, Attack Surface Monitoring, Infrastructure Monitoring and Supply chain to give visibility and context to our customers' Initial Attack Vectors.
+        </p>
 
-      {/* Office Hours */}
-      <Card className="glass-effect">
-        <CardHeader>
-          <CardTitle className="text-xl flex items-center">
-            <Clock className="w-5 h-5 text-accent mr-2" />
-            Office Hours
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-3">
-            {officeHours.map((schedule, index) => (
-              <div
-                key={index}
-                className="flex justify-between items-center py-2 border-b border-white/10 last:border-b-0"
-              >
-                <span className="text-sm font-medium">{schedule.day}</span>
-                <span className="text-sm text-muted-foreground">{schedule.hours}</span>
-              </div>
-            ))}
-          </div>
-          <div className="mt-6 p-4 glass-effect rounded-lg">
-            <p className="text-sm text-muted-foreground mb-3">
-              <strong className="text-accent">Emergency Support:</strong> Available 24/7 for critical security incidents
+        <p className="text-base leading-relaxed text-[var(--muted-foreground)]">
+          Our single unified dashboard allows customers to build custom dashboards, triage and visualize all digital threats in one place. In addition, we offer workflows and integrations to manage and remediate the identified threats. The Safegrey Platform helps you by identifying and reporting below listed business-critical threats from Day 1:
+        </p>
+
+        {/* Threats List */}
+        <div className="space-y-4 pl-4 border-l-2" style={{ borderColor: "var(--primary)" }}>
+          <div>
+            <h4 className="font-semibold mb-2 text-[var(--foreground)]">Credential Leaks</h4>
+            <p className="text-sm text-[var(--muted-foreground)]">
+              Related to your organisation, linked to the Domain Address.
             </p>
-            <Button size="sm" className="glow-accent">
-              <Phone className="w-4 h-4 mr-2" />
-              Emergency Line
-            </Button>
           </div>
-        </CardContent>
-      </Card>
 
-      {/* Location */}
-      <Card className="glass-effect">
-        <CardHeader>
-          <CardTitle className="text-xl flex items-center">
-            <MapPin className="w-5 h-5 text-accent mr-2" />
-            Our Location
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <div>
-              <h4 className="font-semibold mb-2">ThreatOps Headquarters</h4>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                123 Security Boulevard
-                <br />
-                Suite 500
-                <br />
-                San Francisco, CA 94105
-                <br />
-                United States
-              </p>
+          <div>
+            <h4 className="font-semibold mb-2 text-[var(--foreground)]">Brand Threats</h4>
+            <p className="text-sm text-[var(--muted-foreground)]">
+              Phishing/Impersonating domains, Fake Social Media Brand Profiles, Rogue Mobile apps, and Fake Customer care scams.
+            </p>
+          </div>
+
+          <div>
+            <h4 className="font-semibold mb-2 text-[var(--foreground)]">Public Infrastructure/Public Attack Surface Threats</h4>
+            <p className="text-sm text-[var(--muted-foreground)]">
+              Vulnerabilities and Misconfigurations on the Internet-facing assets, feeble SSL certificates and open ports.
+            </p>
+          </div>
+        </div>
+
+        {/* Customer First Section */}
+        <div className="pt-6 mt-6 border-t border-[var(--theme-border)]">
+          <h3 className="text-xl font-bold mb-4 text-[var(--foreground)]">We are a Customer First Vendor</h3>
+
+          <div className="flex items-center gap-3 p-4 rounded-lg border border-[var(--theme-border)] bg-[var(--theme-dark-base)]/50">
+            <div className="flex items-center gap-1">
+              {[...Array(5)].map((_, i) => (
+                <Star
+                  key={i}
+                  className="w-5 h-5 fill-current"
+                  style={{ color: i < 4 ? "var(--primary)" : "var(--muted-foreground)" }}
+                />
+              ))}
             </div>
-            <Button variant="outline" className="glass-effect bg-transparent">
-              <MapPin className="w-4 h-4 mr-2" />
-              Get Directions
-            </Button>
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-[var(--foreground)]">4.8 stars in Gartner Peer Insights</p>
+              <p className="text-xs text-[var(--muted-foreground)]">for Safegrey</p>
+            </div>
           </div>
-        </CardContent>
-      </Card>
-
-      {/* Quick Actions */}
-      <Card className="glass-effect glow-accent">
-        <CardHeader>
-          <CardTitle className="text-xl">Quick Actions</CardTitle>
-          <CardDescription>Fast-track your security assessment</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <Button className="w-full glow-accent group">
-            <Calendar className="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" />
-            Schedule Free Consultation
-          </Button>
-          <Button variant="outline" className="w-full glass-effect bg-transparent">
-            <Phone className="w-4 h-4 mr-2" />
-            Request Emergency Support
-          </Button>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   )
 }
