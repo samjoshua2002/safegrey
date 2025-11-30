@@ -228,20 +228,13 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Configure nodemailer for Zoho Mail
+    // Configure nodemailer
     const transporter = nodemailer.createTransport({
-      host: 'smtp.zoho.com',
-      port: 587,
-      secure: false, // use STARTTLS
-      requireTLS: true,
+      service: 'gmail',
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
-      tls: {
-        ciphers: 'SSLv3',
-        rejectUnauthorized: false
-      }
     });
 
     // Get PDF path
