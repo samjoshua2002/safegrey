@@ -1,6 +1,7 @@
 "use client"
 
-import { useRef } from "react"
+import { useRef, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 import { Navigation } from "@/components/navigation"
 import { ServicesHero } from "@/components/services-hero"
 import { SecurityAssessment } from "@/components/Security-Assessment"
@@ -19,6 +20,17 @@ export function ServicesPageContent() {
     const ManangeSecurityRef = useRef<HTMLDivElement>(null)
     const RiskManagementRef = useRef<HTMLDivElement>(null)
     const SecurityEnablementRef = useRef<HTMLDivElement>(null)
+    const searchParams = useSearchParams()
+    const section = searchParams.get("section")
+
+    useEffect(() => {
+        if (section) {
+            // Small delay to ensure rendering and layout
+            setTimeout(() => {
+                handleServiceSelect(section)
+            }, 100)
+        }
+    }, [section])
 
     const handleServiceSelect = (serviceId: string) => {
         switch (serviceId) {
@@ -66,7 +78,7 @@ export function ServicesPageContent() {
 
     return (
         <main className="min-h-screen">
-            <Navigation />
+            <Navigation onServiceSelect={handleServiceSelect} />
 
             <ServicesHero onServiceSelect={handleServiceSelect} />
             <div

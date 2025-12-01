@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -180,6 +181,16 @@ export function SecurityPostureAssessment() {
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({ name: "", email: "" })
   const [selectedAssessment, setSelectedAssessment] = useState("")
+  const [activeTab, setActiveTab] = useState("phishing-campaign")
+
+  const searchParams = useSearchParams()
+  const tab = searchParams.get("tab")
+
+  useEffect(() => {
+    if (tab && assessmentTypes.some(t => t.id === tab)) {
+      setActiveTab(tab)
+    }
+  }, [tab])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -250,12 +261,12 @@ export function SecurityPostureAssessment() {
 
 
       ],
-   highlights: [
-  "On-Site Intrusion Simulation",
-  "Staff Response Evaluation",  // Removed "Awareness &"
-  "Findings with Operational Impact",  // Removed "Clear"
-  "Practical Physical Security Enhancements"
-],
+      highlights: [
+        "On-Site Intrusion Simulation",
+        "Staff Response Evaluation",  // Removed "Awareness &"
+        "Findings with Operational Impact",  // Removed "Clear"
+        "Practical Physical Security Enhancements"
+      ],
       gradient: "from-accent/20 via-primary/20 to-accent/20"
     },
     {
@@ -324,7 +335,7 @@ export function SecurityPostureAssessment() {
           </p>
         </div>
 
-        <Tabs defaultValue="phishing-campaign" className="w-full items-center">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full items-center">
           <TabsList className="grid grid-cols-2 md:grid-cols-4 gap-3 p-2 bg-card/50 backdrop-blur-sm rounded-2xl h-auto border border-border/50 shadow-xl mb-12">
             {assessmentTypes.map((type) => {
               const Icon = type.icon

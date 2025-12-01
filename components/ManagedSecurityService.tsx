@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -179,6 +180,16 @@ export function ManagedSecurityServices() {
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({ name: "", email: "" })
   const [selectedService, setSelectedService] = useState("")
+  const [activeTab, setActiveTab] = useState("siem")
+
+  const searchParams = useSearchParams()
+  const tab = searchParams.get("tab")
+
+  useEffect(() => {
+    if (tab && serviceTypes.some(t => t.id === tab)) {
+      setActiveTab(tab)
+    }
+  }, [tab])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -301,7 +312,7 @@ export function ManagedSecurityServices() {
           </p>
         </div>
 
-        <Tabs defaultValue={serviceTypes[0].id} className="w-full items-center">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full items-center">
           <TabsList className="grid grid-cols-3 md:grid-cols-3 gap-3 p-2 bg-card/50 backdrop-blur-sm rounded-2xl h-auto border border-border/50 shadow-xl mb-12">
             {serviceTypes.map((service) => {
               const Icon = service.icon

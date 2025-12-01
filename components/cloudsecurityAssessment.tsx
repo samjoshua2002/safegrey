@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react"
+import { useSearchParams } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
@@ -179,6 +180,16 @@ export function CloudSecurityAssessment() {
   const [isLoading, setIsLoading] = useState(false)
   const [formData, setFormData] = useState({ name: "", email: "" })
   const [selectedAssessment, setSelectedAssessment] = useState("")
+  const [activeTab, setActiveTab] = useState("cloud-infrastructure")
+
+  const searchParams = useSearchParams()
+  const tab = searchParams.get("tab")
+
+  useEffect(() => {
+    if (tab && assessmentTypes.some(t => t.id === tab)) {
+      setActiveTab(tab)
+    }
+  }, [tab])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -299,7 +310,7 @@ export function CloudSecurityAssessment() {
           </p>
         </div>
 
-        <Tabs defaultValue="cloud-infrastructure" className="w-full items-center">
+        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full items-center">
           <TabsList className="grid grid-cols-3 md:grid-cols-3 gap-3 p-2 bg-card/50 backdrop-blur-sm rounded-2xl h-auto border border-border/50 shadow-xl mb-12">
             {assessmentTypes.map((type) => {
               const Icon = type.icon

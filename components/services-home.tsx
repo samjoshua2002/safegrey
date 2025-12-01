@@ -196,12 +196,12 @@ const rowColors = [
 ];
 
 const rowImages = [
-  "/service.jpeg",
-  "/a2.jpg",
-  "/a3.jpg",
-  "/cloud.jpg",
-  "/image2.png",
-  "/a4.jpg",
+  "/service.webp",
+  "/a2.webp",
+  "/a3.webp",
+  "/cloud.webp",
+  "/image2.webp",
+  "/a4.webp",
 ];
 
 // Preload images
@@ -232,8 +232,8 @@ export default function ServicesAccordion() {
   }, []);
 
   return (
-    <section className="relative w-full py-20">
-      
+    <section className="relative w-full py-20 px-4 md:px-6 lg:px-12">
+
       {/* Dotted clusters */}
       <div className="absolute inset-0 opacity-30">
         <div className="absolute top-20 left-10 grid grid-cols-3 gap-8">
@@ -289,51 +289,48 @@ export default function ServicesAccordion() {
                 }}
               >
                 {/* INDIVIDUAL ACCORDION IMAGE - Only for this specific accordion */}
-              {/* Simple CSS transition version - smoothest */}
-<div className="absolute inset-0 overflow-hidden">
-  <div
-    className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-200 ease-out ${
-      showImage ? 'opacity-100' : 'opacity-0'
-    }`}
-    style={{
-      backgroundImage: `url(${rowImages[index]})`,
-      filter: "brightness(0.95)",
-    }}
-  />
-  
-  <div
-    className={`absolute inset-0 transition-opacity duration-200 ease-out ${
-      showImage ? 'opacity-50' : 'opacity-0'
-    }`}
-    style={{
-      background: "linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6))",
-    }}
-  />
-</div>
+                {/* Simple CSS transition version - smoothest */}
+                <div className="absolute inset-0 overflow-hidden">
+                  <div
+                    className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-300 ease-in-out will-change-[opacity] ${showImage ? 'opacity-100' : 'opacity-0'
+                      }`}
+                    style={{
+                      backgroundImage: `url(${rowImages[index]})`,
+                      filter: "brightness(0.95)",
+                    }}
+                  />
+
+                  <div
+                    className={`absolute inset-0 transition-opacity duration-300 ease-in-out will-change-[opacity] ${showImage ? 'opacity-50' : 'opacity-0'
+                      }`}
+                    style={{
+                      background: "linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6))",
+                    }}
+                  />
+                </div>
 
                 {/* Content */}
                 <div className="relative z-10">
                   {/* HEADER */}
                   <button
-                    className="w-full flex items-center justify-between px-7 py-6 text-left hover:bg-white/5 transition-colors duration-200 cursor-pointer"
+                    className="w-full flex items-center justify-between px-4 md:px-7 py-6 text-left hover:bg-white/5 transition-colors duration-200 cursor-pointer"
                     onClick={() => handleAccordionToggle(service.key)}
                   >
                     <div className="flex items-center gap-4">
                       {/* Red indicator */}
-                      <div className={`w-2 h-8 rounded-full transition-all duration-200 ${
-                        isOpen ? "bg-red-500 shadow-lg shadow-red-500/50" : 
-                        isHovered ? "bg-red-500/80" : "bg-red-500/50"
-                      }`} />
-                      
+                      <div className={`w-2 h-8 rounded-full transition-all duration-200 ${isOpen ? "bg-red-500 shadow-lg shadow-red-500/50" :
+                          isHovered ? "bg-red-500/80" : "bg-red-500/50"
+                        }`} />
+
                       <span className="text-2xl font-semibold text-white tracking-wide">
                         {service.title}
                       </span>
                     </div>
 
                     <div className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors duration-200">
-                      <ChevronDown 
-                        className={`text-white transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`} 
-                        size={24} 
+                      <ChevronDown
+                        className={`text-white transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+                        size={24}
                       />
                     </div>
                   </button>
@@ -345,16 +342,16 @@ export default function ServicesAccordion() {
                         initial={{ height: 0, opacity: 0 }}
                         animate={{ height: "auto", opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.3, ease: "easeInOut" }}
-                        className="px-7 pb-7 overflow-hidden"
+                        transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+                        className="px-4 md:px-7 pb-7 overflow-hidden"
                       >
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-2">
                           {service.sections.map((section, i) => (
                             <motion.div
                               key={i}
-                              initial={{ opacity: 0, y: 5 }}
+                              initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: i * 0.05, duration: 0.2 }}
+                              transition={{ delay: i * 0.04, duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
                               className="p-5 bg-gradient-to-br from-white/15 to-white/5 border border-white/20 rounded-xl backdrop-blur-sm hover:bg-white/15 transition-all duration-200 group"
                             >
                               <div className="flex gap-4">
