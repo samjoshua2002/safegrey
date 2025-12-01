@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { Mail, Phone, MapPin } from "lucide-react"
+import { Mail, Phone, MapPin, Linkedin, Twitter, Github } from "lucide-react"
 
 export function Footer() {
   const footerLinks = {
@@ -20,6 +20,24 @@ export function Footer() {
     ],
   }
 
+  const socialLinks = [
+    {
+      name: "LinkedIn",
+      href: "https://www.linkedin.com/company/safegrey/",
+      icon: Linkedin,
+    },
+    {
+      name: "Twitter",
+      href: "https://x.com/safegrey_",
+      icon: Twitter,
+    },
+    {
+      name: "GitHub",
+      href: "https://github.com/safegrey",
+      icon: Github,
+    },
+  ]
+
   return (
     <footer className="bg-[var(--theme-dark-base)] border-t border-[var(--theme-border)]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
@@ -33,6 +51,23 @@ export function Footer() {
               Advanced cybersecurity solutions that protect your business before threats become breaches. Proactive.
               Reliable. Always vigilant.
             </p>
+            
+            {/* Social Icons */}
+            <div className="flex space-x-4 mb-6">
+              {socialLinks.map((social) => (
+                <a
+                  key={social.name}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-[var(--theme-text-secondary)] hover:text-[var(--theme-accent)] transition-colors"
+                  aria-label={`Follow us on ${social.name}`}
+                >
+                  <social.icon className="w-5 h-5" />
+                </a>
+              ))}
+            </div>
+
             <div className="space-y-2">
               <div className="flex items-center text-sm text-[var(--theme-text-secondary)]">
                 <Mail className="w-4 h-4 mr-2 text-[var(--theme-accent)]" />
@@ -42,7 +77,7 @@ export function Footer() {
                 <Phone className="w-4 h-4 mr-2 text-[var(--theme-accent)]" />
                 +91 7540081007
               </div>
-              <div className="flex items-center text-sm text-[var(--theme-text-secondary)]">
+              <div className="flex items-start text-sm text-[var(--theme-text-secondary)]">
                 <MapPin className="w-4 h-4 mr-2 text-[var(--theme-accent)]" />
                 No. 50 & 51, TEJA RESIDENCY - 1, <br /> COCONUT GARDEN,
                 KODIGEHALLI MAIN ROAD, <br />AYYAPPA NAGAR,

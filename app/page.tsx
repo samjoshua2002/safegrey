@@ -6,7 +6,7 @@ import { ServicesOverview } from "@/components/services-overview";
 
 import { TestimonialsSection } from "@/components/testimonials-section";
 
-import { ServicesAccordion } from "@/components/services-home";
+import ServicesAccordion from "@/components/services-home";
 import { Footer } from "@/components/footer";
 import EcosystemSection from "@/components/ui/ecosystem-section";
 import { useEffect, useRef } from "react";
