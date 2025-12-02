@@ -1,150 +1,224 @@
+"use client";
 import Image from "next/image"
+import { StickyScroll } from "@/components/ui/sticky-scroll-reveal";
+import { Zap, Target, Shield } from "lucide-react";
+
+const stickyContent = [
+    {
+        title: "Collaborative Editing",
+        description:
+            "Work together in real time with your team, clients, and stakeholders. Collaborate on documents, share ideas, and make decisions quickly. With our platform, you can streamline your workflow and increase productivity.",
+        content: (
+            <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(to_bottom_right,var(--theme-accent),var(--theme-accent))] text-white">
+                <div className="text-2xl font-bold">Collaborative Editing</div>
+            </div>
+        ),
+    },
+    {
+        title: "Real time changes",
+        description:
+            "See changes as they happen. With our platform, you can track every modification in real time. No more confusion about the latest version of your project. Say goodbye to the chaos of version control and embrace the simplicity of real-time updates.",
+        content: (
+            <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(to_bottom_right,var(--theme-accent),#10b981)] text-white">
+                <div className="text-2xl font-bold">Real Time Updates</div>
+            </div>
+        ),
+    },
+    {
+        title: "Version control",
+        description:
+            "Experience real-time updates and never stress about version control again. Our platform ensures that you're always working on the most recent version of your project, eliminating the need for constant manual updates. Stay in the loop, keep your team aligned, and maintain the flow of your work without any interruptions.",
+        content: (
+            <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(to_bottom_right,#f97316,#fbbf24)] text-white">
+                <div className="text-2xl font-bold">Version Control</div>
+            </div>
+        ),
+    },
+    {
+        title: "Running out of content",
+        description:
+            "Experience real-time updates and never stress about version control again. Our platform ensures that you're always working on the most recent version of your project, eliminating the need for constant manual updates. Stay in the loop, keep your team aligned, and maintain the flow of your work without any interruptions.",
+        content: (
+            <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(to_bottom_right,var(--theme-accent),#10b981)] text-white">
+                <div className="text-2xl font-bold">More Content</div>
+            </div>
+        ),
+    },
+];
+
+const iconMap = {
+    "Commitment": Zap,
+    "Strategy": Target,
+    "Responsibility": Shield,
+};
 
 export function PartnerProcess() {
     return (
-        <section className="relative py-24 px-4 sm:px-6 lg:px-8 mx-auto">
+        <section className="relative py-24">
+            {/* Sticky Scroll Section */}
+            <div className="mb-24">
+                <div className="text-center mb-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                    <h2 className="text-4xl font-bold text-[var(--foreground)] mb-4">
+                        Partner <span className="text-[var(--theme-accent)]">Experience</span>
+                    </h2>
+                    <p className="text-lg text-[var(--muted-foreground)] max-w-2xl mx-auto">
+                        Discover how our partnership platform transforms collaboration and accelerates your success
+                    </p>
+                </div>
+                <StickyScroll content={stickyContent} />
+            </div>
+
+
             {/* Enhanced Process Section */}
-            <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start mb-24">
-                {/* Process Column - Enhanced with cards */}
-                <div className="lg:col-span-4 space-y-6">
-                    <div className="sticky top-8">
-                        <h2 className="text-3xl font-bold text-[var(--foreground)] mb-8 lg:mb-12">
-                            How the program <span className="text-[var(--theme-accent)]">works</span>
-                        </h2>
-                        
-                        <div className="space-y-6">
-                            {[
-                                { step: "01", title: "Apply", desc: "Complete a short partner application (company details, offerings, target markets)." },
-                                { step: "02", title: "Qualify", desc: "Partner manager reviews fit and recommends an initial tier." },
-                                { step: "03", title: "Onboard", desc: "Contracting, access to partner portal, technical enablement, and sales collateral." },
-                                { step: "04", title: "Enable & Launch", desc: "Joint go-to-market plan, pilot engagements or co-sell opportunities." },
-                                { step: "05", title: "Grow", desc: "Ongoing support, quarterly business reviews, performance incentives, and roadmap alignment." }
-                            ].map((item, index) => (
-                                <div 
-                                    key={index}
-                                    className="group p-6 rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card-bg)] hover:border-[var(--theme-accent)] transition-all duration-300 hover:shadow-lg"
-                                >
-                                    <div className="flex items-start gap-4">
-                                        <div className="flex-shrink-0 w-8 h-8 bg-[var(--theme-accent)] rounded-full flex items-center justify-center">
-                                            <span className="text-sm font-bold text-white">{item.step}</span>
-                                        </div>
-                                        <div>
-                                            <h3 className="font-semibold text-[var(--foreground)] text-lg group-hover:text-[var(--theme-accent)] transition-colors">
-                                                {item.title}
-                                            </h3>
-                                            <p className="mt-2 font-medium text-[var(--muted-foreground)]">
-                                                {item.desc}
-                                            </p>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-start">
+                    {/* Process Column - Enhanced with cards */}
+                    <div className="lg:col-span-4 space-y-6">
+                        <div className="sticky top-8">
+                            <h2 className="text-3xl font-bold text-[var(--foreground)] mb-8 lg:mb-12">
+                                How the program <span className="text-[var(--theme-accent)]">works</span>
+                            </h2>
+
+                            <div className="space-y-6">
+                                {[
+                                    { step: "01", title: "Apply", desc: "Complete a short partner application (company details, offerings, target markets)." },
+                                    { step: "02", title: "Qualify", desc: "Partner manager reviews fit and recommends an initial tier." },
+                                    { step: "03", title: "Onboard", desc: "Contracting, access to partner portal, technical enablement, and sales collateral." },
+                                    { step: "04", title: "Enable & Launch", desc: "Joint go-to-market plan, pilot engagements or co-sell opportunities." },
+                                    { step: "05", title: "Grow", desc: "Ongoing support, quarterly business reviews, performance incentives, and roadmap alignment." }
+                                ].map((item, index) => (
+                                    <div
+                                        key={index}
+                                        className="group p-6 rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card-bg)] hover:border-[var(--theme-accent)] transition-all duration-300 hover:shadow-lg"
+                                    >
+                                        <div className="flex items-start gap-4">
+                                            <div className="flex-shrink-0 w-8 h-8 bg-[var(--theme-accent)] rounded-full flex items-center justify-center">
+                                                <span className="text-sm font-bold text-white">{item.step}</span>
+                                            </div>
+                                            <div>
+                                                <h3 className="font-semibold text-[var(--foreground)] text-lg group-hover:text-[var(--theme-accent)] transition-colors">
+                                                    {item.title}
+                                                </h3>
+                                                <p className="mt-2 font-medium text-[var(--muted-foreground)]">
+                                                    {item.desc}
+                                                </p>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            ))}
+                                ))}
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                {/* Center Image Column - Enhanced with overlay content */}
-                <div className="lg:col-span-4 h-full min-h-[700px] relative rounded-2xl overflow-hidden border border-[var(--theme-border)] group">
-                    <Image
-                        src="https://images.pexels.com/photos/10649807/pexels-photo-10649807.jpeg"
-                        alt="Partnership Process"
-                        fill
-                        className="object-cover group-hover:scale-105 transition-transform duration-700"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-[var(--theme-dark-base)] via-transparent to-transparent opacity-70" />
-                    
-                    {/* Floating stats overlay */}
-                    <div className="absolute bottom-8 left-8 right-8">
-                        <div className="bg-[var(--theme-card-bg)]/80 backdrop-blur-sm rounded-xl p-6 border border-[var(--theme-border)]">
-                            <div className="grid grid-cols-2 gap-4">
-                                <div className="text-center">
-                                    <div className="text-2xl font-bold text-[var(--theme-accent)]">95%</div>
-                                    <div className="text-sm text-[var(--muted-foreground)]">Success Rate</div>
-                                </div>
-                                <div className="text-center">
-                                    <div className="text-2xl font-bold text-[var(--theme-accent)]">24h</div>
-                                    <div className="text-sm text-[var(--muted-foreground)]">Onboarding</div>
+                    {/* Center Image Column - Enhanced with overlay content */}
+                    <div className="lg:col-span-4 h-full min-h-[700px] relative rounded-2xl overflow-hidden border border-[var(--theme-border)] group">
+                        <Image
+                            src="https://images.pexels.com/photos/10649807/pexels-photo-10649807.jpeg"
+                            alt="Partnership Process"
+                            fill
+                            className="object-cover group-hover:scale-105 transition-transform duration-700"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-[var(--theme-dark-base)] via-transparent to-transparent opacity-70" />
+
+                        {/* Floating stats overlay */}
+                        <div className="absolute bottom-8 left-8 right-8">
+                            <div className="bg-[var(--theme-card-bg)]/80 backdrop-blur-sm rounded-xl p-6 border border-[var(--theme-border)]">
+                                <div className="grid grid-cols-2 gap-4">
+                                    <div className="text-center">
+                                        <div className="text-2xl font-bold text-[var(--theme-accent)]">95%</div>
+                                        <div className="text-sm text-[var(--muted-foreground)]">Success Rate</div>
+                                    </div>
+                                    <div className="text-center">
+                                        <div className="text-2xl font-bold text-[var(--theme-accent)]">24h</div>
+                                        <div className="text-sm text-[var(--muted-foreground)]">Onboarding</div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                {/* Expectations Column - Enhanced with icons */}
-                <div className="lg:col-span-4 space-y-6">
-                    <div className="sticky top-8">
-                        <h2 className="text-3xl font-bold text-[var(--foreground)] mb-8 lg:mb-12 text-right">
-                            What we <span className="text-[var(--theme-accent)]">expect</span>
-                        </h2>
-                        
-                        <div className="space-y-6">
-                            {[
-                                { icon: "⚡", title: "Commitment", desc: "Commitment to ethical and compliant delivery of security services." },
-                                { icon: "🎯", title: "Strategy", desc: "Clear go-to-market plan and willingness to participate in joint sales motions." },
-                                { icon: "🛡️", title: "Responsibility", desc: "Shared responsibility for customer success and transparent reporting of engagements." }
-                            ].map((item, index) => (
-                                <div 
-                                    key={index}
-                                    className="group p-6 rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card-bg)] hover:border-[var(--theme-accent)] transition-all duration-300 hover:shadow-lg text-right"
-                                >
-                                    <div className="flex items-start justify-end gap-4">
-                                        <div className="flex-1">
-                                            <h3 className="font-semibold text-[var(--foreground)] text-lg group-hover:text-[var(--theme-accent)] transition-colors">
-                                                {item.title}
-                                            </h3>
-                                            <p className="mt-2 font-medium text-[var(--muted-foreground)]">
-                                                {item.desc}
-                                            </p>
+                    {/* Expectations Column - Enhanced with icons */}
+                    <div className="lg:col-span-4 space-y-6">
+                        <div className="sticky top-8">
+                            <h2 className="text-3xl font-bold text-[var(--foreground)] mb-8 lg:mb-12 text-right">
+                                What we <span className="text-[var(--theme-accent)]">expect</span>
+                            </h2>
+
+                            <div className="space-y-6">
+                                {[
+                                    { iconName: "Commitment", title: "Commitment", desc: "Commitment to ethical and compliant delivery of security services." },
+                                    { iconName: "Strategy", title: "Strategy", desc: "Clear go-to-market plan and willingness to participate in joint sales motions." },
+                                    { iconName: "Responsibility", title: "Responsibility", desc: "Shared responsibility for customer success and transparent reporting of engagements." }
+                                ].map((item, index) => {
+                                    const Icon = iconMap[item.iconName as keyof typeof iconMap];
+                                    return (
+                                        <div
+                                            key={index}
+                                            className="group p-6 rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card-bg)] hover:border-[var(--theme-accent)] transition-all duration-300 hover:shadow-lg text-right"
+                                        >
+                                            <div className="flex items-start justify-end gap-4">
+                                                <div className="flex-1">
+                                                    <h3 className="font-semibold text-[var(--foreground)] text-lg group-hover:text-[var(--theme-accent)] transition-colors">
+                                                        {item.title}
+                                                    </h3>
+                                                    <p className="mt-2 font-medium text-[var(--muted-foreground)]">
+                                                        {item.desc}
+                                                    </p>
+                                                </div>
+                                                <div className="flex-shrink-0 p-2 rounded-lg bg-[var(--theme-accent)]/10 border border-[var(--theme-accent)]/20">
+                                                    <Icon className="h-5 w-5 text-[var(--theme-accent)]" />
+                                                </div>
+                                            </div>
                                         </div>
-                                        <div className="flex-shrink-0 text-2xl">
-                                            {item.icon}
-                                        </div>
-                                    </div>
-                                </div>
-                            ))}
+                                    );
+                                })}
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
+
             {/* Enhanced Hero Section */}
-            <div className="relative h-[800px] rounded-2xl overflow-hidden border border-[var(--theme-border)] group">
-                <Image
-                    src="https://images.pexels.com/photos/33723163/pexels-photo-33723163.jpeg"
-                    alt="Partner Success"
-                    fill
-                    className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-[var(--theme-dark-base)] via-[var(--theme-dark-base)]/70 to-transparent" />
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+                <div className="relative h-[800px] rounded-2xl overflow-hidden border border-[var(--theme-border)] group">
+                    <Image
+                        src="https://images.pexels.com/photos/33723163/pexels-photo-33723163.jpeg"
+                        alt="Partner Success"
+                        fill
+                        className="object-cover object-center group-hover:scale-105 transition-transform duration-700"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[var(--theme-dark-base)] via-[var(--theme-dark-base)]/70 to-transparent" />
 
-                {/* Enhanced content overlay */}
-                <div className="relative h-full flex flex-col justify-end px-8 pb-12 lg:px-16 lg:pb-16 z-10">
-                    <div className="max-w-2xl">
-                        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--theme-accent)]/10 border border-[var(--theme-accent)]/20 mb-6">
-                            <div className="w-2 h-2 bg-[var(--theme-accent)] rounded-full animate-pulse"></div>
-                            <span className="text-sm font-medium text-[var(--theme-accent)]">Partner Program</span>
+                    {/* Enhanced content overlay */}
+                    <div className="relative h-full flex flex-col justify-end px-8 pb-12 lg:px-16 lg:pb-16 z-10">
+                        <div className="max-w-2xl">
+                            <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--theme-accent)]/10 border border-[var(--theme-accent)]/20 mb-6">
+                                <div className="w-2 h-2 bg-[var(--theme-accent)] rounded-full animate-pulse"></div>
+                                <span className="text-sm font-medium text-[var(--theme-accent)]">Partner Program</span>
+                            </div>
+
+                            <p className="text-lg md:text-xl max-w-xl mb-6 font-semibold text-[var(--muted-foreground)]">
+                                Collaborate in real time and launch security initiatives faster than ever before.
+                            </p>
+                            <h2 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-[var(--foreground)] md:text-balance leading-tight">
+                                Instant Partnership
+                            </h2>
                         </div>
-                        
-                        <p className="text-lg md:text-xl max-w-xl mb-6 font-semibold text-[var(--muted-foreground)]">
-                            Collaborate in real time and launch security initiatives faster than ever before.
-                        </p>
-                        <h2 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-[var(--foreground)] md:text-balance leading-tight">
-                            Instant Partnership
-                        </h2>
                     </div>
-                </div>
 
-                {/* Floating elements */}
-                <div className="absolute top-8 right-8 hidden lg:block">
-                    <div className="bg-[var(--theme-card-bg)]/80 backdrop-blur-sm rounded-xl p-4 border border-[var(--theme-border)]">
-                        <div className="text-sm text-[var(--muted-foreground)]">Trusted by</div>
-                        <div className="text-lg font-bold text-[var(--foreground)]">500+ Partners</div>
+                    {/* Floating elements */}
+                    <div className="absolute top-8 right-8 hidden lg:block">
+                        <div className="bg-[var(--theme-card-bg)]/80 backdrop-blur-sm rounded-xl p-4 border border-[var(--theme-border)]">
+                            <div className="text-sm text-[var(--muted-foreground)]">Trusted by</div>
+                            <div className="text-lg font-bold text-[var(--foreground)]">500+ Partners</div>
+                        </div>
                     </div>
                 </div>
             </div>
 
             {/* Enhanced Partner Categories Section */}
-            <div className="mt-24">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
                 <div className="text-center mb-16">
                     <h1 className="text-6xl sm:text-8xl md:text-9xl lg:text-[12rem] xl:text-[16rem] font-black text-[var(--foreground)] tracking-tighter leading-none mb-4">
                         Safe<span className="text-[var(--theme-accent)]">Grey</span>
@@ -183,7 +257,7 @@ export function PartnerProcess() {
                     <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold text-[var(--foreground)] uppercase mb-8 lg:text-balance">
                         Collaborate, <span className="text-[var(--theme-accent)]">Secure</span>, and launch your next big initiative
                     </h2>
-                    
+
                     <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-12">
                         <button className="px-8 py-4 bg-[var(--theme-accent)] text-white font-semibold rounded-xl hover:bg-[var(--theme-accent)]/90 transition-colors duration-300 transform hover:scale-105">
                             Become a Partner
@@ -196,23 +270,25 @@ export function PartnerProcess() {
             </div>
 
             {/* New Stats Section */}
-            <div className="mt-24 grid grid-cols-2 lg:grid-cols-4 gap-8">
-                {[
-                    { number: "2M+", label: "Protected Assets" },
-                    { number: "500+", label: "Global Partners" },
-                    { number: "99.9%", label: "Uptime SLA" },
-                    { number: "24/7", label: "Support Coverage" }
-                ].map((stat, index) => (
-                    <div key={index} className="text-center p-6 rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card-bg)]">
-                        <div className="text-2xl lg:text-3xl font-bold text-[var(--theme-accent)] mb-2">
-                            {stat.number}
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+                <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
+                    {[
+                        { number: "2M+", label: "Protected Assets" },
+                        { number: "500+", label: "Global Partners" },
+                        { number: "99.9%", label: "Uptime SLA" },
+                        { number: "24/7", label: "Support Coverage" }
+                    ].map((stat, index) => (
+                        <div key={index} className="text-center p-6 rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card-bg)]">
+                            <div className="text-2xl lg:text-3xl font-bold text-[var(--theme-accent)] mb-2">
+                                {stat.number}
+                            </div>
+                            <div className="text-sm text-[var(--muted-foreground)] font-medium">
+                                {stat.label}
+                            </div>
                         </div>
-                        <div className="text-sm text-[var(--muted-foreground)] font-medium">
-                            {stat.label}
-                        </div>
-                    </div>
-                ))}
+                    ))}
+                </div>
             </div>
-        </section>
+        </section >
     )
 }

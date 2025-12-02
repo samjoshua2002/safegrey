@@ -13,9 +13,11 @@ import {
   FileCheck,
   Users,
   FolderGit2,
+  Search,
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
+import { SearchCommand } from "@/components/search-command";
 
 const sectionMap: Record<string, { section: string; tab?: string }> = {
   // Main Sections
@@ -69,6 +71,7 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [isOpen, setIsOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const [activeAccordion, setActiveAccordion] = useState<string | null>(null);
   const [hoveredSection, setHoveredSection] = useState<string | null>(null);
@@ -107,13 +110,28 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [activeDropdown]);
 
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      if (e.key === "f" && e.ctrlKey) {
+        e.preventDefault();
+        setSearchOpen((open) => !open);
+      }
+    };
+    document.addEventListener("keydown", down);
+    return () => document.removeEventListener("keydown", down);
+  }, []);
+
   const toggleDropdown = (menu: string) => {
     if (activeDropdown === menu) {
       setActiveDropdown(null);
       setHoveredSection(null);
     } else {
       setActiveDropdown(menu);
-      setHoveredSection(null);
+      if (menu === "whatwedo") {
+        setHoveredSection("Security Assessment");
+      } else {
+        setHoveredSection(null);
+      }
     }
   };
 
@@ -122,6 +140,9 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
       clearTimeout(dropdownTimeoutRef.current);
     }
     setActiveDropdown(menu);
+    if (menu === "whatwedo" && !hoveredSection) {
+      setHoveredSection("Security Assessment");
+    }
   };
 
   const handleDropdownMouseLeave = () => {
@@ -246,11 +267,10 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
     <>
       <nav
         ref={navRef}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? "bg-[var(--theme-dark-base)]/95 backdrop-blur-sm shadow-lg border-b border-[var(--theme-border)]"
-            : "bg-[var(--theme-dark-base)] border-b border-[var(--theme-border)]"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
+          ? "bg-[var(--theme-dark-base)]/95 backdrop-blur-sm shadow-lg border-b border-[var(--theme-border)]"
+          : "bg-[var(--theme-dark-base)] border-b border-[var(--theme-border)]"
+          }`}
       >
         <div className={`h-px w-full bg-gradient-to-r from-transparent via-[var(--theme-accent)]/30 to-transparent transition-opacity duration-300 ${scrolled ? 'opacity-100' : 'opacity-0'}`}></div>
 
@@ -274,17 +294,15 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
                     <button
                       data-nav-item
                       onClick={() => toggleDropdown(item.key)}
-                      className={`flex items-center transition-colors gap-1 px-4 py-2 rounded-lg hover:bg-[var(--theme-accent)]/10 hover:text-[var(--theme-accent)] ${
-                        activeDropdown === item.key
-                          ? "text-[var(--theme-accent)] bg-[var(--theme-accent)]/10"
-                          : "text-[var(--theme-text-primary)]"
-                      }`}
+                      className={`flex items-center transition-colors gap-1 px-4 py-2 rounded-lg hover:bg-[var(--theme-accent)]/10 hover:text-[var(--theme-accent)] ${activeDropdown === item.key
+                        ? "text-[var(--theme-accent)] bg-[var(--theme-accent)]/10"
+                        : "text-[var(--theme-text-primary)]"
+                        }`}
                     >
                       {item.title}
                       <ChevronDown
-                        className={`h-4 w-4 transition-transform duration-200 ${
-                          activeDropdown === item.key ? "rotate-180" : ""
-                        }`}
+                        className={`h-4 w-4 transition-transform duration-200 ${activeDropdown === item.key ? "rotate-180" : ""
+                          }`}
                       />
                     </button>
                   </div>
@@ -292,24 +310,40 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
               </div>
 
               {/* CTA Button */}
-              <div className="hidden md:flex">
-                <Button
-                  className="flex items-center gap-2 group relative overflow-hidden border border-[var(--theme-border)] hover:border-[var(--theme-accent)] transition-all duration-300"
-                  style={{
-                    backgroundColor: "var(--theme-accent)",
-                    color: "white",
-                  }}
+              <div className="hidden md:flex items-center gap-4">
+                <button
+                  onClick={() => setSearchOpen(true)}
+                  className="p-2 rounded-full hover:bg-[var(--theme-accent)]/10 text-[var(--theme-text-primary)] hover:text-[var(--theme-accent)] transition-colors"
+                  aria-label="Search"
                 >
-                  <span className="relative z-10">Got hacked?</span>
-                  <ArrowRight
-                    className="h-4 w-4 relative z-10 transition-transform duration-300 group-hover:translate-x-1"
-                  />
-                  <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
-                </Button>
+                  <Search className="h-5 w-5" />
+                </button>
+                <div className="hidden md:flex">
+                  <Button
+                    className="flex items-center gap-2 group relative overflow-hidden border border-[var(--theme-border)] hover:border-[var(--theme-accent)] transition-all duration-300"
+                    style={{
+                      backgroundColor: "var(--theme-accent)",
+                      color: "white",
+                    }}
+                  >
+                    <span className="relative z-10">Got hacked?</span>
+                    <ArrowRight
+                      className="h-4 w-4 relative z-10 transition-transform duration-300 group-hover:translate-x-1"
+                    />
+                    <div className="absolute inset-0 bg-white/10 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
+                  </Button>
+                </div>
               </div>
 
               {/* Mobile Menu Button */}
-              <div className="md:hidden">
+              <div className="md:hidden flex items-center gap-2">
+                <button
+                  onClick={() => setSearchOpen(true)}
+                  className="p-2 rounded-full hover:bg-[var(--theme-accent)]/10 text-[var(--theme-text-primary)] hover:text-[var(--theme-accent)] transition-colors"
+                  aria-label="Search"
+                >
+                  <Search className="h-5 w-5" />
+                </button>
                 <Button
                   variant="ghost"
                   size="icon"
@@ -367,19 +401,17 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
                                 Select a category to explore services
                               </p>
                             </div>
-                            
+
                             {whatWeDoSections.map((section, i) => {
                               const Icon = iconMap[section.title] ?? ShieldCheck;
                               return (
                                 <button
                                   key={i}
-                                  onMouseEnter={() => setHoveredSection(section.title)}
                                   onClick={() => setHoveredSection(section.title)}
-                                  className={`w-full text-left p-3 rounded-lg transition-all duration-200 flex items-center gap-3 ${
-                                    hoveredSection === section.title
-                                      ? "bg-[var(--theme-accent)]/10 text-[var(--theme-accent)] border border-[var(--theme-accent)]/30"
-                                      : "text-[var(--theme-text-secondary)] hover:text-[var(--theme-text-primary)] hover:bg-[var(--theme-dark-base)]/80 border border-transparent"
-                                  }`}
+                                  className={`w-full text-left p-3 rounded-lg transition-all duration-200 flex items-center gap-3 ${(hoveredSection || "Security Assessment") === section.title
+                                    ? "bg-[var(--theme-accent)]/10 text-[var(--theme-accent)] border border-[var(--theme-accent)]/30"
+                                    : "text-[var(--theme-text-secondary)] hover:text-[var(--theme-text-primary)] hover:bg-[var(--theme-dark-base)]/80 border border-transparent"
+                                    }`}
                                 >
                                   <Icon className="h-4 w-4 flex-shrink-0" />
                                   <span className="font-medium text-md">{section.title}</span>
@@ -406,82 +438,36 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
                               </p>
                             </div>
 
-                            {hoveredSection ? (
-                              // Show subheadings for hovered section
-                              whatWeDoSections
-                                .filter(section => section.title === hoveredSection)
-                                .map((section, i) => {
-                                  const Icon = iconMap[section.title] ?? ShieldCheck;
-                                  return (
-                                    <div key={i} className="animate-in fade-in duration-200">
-                                      <div className="flex items-center gap-3 mb-6">
-                                        <div className="p-2 rounded-lg bg-[var(--theme-accent)]/10 border border-[var(--theme-accent)]/20">
-                                          <Icon className="h-5 w-5 text-[var(--theme-accent)]" />
-                                        </div>
-                                        <h4 className="text-xl font-bold text-[var(--theme-text-primary)]">{section.title}</h4>
+                            {whatWeDoSections
+                              .filter(section => section.title === (hoveredSection || "Security Assessment"))
+                              .map((section, i) => {
+                                const Icon = iconMap[section.title] ?? ShieldCheck;
+                                return (
+                                  <div key={i} className="animate-in fade-in duration-200">
+                                    <div className="flex items-center gap-3 mb-6">
+                                      <div className="p-2 rounded-lg bg-[var(--theme-accent)]/10 border border-[var(--theme-accent)]/20">
+                                        <Icon className="h-5 w-5 text-[var(--theme-accent)]" />
                                       </div>
-                                      <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                                        {section.links.map((link, j) => (
-                                          <li key={j}>
-                                            <button
-                                              onClick={() => handleServiceNavigation(link)}
-                                              className="group flex items-center justify-between p-3 rounded-lg border border-[var(--theme-border)] hover:border-[var(--theme-accent)]/30 transition-all duration-200 hover:bg-[var(--theme-dark-base)]/70 w-full text-left"
-                                            >
-                                              <span className="text-[var(--theme-text-secondary)] group-hover:text-[var(--theme-text-primary)] transition-colors">
-                                                {link}
-                                              </span>
-                                              <ArrowRight className="h-3 w-3 text-[var(--theme-text-secondary)] group-hover:text-[var(--theme-accent)] transform group-hover:translate-x-1 transition-all duration-200" />
-                                            </button>
-                                          </li>
-                                        ))}
-                                      </ul>
+                                      <h4 className="text-xl font-bold text-[var(--theme-text-primary)]">{section.title}</h4>
                                     </div>
-                                  );
-                                })
-                            ) : (
-                              // Show all subheadings in columns
-                              <div>
-                                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                                  {whatWeDoSections.map((section, i) => {
-                                    const Icon = iconMap[section.title] ?? ShieldCheck;
-                                    return (
-                                      <div
-                                        key={i}
-                                        onMouseEnter={() => setHoveredSection(section.title)}
-                                        className="group cursor-pointer"
-                                      >
-                                        <div className="flex items-center gap-2 mb-3">
-                                          <div className="p-1.5 rounded-md bg-[var(--theme-accent)]/10 group-hover:bg-[var(--theme-accent)]/20 transition-colors border border-[var(--theme-accent)]/20">
-                                            <Icon className="h-4 w-4 text-[var(--theme-accent)]" />
-                                          </div>
-                                          <h4 className="font-semibold text-[var(--theme-text-primary)] text-sm group-hover:text-[var(--theme-accent)] transition-colors">
-                                            {section.title}
-                                          </h4>
-                                        </div>
-                                        <ul className="space-y-1.5">
-                                          {section.links.slice(0, 4).map((link, j) => (
-                                            <li key={j}>
-                                              <button
-                                                onClick={() => handleServiceNavigation(link)}
-                                                className="text-sm text-[var(--theme-text-secondary)] hover:text-[var(--theme-text-primary)] transition-colors block py-1 hover:pl-1 transition-all duration-150 w-full text-left"
-                                              >
-                                                {link}
-                                              </button>
-                                            </li>
-                                          ))}
-                                        </ul>
-                                      </div>
-                                    );
-                                  })}
-                                </div>
-                                {/* Call to action or additional info */}
-                                <div className="p-4 border border-[var(--theme-border)] rounded-lg bg-gradient-to-r from-[var(--theme-dark-base)] to-[var(--theme-dark-base)]/50">
-                                  <p className="text-[var(--theme-text-secondary)] text-sm">
-                                    <span className="text-[var(--theme-accent)] font-semibold">Hover over any section</span> to see detailed services or <span className="text-[var(--theme-accent)] font-semibold">click on a service</span> to learn more
-                                  </p>
-                                </div>
-                              </div>
-                            )}
+                                    <ul className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                      {section.links.map((link, j) => (
+                                        <li key={j}>
+                                          <button
+                                            onClick={() => handleServiceNavigation(link)}
+                                            className="group flex items-center justify-between p-3 rounded-lg border border-[var(--theme-border)] hover:border-[var(--theme-accent)]/30 transition-all duration-200 hover:bg-[var(--theme-dark-base)]/70 w-full text-left"
+                                          >
+                                            <span className="text-[var(--theme-text-secondary)] group-hover:text-[var(--theme-text-primary)] transition-colors">
+                                              {link}
+                                            </span>
+                                            <ArrowRight className="h-3 w-3 text-[var(--theme-text-secondary)] group-hover:text-[var(--theme-accent)] transform group-hover:translate-x-1 transition-all duration-200" />
+                                          </button>
+                                        </li>
+                                      ))}
+                                    </ul>
+                                  </div>
+                                );
+                              })}
                           </div>
                         )}
 
@@ -570,9 +556,8 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
                   >
                     <span className="tracking-wide">{item.title}</span>
                     <ChevronDown
-                      className={`h-5 w-5 text-[var(--theme-text-secondary)] transition-transform duration-300 ${
-                        activeAccordion === item.key ? "rotate-180 text-[var(--theme-accent)]" : ""
-                      }`}
+                      className={`h-5 w-5 text-[var(--theme-text-secondary)] transition-transform duration-300 ${activeAccordion === item.key ? "rotate-180 text-[var(--theme-accent)]" : ""
+                        }`}
                     />
                   </button>
 
@@ -594,7 +579,7 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
                                   Comprehensive cybersecurity solutions tailored to your needs
                                 </p>
                               </div>
-                              
+
                               {whatWeDoSections.map((section, i) => {
                                 const Icon = iconMap[section.title] ?? ShieldCheck;
                                 return (
@@ -665,6 +650,7 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
           </motion.div>
         )}
       </AnimatePresence>
+      <SearchCommand open={searchOpen} onOpenChange={setSearchOpen} />
     </>
   );
 }
