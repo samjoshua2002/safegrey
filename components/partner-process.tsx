@@ -17,7 +17,7 @@ const stickyContent = [
     {
         title: "Real time changes",
         description:
-            "See changes as they happen. With our platform, you can track every modification in real time. No more confusion about the latest version of your project. Say goodbye to the chaos of version control and embrace the simplicity of real-time updates.",
+            "See changes as they happen. With our platform, you can track every modification in real time.Say goodbye to the chaos of version control and embrace the simplicity of real-time updates.",
         content: (
             <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(to_bottom_right,var(--theme-accent),#10b981)] text-white">
                 <div className="text-2xl font-bold">Real Time Updates</div>
@@ -27,7 +27,7 @@ const stickyContent = [
     {
         title: "Version control",
         description:
-            "Experience real-time updates and never stress about version control again. Our platform ensures that you're always working on the most recent version of your project, eliminating the need for constant manual updates. Stay in the loop, keep your team aligned, and maintain the flow of your work without any interruptions.",
+            "Experience real-time updates and never stress about version control again. eliminating the need for constant manual updates. Stay in the loop, keep your team aligned, and maintain the flow of your work without any interruptions.",
         content: (
             <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(to_bottom_right,#f97316,#fbbf24)] text-white">
                 <div className="text-2xl font-bold">Version Control</div>
