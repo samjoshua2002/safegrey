@@ -28,10 +28,12 @@ import { format } from "date-fns"
 import { Reply, Send, Loader2, Trash2, Eye, CheckCircle2, Circle } from "lucide-react"
 import Link from "next/link"
 import { useToast } from "@/components/ui/use-toast"
-import dynamic from "next/dynamic"
+import dynamicImport from "next/dynamic"
 import "react-quill/dist/quill.snow.css"
 
-const ReactQuill = dynamic(() => import("react-quill"), { ssr: false })
+const ReactQuill = dynamicImport(() => import("react-quill"), { ssr: false })
+
+export const dynamic = 'force-dynamic'
 
 interface Message {
     _id: string

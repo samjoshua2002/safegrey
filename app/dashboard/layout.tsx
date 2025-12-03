@@ -34,11 +34,7 @@ export default function DashboardLayout({
     }
 
     const navItems = [
-        {
-            title: "Create Service",
-            href: "/dashboard/create-service",
-            icon: PlusCircle,
-        },
+        
         {
             title: "Service",
             href: "/dashboard/service",
@@ -49,6 +45,11 @@ export default function DashboardLayout({
             href: "/dashboard/contact",
             icon: MessageSquare,
         },
+        {
+            title: "Upcoming Features",
+            href: "/dashboard/create-service",
+            icon: PlusCircle,
+        }
     ]
 
     return (

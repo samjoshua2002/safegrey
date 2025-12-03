@@ -4,6 +4,8 @@ import { useEffect, useState } from "react"
 import { Download, columns } from "@/components/dashboard/columns"
 import { DataTable } from "@/components/dashboard/data-table"
 
+export const dynamic = 'force-dynamic'
+
 export default function ServicePage() {
     const [data, setData] = useState<Download[]>([])
     const [loading, setLoading] = useState(true)
