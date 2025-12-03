@@ -3,6 +3,8 @@ import connectDB from '@/lib/db';
 import DatasheetDownload from '@/models/DatasheetDownload';
 import User from '@/models/User'; // Ensure User model is registered
 
+export const dynamic = 'force-dynamic';
+
 export async function GET() {
     try {
         await connectDB();
