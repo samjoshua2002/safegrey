@@ -40,6 +40,11 @@ export default function DashboardLayout({
             icon: PlusCircle,
         },
         {
+            title: "Service",
+            href: "/dashboard/service",
+            icon: LayoutDashboard,
+        },
+        {
             title: "Contact",
             href: "/dashboard/contact",
             icon: MessageSquare,

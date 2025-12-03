@@ -1,8 +1,11 @@
 import { NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
+import connectDB from '@/lib/db';
+import User from '@/models/User';
+import ContactSubmission from '@/models/ContactSubmission';
 
 function getEmailTemplate(data: any): string {
-  const { firstName, lastName, email, company, designation, phone } = data;
+  const { firstName, lastName, email, company, designation, phone, message } = data;
 
   return `
 <!DOCTYPE html>
@@ -61,6 +64,10 @@ function getEmailTemplate(data: any): string {
                 <tr>
                   <td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #718096; font-size: 14px;">Designation</td>
                   <td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #1a1a1a; font-size: 16px; font-weight: 500;">${designation || 'N/A'}</td>
+                </tr>
+                <tr>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #718096; font-size: 14px;">Message</td>
+                  <td style="padding: 12px 0; border-bottom: 1px solid #e2e8f0; color: #1a1a1a; font-size: 16px; font-weight: 500;">${message || 'N/A'}</td>
                 </tr>
               </table>
 
@@ -171,14 +178,53 @@ function getAutoReplyTemplate(firstName: string): string {
 export async function POST(req: Request) {
   try {
     const body = await req.json();
-    const { firstName, lastName, email, company, designation, phone } = body;
+    const { firstName, lastName, email, company, designation, phone, message } = body;
 
     // Basic validation
-    if (!firstName || !lastName || !email || !phone) {
+    if (!firstName || !lastName || !email || !phone || !message) {
       return NextResponse.json(
         { error: 'Missing required fields' },
         { status: 400 }
       );
+    }
+
+    // Save to Database
+    try {
+      await connectDB();
+
+      // Upsert User
+      let user = await User.findOne({ email });
+      if (user) {
+        // Update existing user with new details if provided
+        user.firstName = firstName;
+        user.lastName = lastName;
+        user.name = `${firstName} ${lastName}`;
+        user.phone = phone;
+        user.company = company || user.company;
+        user.designation = designation || user.designation;
+        await user.save();
+      } else {
+        // Create new user
+        user = await User.create({
+          firstName,
+          lastName,
+          name: `${firstName} ${lastName}`,
+          email,
+          phone,
+          company,
+          designation,
+        });
+      }
+
+      // Create Contact Submission
+      await ContactSubmission.create({
+        userId: user._id,
+        message,
+      });
+
+    } catch (dbError) {
+      console.error('Error saving to database:', dbError);
+      // Continue to send email even if DB save fails, but log it
     }
 
     // Configure transporter with new credentials
