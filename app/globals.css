@@ -252,3 +252,44 @@ body {
 .animated-matrix span {
   will-change: transform, opacity;
 }
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 20px var(--primary);
+  }
+  50% {
+    box-shadow: 0 0 40px var(--primary);
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.glow-accent {
+  box-shadow: 0 0 30px rgba(229, 69, 61, 0.3);
+  transition: all 0.3s ease;
+}
+
+.glow-accent:hover {
+  box-shadow: 0 0 50px rgba(229, 69, 61, 0.5);
+  transform: translateY(-2px);
+}
+
+.glass-effect {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-20px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}

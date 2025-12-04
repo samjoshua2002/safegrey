@@ -279,7 +279,7 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
             <div className="flex justify-between items-center h-16">
               {/* Brand */}
               <Link href="/" className="flex items-center space-x-2 z-50">
-                <span className="text-2xl font-bold text-[var(--theme-accent)]">SafeGrey</span>
+                <img src="/logo.png"  className="pl-4 h-10 w-auto" alt="safegrey"/>
               </Link>
 
               {/* Desktop Navigation Items */}
@@ -294,7 +294,7 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
                     <button
                       data-nav-item
                       onClick={() => toggleDropdown(item.key)}
-                      className={`flex items-center transition-colors gap-1 px-4 py-2 rounded-lg hover:bg-[var(--theme-accent)]/10 hover:text-[var(--theme-accent)] ${activeDropdown === item.key
+                      className={`flex items-center transition-colors gap-1 px-4 py-2 rounded-lg text-lg hover:bg-[var(--theme-accent)]/10 hover:text-[var(--theme-accent)] ${activeDropdown === item.key
                         ? "text-[var(--theme-accent)] bg-[var(--theme-accent)]/10"
                         : "text-[var(--theme-text-primary)]"
                         }`}
