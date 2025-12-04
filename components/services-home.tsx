@@ -199,7 +199,7 @@ const rowImages = [
   "/service.webp",
   "/a2.webp",
   "/a3.webp",
-  "/cloud.webp",
+  "/img.png",
   "/image2.webp",
   "/a4.webp",
 ];
@@ -322,7 +322,7 @@ export default function ServicesAccordion() {
                           isHovered ? "bg-red-500/80" : "bg-red-500/50"
                         }`} />
 
-                      <span className="text-2xl font-semibold text-white tracking-wide">
+                      <span className="md:text-2xl text-lg font-semibold text-white tracking-wide">
                         {service.title}
                       </span>
                     </div>

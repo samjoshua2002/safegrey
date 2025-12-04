@@ -34,6 +34,10 @@ export const metadata: Metadata = {
     default: "Safegrey",
     template: "%s | Safegrey",
   },
+  icons: {
+    icon: "/fav.svg",      // or .svg
+    apple: "/fav.svg",
+  },
   description:
     "Safegrey provides advanced cybersecurity services including Penetration Testing, Red Teaming, SOC, and Risk Management. Secure your digital future with our adversary-focused approach.",
   keywords: [
