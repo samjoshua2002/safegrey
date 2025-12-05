@@ -61,7 +61,7 @@ export function HeroSection() {
               className="glow-accent animate-pulse-glow group cursor-pointer"
               style={{ backgroundColor: "var(--primary)", color: "var(--foreground)" }}
             >
-              Start Your Security Assessment<ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              Book your Consultation<ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
 
             <Link href="/services" passHref legacyBehavior>
