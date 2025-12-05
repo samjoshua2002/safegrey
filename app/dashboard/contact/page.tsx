@@ -314,7 +314,57 @@ export default function ContactPage() {
                         </div>
                         <div className="grid gap-2">
                             <Label htmlFor="message">Message</Label>
-                            <div className="bg-white rounded-md">
+                            <div className="rounded-md dark-quill-editor">
+                                <style jsx global>{`
+                                    .dark-quill-editor .ql-toolbar {
+                                        background: var(--theme-dark-base);
+                                        border: 1px solid var(--theme-border);
+                                        border-radius: 0.375rem 0.375rem 0 0;
+                                    }
+                                    .dark-quill-editor .ql-container {
+                                        background: var(--theme-dark-base);
+                                        border: 1px solid var(--theme-border);
+                                        border-top: none;
+                                        border-radius: 0 0 0.375rem 0.375rem;
+                                        color: var(--foreground);
+                                    }
+                                    .dark-quill-editor .ql-editor {
+                                        color: var(--foreground);
+                                        min-height: 200px;
+                                    }
+                                    .dark-quill-editor .ql-editor.ql-blank::before {
+                                        color: var(--muted-foreground);
+                                    }
+                                    .dark-quill-editor .ql-stroke {
+                                        stroke: var(--foreground);
+                                    }
+                                    .dark-quill-editor .ql-fill {
+                                        fill: var(--foreground);
+                                    }
+                                    .dark-quill-editor .ql-picker-label {
+                                        color: var(--foreground);
+                                    }
+                                    .dark-quill-editor .ql-picker-options {
+                                        background: var(--theme-dark-secondary);
+                                        border: 1px solid var(--theme-border);
+                                    }
+                                    .dark-quill-editor .ql-picker-item:hover {
+                                        background: var(--theme-accent);
+                                        color: white;
+                                    }
+                                    .dark-quill-editor .ql-toolbar button:hover,
+                                    .dark-quill-editor .ql-toolbar button.ql-active {
+                                        color: var(--theme-accent);
+                                    }
+                                    .dark-quill-editor .ql-toolbar button:hover .ql-stroke,
+                                    .dark-quill-editor .ql-toolbar button.ql-active .ql-stroke {
+                                        stroke: var(--theme-accent);
+                                    }
+                                    .dark-quill-editor .ql-toolbar button:hover .ql-fill,
+                                    .dark-quill-editor .ql-toolbar button.ql-active .ql-fill {
+                                        fill: var(--theme-accent);
+                                    }
+                                `}</style>
                                 <ReactQuill
                                     theme="snow"
                                     value={replyMessage}

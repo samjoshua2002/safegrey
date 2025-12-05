@@ -9,6 +9,12 @@ export async function GET() {
     try {
         await connectDB();
 
+        // Ensure User model is registered before populate
+        // This forces the model to be loaded into Mongoose's registry
+        if (!User) {
+            throw new Error('User model not loaded');
+        }
+
         // Fetch messages and populate user details
         const messages = await ContactSubmission.find({})
             .populate('userId', 'name email company')

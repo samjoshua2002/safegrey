@@ -29,8 +29,14 @@ import {
     DropdownMenuCheckboxItem,
     DropdownMenuContent,
     DropdownMenuTrigger,
+    DropdownMenuRadioGroup,
+    DropdownMenuRadioItem,
+    DropdownMenuSeparator,
+    DropdownMenuLabel,
 } from "@/components/ui/dropdown-menu"
-import { ChevronDown } from "lucide-react"
+import { ChevronDown, Calendar } from "lucide-react"
+
+type DateFilterOption = "all" | "recent" | "oldest" | "thisMonth" | "lastMonth"
 
 interface DataTableProps<TData, TValue> {
     columns: ColumnDef<TData, TValue>[]
@@ -48,6 +54,7 @@ export function DataTable<TData, TValue>({
     const [columnVisibility, setColumnVisibility] =
         React.useState<VisibilityState>({})
     const [rowSelection, setRowSelection] = React.useState({})
+    const [dateFilter, setDateFilter] = React.useState<DateFilterOption>("all")
 
     const table = useReactTable({
         data,
@@ -67,6 +74,47 @@ export function DataTable<TData, TValue>({
             rowSelection,
         },
     })
+
+    // Apply date filtering
+    React.useEffect(() => {
+        const now = new Date()
+        const currentMonth = now.getMonth()
+        const currentYear = now.getFullYear()
+
+        switch (dateFilter) {
+            case "recent":
+                setSorting([{ id: "downloadedAt", desc: true }])
+                table.getColumn("downloadedAt")?.setFilterValue(undefined)
+                break
+            case "oldest":
+                setSorting([{ id: "downloadedAt", desc: false }])
+                table.getColumn("downloadedAt")?.setFilterValue(undefined)
+                break
+            case "thisMonth":
+                // Filter for current month
+                setSorting([{ id: "downloadedAt", desc: true }])
+                table.getColumn("downloadedAt")?.setFilterValue((value: any) => {
+                    const date = new Date(value)
+                    return date.getMonth() === currentMonth && date.getFullYear() === currentYear
+                })
+                break
+            case "lastMonth":
+                // Filter for last month
+                setSorting([{ id: "downloadedAt", desc: true }])
+                const lastMonth = currentMonth === 0 ? 11 : currentMonth - 1
+                const lastMonthYear = currentMonth === 0 ? currentYear - 1 : currentYear
+                table.getColumn("downloadedAt")?.setFilterValue((value: any) => {
+                    const date = new Date(value)
+                    return date.getMonth() === lastMonth && date.getFullYear() === lastMonthYear
+                })
+                break
+            case "all":
+            default:
+                table.getColumn("downloadedAt")?.setFilterValue(undefined)
+                setSorting([])
+                break
+        }
+    }, [dateFilter, table])
 
     // Unique categories for filtering
     // @ts-ignore
@@ -115,6 +163,43 @@ export function DataTable<TData, TValue>({
                                     </DropdownMenuCheckboxItem>
                                 )
                             })}
+                        </DropdownMenuContent>
+                    </DropdownMenu>
+
+                    {/* Date Filter */}
+                    <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                            <Button variant="outline" className="glass-effect bg-transparent border-[var(--theme-border)] text-[var(--foreground)]">
+                                <Calendar className="mr-2 h-4 w-4" />
+                                {dateFilter === "all" && "All Dates"}
+                                {dateFilter === "recent" && "Recent"}
+                                {dateFilter === "oldest" && "Oldest"}
+                                {dateFilter === "thisMonth" && "This Month"}
+                                {dateFilter === "lastMonth" && "Last Month"}
+                                <ChevronDown className="ml-2 h-4 w-4" />
+                            </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="bg-[var(--theme-dark-secondary)] border-[var(--theme-border)]">
+                            <DropdownMenuLabel className="text-[var(--muted-foreground)]">Sort & Filter by Date</DropdownMenuLabel>
+                            <DropdownMenuSeparator className="bg-[var(--theme-border)]" />
+                            <DropdownMenuRadioGroup value={dateFilter} onValueChange={(value) => setDateFilter(value as DateFilterOption)}>
+                                <DropdownMenuRadioItem value="all" className="text-[var(--foreground)] focus:bg-[var(--theme-accent)]/20">
+                                    All Dates
+                                </DropdownMenuRadioItem>
+                                <DropdownMenuRadioItem value="recent" className="text-[var(--foreground)] focus:bg-[var(--theme-accent)]/20">
+                                    Recent (Newest First)
+                                </DropdownMenuRadioItem>
+                                <DropdownMenuRadioItem value="oldest" className="text-[var(--foreground)] focus:bg-[var(--theme-accent)]/20">
+                                    Oldest (Oldest First)
+                                </DropdownMenuRadioItem>
+                                <DropdownMenuSeparator className="bg-[var(--theme-border)]" />
+                                <DropdownMenuRadioItem value="thisMonth" className="text-[var(--foreground)] focus:bg-[var(--theme-accent)]/20">
+                                    This Month
+                                </DropdownMenuRadioItem>
+                                <DropdownMenuRadioItem value="lastMonth" className="text-[var(--foreground)] focus:bg-[var(--theme-accent)]/20">
+                                    Last Month
+                                </DropdownMenuRadioItem>
+                            </DropdownMenuRadioGroup>
                         </DropdownMenuContent>
                     </DropdownMenu>
 

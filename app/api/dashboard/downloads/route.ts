@@ -9,6 +9,12 @@ export async function GET() {
     try {
         await connectDB();
 
+        // Ensure User model is registered before populate
+        // This forces the model to be loaded into Mongoose's registry
+        if (!User) {
+            throw new Error('User model not loaded');
+        }
+
         // Fetch downloads and populate user details
         // We sort by downloadedAt descending (newest first)
         const downloads = await DatasheetDownload.find({})
