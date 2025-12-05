@@ -636,7 +636,6 @@ export function BookingScheduler() {
                                                 </div>
                                             </div>
                                         )}
-                                    )}
                                     </div>
                                 </div>
                             )}
