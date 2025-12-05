@@ -19,7 +19,7 @@ export function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[var(--theme-dark-base)] text-[var(--foreground)]">
-      
+
       {/* Dotted Background */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute inset-0 grid grid-cols-4 gap-24 transform -rotate-6 scale-150">
@@ -44,9 +44,8 @@ export function HeroSection() {
       <div className="max-w-7xl mx-auto px-6 lg:px-12 w-full grid grid-cols-1 md:grid-cols-2 gap-5 items-center relative z-10">
 
         {/* Left Side - Text */}
-        <div className={`relative z-10 max-w-xl text-left transition-all duration-1000 ${
-          mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
-        }`}>
+        <div className={`relative z-10 max-w-xl text-left transition-all duration-1000 ${mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
+          }`}>
           <h1 className="text-3xl pt-[80px] sm:pt-[100px] md:pt-[70px] lg:pt-[50px] sm:text-4xl md:text-6xl font-bold mb-6 leading-tight text-foreground">
             <span style={{ color: "var(--primary)" }}>Find the breach point</span>{" "}
             <span>before They Do.</span>
@@ -62,8 +61,7 @@ export function HeroSection() {
               className="glow-accent animate-pulse-glow group cursor-pointer"
               style={{ backgroundColor: "var(--primary)", color: "var(--foreground)" }}
             >
-              Start Your Security Assessment
-              <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
+              Start Your Security Assessment<ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
             </Button>
 
             <Link href="/services" passHref legacyBehavior>

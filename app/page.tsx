@@ -14,6 +14,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { LogoSection } from "@/components/ui/logosection";
 
+
 // Register ScrollTrigger plugin
 if (typeof window !== "undefined") {
   gsap.registerPlugin(ScrollTrigger);
@@ -172,6 +173,7 @@ export default function HomePage() {
       background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
     }}
   />
+
 
   <Footer />
 </main>

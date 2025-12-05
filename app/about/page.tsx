@@ -8,6 +8,7 @@ import { Footer } from "@/components/footer"
 import { AboutSection } from "@/components/about-section"
 
 import { Metadata } from "next"
+import { BookingScheduler } from "@/components/booking-sheduler"
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -26,6 +27,7 @@ export default function AboutPage() {
       <TeamSection />
       <CompanyStats />
       <CTASection /> */}
+      <BookingScheduler/>
       <Footer />
 
     </main>
