@@ -396,7 +396,7 @@ export function BookingScheduler() {
                                                                 </AvatarFallback>
                                                             </Avatar>
                                                             <div>
-                                                                <p className="text-[var(--muted-foreground)]">Joel Aviad Ossi</p>
+                                                                <p className="text-[var(--muted-foreground)]">Sam Joshua</p>
                                                                 <h2 className="text-2xl font-bold text-[var(--foreground)]">30 Min Meeting</h2>
                                                             </div>
                                                         </div>
