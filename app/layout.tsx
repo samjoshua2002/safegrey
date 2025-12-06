@@ -6,6 +6,7 @@ import "./globals.css";
 import localFont from "next/font/local";
 import { CursorGlow } from "@/components/ui/cursor-glow";
 import { CookieConsent } from "@/components/cookie-consent";
+import { Toaster } from "@/components/ui/sonner";
 
 // Import Satoshi font
 const satoshi = localFont({
@@ -153,6 +154,7 @@ export default function RootLayout({
         <CursorGlow />
         <CookieConsent />
         <Suspense fallback={null}>{children}</Suspense>
+        <Toaster />
         <Analytics />
       </body>
     </html>

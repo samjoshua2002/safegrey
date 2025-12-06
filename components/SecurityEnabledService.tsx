@@ -124,56 +124,7 @@ function ServiceDownloadDialog({ isOpen, onOpenChange, formData, onFormChange, o
   )
 }
 
-// Custom toast configuration
-const showSuccessToast = () => {
-  toast.success(
-    <div className="flex items-center gap-3">
-      <div className="p-1.5 rounded-full bg-green-500/20 border border-green-500/30">
-        <CheckCircle className="w-4 h-4 text-green-500" />
-      </div>
-      <div className="flex flex-col">
-        <span className="font-semibold text-foreground">Email Sent Successfully!</span>
-        <span className="text-sm text-muted-foreground">Check your inbox for the service guide</span>
-      </div>
-    </div>,
-    {
-      duration: 5000,
-      position: "top-right",
-      style: {
-        background: "hsl(var(--card))",
-        border: "1px solid hsl(var(--border))",
-        borderRadius: "12px",
-        boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-      },
-    }
-  )
-}
-
-const showErrorToast = (message: string) => {
-  toast.error(
-    <div className="flex items-center gap-3">
-      <div className="p-1.5 rounded-full bg-red-500/20 border border-red-500/30">
-        <div className="w-4 h-4 flex items-center justify-center">
-          <span className="text-red-500 font-bold text-sm">!</span>
-        </div>
-      </div>
-      <div className="flex flex-col">
-        <span className="font-semibold text-foreground">Failed to Send Email</span>
-        <span className="text-sm text-muted-foreground">{message}</span>
-      </div>
-    </div>,
-    {
-      duration: 5000,
-      position: "top-right",
-      style: {
-        background: "hsl(var(--card))",
-        border: "1px solid hsl(var(--border))",
-        borderRadius: "12px",
-        boxShadow: "0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)",
-      },
-    }
-  )
-}
+// Custom toast configuration removed in favor of Sonner toast.promise
 
 export function SecurityEnablementServices() {
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -195,31 +146,38 @@ export function SecurityEnablementServices() {
     e.preventDefault()
     setIsLoading(true)
 
-    try {
-      const response = await fetch('/api/security-enablement', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ ...formData, serviceType: selectedService }),
-      })
+    const submitPromise = async () => {
+      try {
+        const response = await fetch('/api/security-enablement', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ ...formData, serviceType: selectedService }),
+        })
 
-      const data = await response.json()
+        const data = await response.json()
 
-      if (!response.ok) {
-        showErrorToast(data.error || 'Failed to send email. Please try again.')
+        if (!response.ok) {
+          throw new Error(data.error || 'Failed to send email. Please try again.')
+        }
+        return data
+      } finally {
         setIsLoading(false)
-        return
       }
-
-      showSuccessToast()
-      setIsDialogOpen(false)
-      setFormData({ name: "", email: "" })
-    } catch (error) {
-      showErrorToast('An unexpected error occurred. Please try again.')
-    } finally {
-      setIsLoading(false)
     }
+
+    toast.promise(submitPromise(), {
+      loading: 'Sending Guide...',
+      success: (data) => {
+        setIsDialogOpen(false)
+        setFormData({ name: "", email: "" })
+        return 'Email Sent Successfully! Check your inbox for the service guide'
+      },
+      error: (err) => {
+        return err.message || 'An unexpected error occurred. Please try again.'
+      },
+    })
   }
 
   const serviceTypes = [
