@@ -1,619 +1,787 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Calendar, Clock, User, Mail, FileText, CheckCircle, X, ChevronRight, ChevronLeft, Calendar as CalendarIcon, Send } from "lucide-react";
+import { useState, useEffect, useCallback } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { toast } from "sonner";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Clock,
+  Globe,
+  Video,
+  Calendar,
+  Users,
+  Check,
+  Sparkles,
+  CheckCircle,
+  X,
+} from "lucide-react";
+import { Card, CardContent } from "@/components/ui/card";
+import { cn } from "@/lib/utils";
+import { motion, AnimatePresence } from "framer-motion";
 
-interface AppointmentData {
-  name: string;
-  email: string;
-  reason: string;
-  description: string;
-  date: string;
-  time: string;
+type Step = "select-date" | "select-time" | "fill-details";
+
+const DAYS = ["SUN", "MON", "TUE", "WED", "THU", "FRI", "SAT"];
+const MONTHS = [
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
+];
+const TIME_SLOTS = [
+  "10:00am",
+  "10:30am",
+  "11:00am",
+  "11:30am",
+  "12:00pm",
+  "12:30pm",
+  "1:00pm",
+  "1:30pm",
+  "2:00pm",
+  "2:30pm",
+  "3:00pm",
+  "3:30pm",
+  "4:00pm",
+  "4:30pm",
+  "5:00pm",
+];
+const TIMEZONES = [
+  { value: "Asia/Kolkata", label: "Asia/Kolkata" },
+  { value: "America/New_York", label: "America/New_York" },
+  { value: "America/Los_Angeles", label: "America/Los_Angeles" },
+  { value: "Europe/London", label: "Europe/London" },
+];
+
+interface BookingSchedulerProps {
+  onClose?: () => void;
 }
 
-interface AppointmentBookingModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-}
+export function AppointmentModal({ onClose }: BookingSchedulerProps) {
+  const [step, setStep] = useState<Step>("select-date");
+  const [currentMonth, setCurrentMonth] = useState(new Date());
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const [selectedTime, setSelectedTime] = useState<string | null>(null);
+  const [timezone, setTimezone] = useState("Asia/Kolkata");
+  const today = new Date();
+  const todayDay = today.getDate();
+  const todayMonth = today.getMonth();
+  const todayYear = today.getFullYear();
 
-export function AppointmentBookingModal({ isOpen, onClose }: AppointmentBookingModalProps) {
-  const [step, setStep] = useState(1);
-  const [selectedDate, setSelectedDate] = useState<string>("2025-12-05");
-  const [selectedTime, setSelectedTime] = useState<string>("16:30");
-  const [appointmentData, setAppointmentData] = useState<AppointmentData>({
+  const [formData, setFormData] = useState({
     name: "",
     email: "",
-    reason: "",
-    description: "",
-    date: "2025-12-05",
-    time: "16:30"
+    topic: "",
+    notes: "",
   });
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
 
-  // Available time slots
-  const timeSlots = [
-    "16:30", "17:00", "17:30", "18:00", 
-    "18:30", "19:00", "19:30", "21:30"
-  ];
+  const getDaysInMonth = useCallback((date: Date) => {
+    const year = date.getFullYear();
+    const month = date.getMonth();
+    const firstDay = new Date(year, month, 1);
+    const lastDay = new Date(year, month + 1, 0);
+    const daysInMonth = lastDay.getDate();
+    const startingDay = firstDay.getDay();
+    const days: (number | null)[] = [];
+    for (let i = 0; i < startingDay; i++) days.push(null);
+    for (let i = 1; i <= daysInMonth; i++) days.push(i);
+    return days;
+  }, []);
 
-  // Calendar data for December 2025
-  const calendarDays = [
-    { day: 1, enabled: true }, { day: 2, enabled: true }, { day: 3, enabled: true },
-    { day: 4, enabled: true }, { day: 5, enabled: true }, { day: 6, enabled: true },
-    { day: 7, enabled: true }, { day: 8, enabled: true }, { day: 9, enabled: true },
-    { day: 10, enabled: true }, { day: 11, enabled: true }, { day: 12, enabled: true },
-    { day: 13, enabled: true }, { day: 14, enabled: true }, { day: 15, enabled: true },
-    { day: 16, enabled: true }, { day: 17, enabled: true }, { day: 18, enabled: true },
-    { day: 19, enabled: true }, { day: 20, enabled: true }, { day: 21, enabled: true },
-    { day: 22, enabled: true }, { day: 23, enabled: true }, { day: 24, enabled: true },
-    { day: 25, enabled: true }, { day: 26, enabled: true }, { day: 27, enabled: true },
-    { day: 28, enabled: true }, { day: 29, enabled: true }, { day: 30, enabled: true },
-    { day: 31, enabled: true }
-  ];
+ // In your AppointmentModal component, replace these two functions:
 
-  const handleInputChange = (field: keyof AppointmentData, value: string) => {
-    setAppointmentData(prev => ({
-      ...prev,
-      [field]: value
-    }));
-  };
+const isDateSelectable = useCallback((day: number) => {
+  const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day)
+  const today = new Date()
+  
+  // Reset both dates to midnight for accurate comparison
+  const dateMidnight = new Date(date.getFullYear(), date.getMonth(), date.getDate())
+  const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate())
+  
+  const dayOfWeek = date.getDay()
+  const isToday = dateMidnight.getTime() === todayMidnight.getTime()
+  
+  // Always allow today, for future dates exclude weekends
+  return isToday || (dateMidnight > todayMidnight && dayOfWeek !== 0 && dayOfWeek !== 6)
+}, [currentMonth])
 
-  const handleDateSelect = (day: number) => {
-    const date = `2025-12-${day.toString().padStart(2, '0')}`;
-    setSelectedDate(date);
-    setAppointmentData(prev => ({ ...prev, date }));
-  };
+const handleDateSelect = useCallback((day: number) => {
+  if (isAnimating) return
+  
+  // Check if date is selectable (includes today)
+  if (!isDateSelectable(day)) return
+  
+  setIsAnimating(true)
+  const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day)
+  setSelectedDate(date)
+  
+  // Automatically go to time selection after date is selected
+  setTimeout(() => {
+    setStep("select-time")
+    setIsAnimating(false)
+  }, 300)
+}, [currentMonth, isAnimating, isDateSelectable])
 
-  const handleTimeSelect = (time: string) => {
-    setSelectedTime(time);
-    setAppointmentData(prev => ({ ...prev, time }));
-  };
 
-  const nextStep = () => {
-    if (step === 1) {
-      if (!selectedDate || !selectedTime) {
-        toast.error("Please select a date and time");
-        return;
-      }
+  const handleTimeSelect = useCallback(
+    (time: string) => {
+      if (isAnimating) return;
+      setIsAnimating(true);
+      setSelectedTime(time);
+      setTimeout(() => setIsAnimating(false), 200);
+    },
+    [isAnimating]
+  );
+
+  const handleNext = useCallback(() => {
+    if (selectedTime && !isAnimating) {
+      setIsAnimating(true);
+      setTimeout(() => {
+        setStep("fill-details");
+        setIsAnimating(false);
+      }, 400);
     }
-    if (step === 2) {
-      if (!appointmentData.name || !appointmentData.email || !appointmentData.reason) {
-        toast.error("Please fill in all required fields");
-        return;
+  }, [selectedTime, isAnimating]);
+
+  const handleBack = useCallback(() => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    setTimeout(() => {
+      if (step === "fill-details") setStep("select-time");
+      else if (step === "select-time") {
+        setStep("select-date");
+        setSelectedTime(null);
       }
-      if (!/\S+@\S+\.\S+/.test(appointmentData.email)) {
-        toast.error("Please enter a valid email address");
-        return;
-      }
-    }
-    setStep(prev => prev + 1);
-  };
+      setIsAnimating(false);
+    }, 300);
+  }, [step, isAnimating]);
 
-  const prevStep = () => {
-    setStep(prev => prev - 1);
-  };
-
-  const handleSubmit = async () => {
-    setIsSubmitting(true);
-    
-    try {
-      // Prepare appointment data
-      const appointmentDateTime = new Date(`${selectedDate}T${selectedTime}`);
-      
-      // Send to your API endpoint
-      const response = await fetch('/api/appointments/book', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          ...appointmentData,
-          appointmentDateTime: appointmentDateTime.toISOString(),
-          userAgent: navigator.userAgent,
-          timestamp: new Date().toISOString()
-        }),
-      });
-
-      if (response.ok) {
-        // Generate Google Calendar link
-        const googleCalendarLink = generateGoogleCalendarLink(appointmentData, appointmentDateTime);
-        
-        // Send confirmation email
-        await sendConfirmationEmail(appointmentData, googleCalendarLink);
-        
-        // Send admin notification
-        await sendAdminNotification(appointmentData);
-        
-        toast.success("Appointment booked successfully!");
-        
-        // Move to confirmation step
-        setStep(4);
-      } else {
-        throw new Error('Failed to book appointment');
-      }
-    } catch (error) {
-      console.error('Booking error:', error);
-      toast.error("Failed to book appointment. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
-
-  const generateGoogleCalendarLink = (data: AppointmentData, dateTime: Date) => {
-    const endDateTime = new Date(dateTime);
-    endDateTime.setHours(endDateTime.getHours() + 1);
-    
-    const params = new URLSearchParams({
-      action: 'TEMPLATE',
-      text: `Consultation: ${data.reason}`,
-      details: `Name: ${data.name}\nEmail: ${data.email}\nReason: ${data.reason}\nDescription: ${data.description || 'No description provided'}`,
-      location: 'Online Meeting',
-      dates: `${dateTime.toISOString().replace(/[-:]/g, '').split('.')[0]}Z/${endDateTime.toISOString().replace(/[-:]/g, '').split('.')[0]}Z`
+  const handleConfirm = useCallback(() => {
+    console.log({
+      date: selectedDate,
+      time: selectedTime,
+      timezone,
+      ...formData,
     });
-    
-    return `https://calendar.google.com/calendar/render?${params.toString()}`;
-  };
+    setIsSubmitted(true);
+  }, [selectedDate, selectedTime, timezone, formData]);
 
-  const sendConfirmationEmail = async (data: AppointmentData, calendarLink: string) => {
-    try {
-      await fetch('/api/email/confirmation', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, calendarLink })
-      });
-    } catch (error) {
-      console.error('Failed to send confirmation email:', error);
-    }
-  };
-
-  const sendAdminNotification = async (data: AppointmentData) => {
-    try {
-      await fetch('/api/email/admin-notification', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(data)
-      });
-    } catch (error) {
-      console.error('Failed to send admin notification:', error);
-    }
-  };
-
-  const resetForm = () => {
-    setStep(1);
-    setSelectedDate("2025-12-05");
-    setSelectedTime("16:30");
-    setAppointmentData({
-      name: "",
-      email: "",
-      reason: "",
-      description: "",
-      date: "2025-12-05",
-      time: "16:30"
+  const formatSelectedDate = useCallback(() => {
+    if (!selectedDate) return "";
+    return selectedDate.toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric",
     });
-    onClose();
-  };
+  }, [selectedDate]);
 
-  const addToGoogleCalendar = () => {
-    const appointmentDateTime = new Date(`${selectedDate}T${selectedTime}`);
-    const googleCalendarLink = generateGoogleCalendarLink(appointmentData, appointmentDateTime);
-    window.open(googleCalendarLink, '_blank');
-  };
+  const getTimeRange = useCallback(() => {
+    if (!selectedTime) return "";
+    const [time, period] = selectedTime.split(/(?=[ap]m)/i);
+    const [hours, minutes] = time.split(":").map(Number);
+    let endHours = hours;
+    let endMinutes = minutes + 30;
+    if (endMinutes >= 60) {
+      endMinutes -= 60;
+      endHours += 1;
+    }
+    const endPeriod = endHours >= 12 ? "pm" : period;
+    if (endHours > 12) endHours -= 12;
+    return `${selectedTime} – ${endHours}:${endMinutes
+      .toString()
+      .padStart(2, "0")}${endPeriod}`;
+  }, [selectedTime]);
+
+  const prevMonth = useCallback(() => {
+    if (isAnimating) return;
+    const today = new Date();
+    const newMonth = new Date(
+      currentMonth.getFullYear(),
+      currentMonth.getMonth() - 1,
+      1
+    );
+    if (newMonth >= new Date(today.getFullYear(), today.getMonth(), 1)) {
+      setIsAnimating(true);
+      setCurrentMonth(newMonth);
+      setTimeout(() => setIsAnimating(false), 200);
+    }
+  }, [currentMonth, isAnimating]);
+
+  const nextMonth = useCallback(() => {
+    if (isAnimating) return;
+    setIsAnimating(true);
+    setCurrentMonth(
+      new Date(currentMonth.getFullYear(), currentMonth.getMonth() + 1, 1)
+    );
+    setTimeout(() => setIsAnimating(false), 200);
+  }, [currentMonth, isAnimating]);
+
+  const [glowingIndex, setGlowingIndex] = useState<number | null>(null);
 
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = 'hidden';
-    } else {
-      document.body.style.overflow = 'unset';
-    }
-    
-    return () => {
-      document.body.style.overflow = 'unset';
-    };
-  }, [isOpen]);
-
-  if (!isOpen) return null;
+    const interval = setInterval(() => {
+      const randomIndex = Math.floor(Math.random() * TIME_SLOTS.length);
+      setGlowingIndex(randomIndex);
+      setTimeout(() => setGlowingIndex(null), 1000);
+    }, 3000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
-    <AnimatePresence>
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[9999] flex items-center justify-center pt-64 p-4 bg-black/70 backdrop-blur-sm"
-        onClick={onClose}
-      >
+    <div className="relative w-full max-w-[1200px] mx-auto">
+      {" "}
+      {/* ADDED max-width constraint */}
+      <AnimatePresence mode="wait">
         <motion.div
-          initial={{ scale: 0.9, opacity: 0, y: 20 }}
-          animate={{ scale: 1, opacity: 1, y: 0 }}
-          exit={{ scale: 0.9, opacity: 0, y: 20 }}
-          transition={{ type: "spring", damping: 25, stiffness: 300 }}
-          className="relative w-full max-w-4xl bg-[var(--theme-dark-base)] border border-[var(--theme-accent)]/20 rounded-2xl shadow-2xl overflow-hidden glass-effect"
-          onClick={(e) => e.stopPropagation()}
+          key={step}
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.3 }}
+          className="w-full"
         >
-          {/* Modal Header */}
-          <div className="flex items-center justify-between p-6 pt- border-b border-[var(--theme-accent)]/20">
-            <div>
-              <h2 className="text-2xl font-bold text-foreground flex items-center gap-2">
-                <Calendar className="w-6 h-6" />
-                Book Your Consultation
-              </h2>
-              <p className="text-muted-foreground mt-1">
-                {step === 1 && "Select date & time"}
-                {step === 2 && "Enter your details"}
-                {step === 3 && "Review & confirm"}
-                {step === 4 && "Booking confirmed!"}
-              </p>
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={onClose}
-              className="hover:bg-[var(--theme-accent)]/10"
+          {isSubmitted ? (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              className="flex justify-center items-center py-12"
             >
-              <X className="w-5 h-5" />
-            </Button>
-          </div>
-
-          {/* Progress Steps */}
-          <div className="px-6 pt-4">
-            <div className="flex items-center justify-between">
-              {[1, 2, 3, 4].map((stepNumber) => (
-                <div key={stepNumber} className="flex flex-col items-center">
-                  <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
-                    step >= stepNumber 
-                      ? "bg-[var(--primary)] text-white" 
-                      : "bg-[var(--theme-accent)]/10 text-muted-foreground"
-                  }`}>
-                    {step > stepNumber ? (
-                      <CheckCircle className="w-5 h-5" />
-                    ) : (
-                      stepNumber
+              <Card className="border border-[var(--theme-border)] bg-[var(--theme-dark-secondary)]/50 backdrop-blur-sm glow-accent max-w-md w-full mx-auto">
+                <CardContent className="p-12 text-center">
+                  <CheckCircle className="w-16 h-16 text-[var(--theme-accent)] mx-auto mb-6" />
+                  <h3 className="text-2xl font-bold mb-4 text-[var(--foreground)]">
+                    Assessment Scheduled!
+                  </h3>
+                  <p className="text-[var(--muted-foreground)] mb-6">
+                    Your free security assessment has been scheduled. Our
+                    security experts will contact you shortly.
+                  </p>
+                  <div className="space-y-3">
+                    <Button
+                      onClick={() => {
+                        setIsSubmitted(false);
+                        setStep("select-date");
+                        setSelectedDate(null);
+                        setSelectedTime(null);
+                        setFormData({
+                          name: "",
+                          email: "",
+                          topic: "",
+                          notes: "",
+                        });
+                      }}
+                      variant="outline"
+                      className="glass-effect bg-transparent border-[var(--theme-accent)] text-[var(--foreground)] hover:bg-[var(--theme-accent)]/10"
+                    >
+                      Schedule Another Assessment
+                    </Button>
+                    {onClose && (
+                      <Button
+                        onClick={onClose}
+                        className="w-full bg-gradient-to-r from-[var(--primary)] to-[var(--theme-accent)] hover:from-[var(--primary)]/90 hover:to-[var(--theme-accent)]/90 text-[var(--foreground)]"
+                      >
+                        Close
+                      </Button>
                     )}
                   </div>
-                  <span className="text-xs mt-2 text-muted-foreground">
-                    {stepNumber === 1 && "Date & Time"}
-                    {stepNumber === 2 && "Details"}
-                    {stepNumber === 3 && "Review"}
-                    {stepNumber === 4 && "Confirm"}
-                  </span>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Modal Content */}
-          <div className="p-6">
-            {step === 1 && (
-              <motion.div
-                key="step1"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                className="space-y-6"
-              >
-                <div>
-                  <h3 className="text-lg font-semibold mb-4 text-foreground flex items-center gap-2">
-                    <Calendar className="w-5 h-5" />
-                    Select Date
-                  </h3>
-                  <div className="glass-effect rounded-xl p-4">
-                    <div className="grid grid-cols-7 gap-2 mb-4">
-                      {['SUN', 'MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT'].map(day => (
-                        <div key={day} className="text-center text-sm font-medium text-muted-foreground py-2">
-                          {day}
-                        </div>
-                      ))}
-                      {calendarDays.map(({ day, enabled }) => (
-                        <motion.button
-                          key={day}
-                          whileHover={{ scale: 1.05 }}
-                          whileTap={{ scale: 0.95 }}
-                          onClick={() => handleDateSelect(day)}
-                          disabled={!enabled}
-                          className={`p-3 rounded-lg transition-all duration-200 ${
-                            selectedDate === `2025-12-${day.toString().padStart(2, '0')}`
-                              ? "bg-[var(--primary)] text-white shadow-lg"
-                              : "bg-[var(--theme-accent)]/5 hover:bg-[var(--theme-accent)]/10"
-                          } ${!enabled ? "opacity-50 cursor-not-allowed" : ""}`}
-                        >
-                          {day}
-                        </motion.button>
-                      ))}
-                    </div>
-                  </div>
-                </div>
-
-                <div>
-                  <h3 className="text-lg font-semibold mb-4 text-foreground flex items-center gap-2">
-                    <Clock className="w-5 h-5" />
-                    Select Time
-                  </h3>
-                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                    {timeSlots.map(time => (
-                      <motion.button
-                        key={time}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        onClick={() => handleTimeSelect(time)}
-                        className={`p-4 rounded-xl text-center transition-all duration-200 ${
-                          selectedTime === time
-                            ? "bg-[var(--primary)] text-white shadow-lg"
-                            : "bg-[var(--theme-accent)]/5 hover:bg-[var(--theme-accent)]/10"
-                        }`}
+                </CardContent>
+              </Card>
+            </motion.div>
+          ) : (
+            <div className="glass-effect rounded-2xl border border-[var(--theme-border)]/30 overflow-hidden w-full">
+              <div className="relative z-10 w-full">
+                {step === "fill-details" ? (
+                  <div className="grid md:grid-cols-2 w-full">
+                    <div className="p-6 space-y-6 bg-gradient-to-br from-[var(--theme-dark-base)]/30 to-[var(--theme-dark-base)]/10 border-b md:border-b-0 md:border-r border-[var(--theme-border)]/30">
+                      <motion.div
+                        initial={{ scale: 0.9 }}
+                        animate={{ scale: 1 }}
+                        className="flex items-center gap-4"
                       >
-                        <div className="text-lg font-medium">
-                          {time.split(':')[0]}:{time.split(':')[1]}
+                        <Avatar className="h-14 w-14 ring-3 ring-[var(--theme-accent)]/30 ring-offset-2 ring-offset-[var(--theme-dark-base)]">
+                          <AvatarImage src="/professional-man-avatar.png" />
+                          <AvatarFallback className="bg-gradient-to-br from-[var(--primary)] to-[var(--theme-accent)] text-[var(--foreground)] text-lg font-bold">
+                            {formData.name
+                              ? formData.name.charAt(0).toUpperCase()
+                              : "JO"}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="text-[var(--muted-foreground)] text-sm">
+                            {formData.name || "Your Name"}
+                          </p>
+                          <h2 className="text-2xl font-bold text-[var(--foreground)]">
+                            Free Security Assessment
+                          </h2>
                         </div>
-                        <div className="text-xs text-muted-foreground">
-                          {parseInt(time.split(':')[0]) >= 12 ? 'PM' : 'AM'}
+                      </motion.div>
+
+                      <div className="space-y-4">
+                        <motion.div
+                          className="flex items-center gap-3 p-4 rounded-xl bg-[var(--theme-dark-base)]/30 border border-[var(--theme-border)]/30"
+                          whileHover={{ scale: 1.02 }}
+                        >
+                          <div className="p-2 rounded-lg bg-[var(--primary)]/10">
+                            <Calendar className="h-5 w-5 text-[var(--primary)]" />
+                          </div>
+                          <div>
+                            <div className="font-medium text-[var(--foreground)]">
+                              {formatSelectedDate()}
+                            </div>
+                            <div className="text-sm text-[var(--muted-foreground)]">
+                              {getTimeRange()}
+                            </div>
+                          </div>
+                        </motion.div>
+
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-3 text-[var(--muted-foreground)]">
+                            <div className="p-2 rounded-lg bg-[var(--primary)]/10">
+                              <Clock className="h-5 w-5 text-[var(--primary)]" />
+                            </div>
+                            <span>30 minutes</span>
+                          </div>
+                          <div className="flex items-center gap-3 text-[var(--muted-foreground)]">
+                            <div className="p-2 rounded-lg bg-[var(--primary)]/10">
+                              <Video className="h-5 w-5 text-[var(--primary)]" />
+                            </div>
+                            <span>Google Meet Video Call</span>
+                          </div>
+                          <div className="flex items-center gap-3 text-[var(--muted-foreground)]">
+                            <div className="p-2 rounded-lg bg-[var(--primary)]/10">
+                              <Globe className="h-5 w-5 text-[var(--primary)]" />
+                            </div>
+                            <span>{timezone}</span>
+                          </div>
                         </div>
-                      </motion.button>
-                    ))}
-                  </div>
-                </div>
-              </motion.div>
-            )}
-
-            {step === 2 && (
-              <motion.div
-                key="step2"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                className="space-y-6"
-              >
-                <div>
-                  <Label htmlFor="name" className="flex items-center gap-2 mb-2">
-                    <User className="w-4 h-4" />
-                    Full Name *
-                  </Label>
-                  <Input
-                    id="name"
-                    value={appointmentData.name}
-                    onChange={(e) => handleInputChange('name', e.target.value)}
-                    placeholder="Enter your full name"
-                    className="glass-effect border-[var(--theme-accent)]/20"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="email" className="flex items-center gap-2 mb-2">
-                    <Mail className="w-4 h-4" />
-                    Email Address *
-                  </Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    value={appointmentData.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
-                    placeholder="Enter your email address"
-                    className="glass-effect border-[var(--theme-accent)]/20"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="reason" className="flex items-center gap-2 mb-2">
-                    <FileText className="w-4 h-4" />
-                    Reason for Consultation *
-                  </Label>
-                  <Input
-                    id="reason"
-                    value={appointmentData.reason}
-                    onChange={(e) => handleInputChange('reason', e.target.value)}
-                    placeholder="e.g., Security Assessment, Penetration Testing"
-                    className="glass-effect border-[var(--theme-accent)]/20"
-                  />
-                </div>
-
-                <div>
-                  <Label htmlFor="description" className="flex items-center gap-2 mb-2">
-                    <FileText className="w-4 h-4" />
-                    Additional Description (Optional)
-                  </Label>
-                  <Textarea
-                    id="description"
-                    value={appointmentData.description}
-                    onChange={(e) => handleInputChange('description', e.target.value)}
-                    placeholder="Any additional details or concerns..."
-                    className="glass-effect border-[var(--theme-accent)]/20 min-h-[120px]"
-                  />
-                </div>
-              </motion.div>
-            )}
-
-            {step === 3 && (
-              <motion.div
-                key="step3"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: 20 }}
-                className="space-y-6"
-              >
-                <h3 className="text-lg font-semibold mb-4 text-foreground">
-                  Review Your Appointment
-                </h3>
-                
-                <div className="glass-effect rounded-xl p-6 space-y-4">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <h4 className="text-sm font-medium text-muted-foreground mb-1">Date & Time</h4>
-                      <p className="text-lg font-semibold">
-                        {new Date(appointmentData.date).toLocaleDateString('en-US', {
-                          weekday: 'long',
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric'
-                        })}
-                      </p>
-                      <p className="text-lg">
-                        {appointmentData.time.split(':')[0]}:
-                        {appointmentData.time.split(':')[1]} 
-                        {parseInt(appointmentData.time.split(':')[0]) >= 12 ? ' PM' : ' AM'}
-                      </p>
+                      </div>
                     </div>
-                    
-                    <div>
-                      <h4 className="text-sm font-medium text-muted-foreground mb-1">Duration</h4>
-                      <p className="text-lg font-semibold">1 Hour</p>
-                      <p className="text-sm text-muted-foreground">Online Meeting</p>
+
+                    <div className="p-6 space-y-6">
+                      <motion.div
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="space-y-4"
+                      >
+                        <div className="space-y-2">
+                          <Label
+                            htmlFor="name"
+                            className="text-[var(--foreground)] flex items-center gap-2"
+                          >
+                            <span className="inline-block w-2 h-2 rounded-full bg-[var(--theme-accent)]"></span>
+                            Your name{" "}
+                            <span className="text-[var(--primary)]">*</span>
+                          </Label>
+                          <Input
+                            id="name"
+                            value={formData.name}
+                            onChange={(e) =>
+                              setFormData({ ...formData, name: e.target.value })
+                            }
+                            required
+                            className="glass-effect h-12 bg-[var(--theme-dark-base)]/30 border-[var(--theme-border)]/50 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:border-[var(--theme-accent)] focus:ring-2 focus:ring-[var(--theme-accent)]/20 transition-all"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label
+                            htmlFor="email"
+                            className="text-[var(--foreground)] flex items-center gap-2"
+                          >
+                            <span className="inline-block w-2 h-2 rounded-full bg-[var(--theme-accent)]"></span>
+                            Email address{" "}
+                            <span className="text-[var(--primary)]">*</span>
+                          </Label>
+                          <Input
+                            id="email"
+                            type="email"
+                            value={formData.email}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                email: e.target.value,
+                              })
+                            }
+                            required
+                            className="glass-effect h-12 bg-[var(--theme-dark-base)]/30 border-[var(--theme-border)]/50 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:border-[var(--theme-accent)] focus:ring-2 focus:ring-[var(--theme-accent)]/20 transition-all"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label
+                            htmlFor="topic"
+                            className="text-[var(--foreground)] flex items-center gap-2"
+                          >
+                            <span className="inline-block w-2 h-2 rounded-full bg-[var(--theme-accent)]"></span>
+                            Security Assessment Focus{" "}
+                            <span className="text-[var(--primary)]">*</span>
+                          </Label>
+                          <Input
+                            id="topic"
+                            value={formData.topic}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                topic: e.target.value,
+                              })
+                            }
+                            required
+                            placeholder="e.g., Network Security, Cloud Security, Compliance"
+                            className="glass-effect h-12 bg-[var(--theme-dark-base)]/30 border-[var(--theme-border)]/50 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:border-[var(--theme-accent)] focus:ring-2 focus:ring-[var(--theme-accent)]/20 transition-all"
+                          />
+                        </div>
+                        <div className="space-y-2">
+                          <Label
+                            htmlFor="notes"
+                            className="text-[var(--foreground)] flex items-center gap-2"
+                          >
+                            <span className="inline-block w-2 h-2 rounded-full bg-[var(--primary)]"></span>
+                            Additional Information
+                          </Label>
+                          <Textarea
+                            id="notes"
+                            placeholder="Please share any specific security concerns or requirements you have."
+                            value={formData.notes}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                notes: e.target.value,
+                              })
+                            }
+                            className="min-h-[120px] glass-effect bg-[var(--theme-dark-base)]/30 border-[var(--theme-border)]/50 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:border-[var(--theme-accent)] focus:ring-2 focus:ring-[var(--theme-accent)]/20 transition-all resize-none"
+                          />
+                        </div>
+                      </motion.div>
+
+                      <div className="space-y-4 pt-4 border-t border-[var(--theme-border)]/30">
+                        <div className="flex justify-between items-center gap-3 pt-2">
+                          <Button
+                            variant="ghost"
+                            onClick={handleBack}
+                            className="text-[var(--foreground)] hover:bg-[var(--theme-dark-base)]/30 hover:text-[var(--primary)] transition-all"
+                          >
+                            ← Back
+                          </Button>
+                          <Button
+                            onClick={handleConfirm}
+                            disabled={
+                              !formData.name ||
+                              !formData.email ||
+                              !formData.topic
+                            }
+                            className="relative bg-gradient-to-r from-[var(--primary)] to-[var(--theme-accent)] hover:from-[var(--primary)]/90 hover:to-[var(--theme-accent)]/90 text-[var(--foreground)] font-semibold px-8 h-12 shadow-lg shadow-[var(--primary)]/20 hover:shadow-[var(--primary)]/30 transition-all group"
+                          >
+                            <Sparkles className="mr-2 h-4 w-4 group-hover:rotate-12 transition-transform" />
+                            Confirm Assessment
+                          </Button>
+                        </div>
+                      </div>
                     </div>
                   </div>
+                ) : (
+                  <div className="grid lg:grid-cols-4 w-full">
+                    {/* Host Info Panel */}
+                    <div className="p-6 space-y-6 bg-gradient-to-br from-[var(--theme-dark-base)]/30 to-[var(--theme-dark-base)]/10 border-b lg:border-b-0 lg:border-r border-[var(--theme-border)]/30">
+                      <motion.div
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        className="space-y-4"
+                      >
+                        <div className="flex items-center gap-4">
+                          <Avatar className="h-16 w-16 ring-3 ring-[var(--theme-accent)]/30 ring-offset-2 ring-offset-[var(--theme-dark-base)]">
+                            <AvatarImage src="/professional-man-avatar.png" />
+                            <AvatarFallback className="bg-gradient-to-br from-[var(--primary)] to-[var(--theme-accent)] text-[var(--foreground)] text-xl font-bold">
+                              SJ
+                            </AvatarFallback>
+                          </Avatar>
+                          <div>
+                            <p className="text-[var(--muted-foreground)]">
+                              Security Expert
+                            </p>
+                            <h2 className="text-2xl font-bold text-[var(--foreground)]">
+                              Free Security Assessment
+                            </h2>
+                          </div>
+                        </div>
 
-                  <div className="border-t border-[var(--theme-accent)]/20 pt-4">
-                    <h4 className="text-sm font-medium text-muted-foreground mb-2">Personal Details</h4>
-                    <div className="space-y-2">
-                      <div className="flex items-center gap-2">
-                        <User className="w-4 h-4 text-muted-foreground" />
-                        <span>{appointmentData.name}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Mail className="w-4 h-4 text-muted-foreground" />
-                        <span>{appointmentData.email}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <FileText className="w-4 h-4 text-muted-foreground" />
-                        <span>{appointmentData.reason}</span>
-                      </div>
-                      {appointmentData.description && (
-                        <div className="mt-2 p-3 bg-[var(--theme-accent)]/5 rounded-lg">
-                          <p className="text-sm">{appointmentData.description}</p>
+                        <div className="space-y-3">
+                          <div className="flex items-center gap-3 text-[var(--muted-foreground)]">
+                            <div className="p-2 rounded-lg bg-[var(--primary)]/10">
+                              <Clock className="h-5 w-5 text-[var(--primary)]" />
+                            </div>
+                            <span>30 minutes</span>
+                          </div>
+                          <div className="flex items-center gap-3 text-[var(--muted-foreground)]">
+                            <div className="p-2 rounded-lg bg-[var(--primary)]/10">
+                              <Video className="h-5 w-5 text-[var(--primary)]" />
+                            </div>
+                            <span>Google Meet Video Call</span>
+                          </div>
+                          <div className="flex items-center gap-3 text-[var(--muted-foreground)]">
+                            <div className="p-2 rounded-lg bg-[var(--primary)]/10">
+                              <Globe className="h-5 w-5 text-[var(--primary)]" />
+                            </div>
+                            <Select
+                              value={timezone}
+                              onValueChange={setTimezone}
+                            >
+                              <SelectTrigger className="h-auto p-0 border-0 shadow-none bg-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)] focus:ring-0">
+                                <SelectValue />
+                              </SelectTrigger>
+                              <SelectContent className="bg-[var(--theme-dark-secondary)] border-[var(--theme-border)]">
+                                {TIMEZONES.map((tz) => (
+                                  <SelectItem
+                                    key={tz.value}
+                                    value={tz.value}
+                                    className="hover:bg-[var(--theme-dark-base)]"
+                                  >
+                                    {tz.label}
+                                  </SelectItem>
+                                ))}
+                              </SelectContent>
+                            </Select>
+                          </div>
+                        </div>
+                      </motion.div>
+                    </div>
+
+                    {/* Calendar Panel */}
+                    <div className="p-6 lg:col-span-2 border-b lg:border-b-0 lg:border-r border-[var(--theme-border)]/30">
+                      <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="space-y-6"
+                      >
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-4">
+                            <h3 className="text-2xl font-bold text-[var(--foreground)]">
+                              {MONTHS[currentMonth.getMonth()]}{" "}
+                              <span className="text-[var(--primary)]">
+                                {currentMonth.getFullYear()}
+                              </span>
+                            </h3>
+                            <div className="flex gap-1">
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-9 w-9 hover:bg-[var(--theme-dark-base)]/30 hover:text-[var(--primary)] transition-all"
+                                onClick={prevMonth}
+                                disabled={isAnimating}
+                              >
+                                <ChevronLeft className="h-4 w-4" />
+                              </Button>
+                              <Button
+                                variant="ghost"
+                                size="icon"
+                                className="h-9 w-9 hover:bg-[var(--theme-dark-base)]/30 hover:text-[var(--primary)] transition-all"
+                                onClick={nextMonth}
+                                disabled={isAnimating}
+                              >
+                                <ChevronRight className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Calendar Grid - Adjusted spacing */}
+                        <div className="grid grid-cols-7 gap-1">
+                          {" "}
+                          {/* Reduced gap */}
+                          {DAYS.map((day) => (
+                            <div key={day} className="text-center py-2">
+                              <span className="text-xs font-semibold text-[var(--muted-foreground)] tracking-wider">
+                                {day}
+                              </span>
+                            </div>
+                          ))}
+                          {getDaysInMonth(currentMonth).map((day, index) => {
+                            if (day === null)
+                              return (
+                                <div key={`empty-${index}`} className="h-10" />
+                              );
+                           const isSelectable = isDateSelectable(day)
+                            const isToday =
+                              day === todayDay &&
+                              currentMonth.getMonth() === todayMonth &&
+                              currentMonth.getFullYear() === todayYear;
+                            const isSelected =
+                              selectedDate &&
+                              selectedDate.getDate() === day &&
+                              selectedDate.getMonth() ===
+                                currentMonth.getMonth() &&
+                              selectedDate.getFullYear() ===
+                                currentMonth.getFullYear();
+
+                            return (
+                              <motion.button
+                                key={day}
+                                onClick={() => handleDateSelect(day)}
+                                disabled={!isSelectable}
+                                whileHover={isSelectable ? { scale: 1.05 } : {}}
+                                whileTap={isSelectable ? { scale: 0.95 } : {}}
+                                className={cn(
+                                  "relative h-10 rounded-md text-sm font-medium transition-all duration-200", // Reduced height and text
+                                  isSelected
+                                    ? "bg-gradient-to-br from-[var(--primary)] to-[var(--theme-accent)] text-[var(--foreground)] shadow-lg shadow-[var(--primary)]/30"
+                                    : isToday
+                                    ? "bg-[var(--theme-dark-base)]/50 text-[var(--foreground)] ring-1 ring-[var(--primary)]/30"
+                                    : isSelectable
+                                    ? "bg-[var(--theme-dark-base)]/30 text-[var(--foreground)] hover:bg-[var(--theme-dark-base)]/50 hover:ring-1 hover:ring-[var(--theme-accent)]/20"
+                                    : "text-[var(--muted-foreground)]/30 cursor-not-allowed"
+                                )}
+                              >
+                                {day}
+                                {isSelected && (
+                                  <motion.div
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    className="absolute -top-1 -right-1"
+                                  >
+                                    <div className="p-1 rounded-full bg-[var(--theme-accent)]">
+                                      <Check className="h-1.5 w-1.5 text-[var(--foreground)]" />
+                                    </div>
+                                  </motion.div>
+                                )}
+                                {isToday && !isSelected && (
+                                  <div className="absolute bottom-0.5 left-1/2 transform -translate-x-1/2 w-1 h-1 rounded-full bg-[var(--primary)]" />
+                                )}
+                              </motion.button>
+                            );
+                          })}
+                        </div>
+                      </motion.div>
+                    </div>
+
+                    {/* Time Selection Panel */}
+                    <div className="p-6 lg:col-span-1">
+                      {selectedDate ? (
+                        <motion.div
+                          initial={{ opacity: 0, x: 20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          className="space-y-6 h-full flex flex-col"
+                        >
+                          <div className="flex items-center justify-between">
+  <div className="space-y-1">
+    <div className="font-bold text-[var(--foreground)] text-sm">
+      {selectedDate.toLocaleDateString("en-US", { 
+        weekday: "short", 
+        month: "short", 
+        day: "numeric", 
+        year: "numeric" 
+      })}
+    </div>
+  </div>
+</div>
+
+                          <div className="space-y-1.5 flex-1 overflow-y-auto px-3 max-h-[280px]">
+                            {" "}
+                            {/* Reduced spacing */}
+                            {TIME_SLOTS.map((time, index) => (
+                              <motion.button
+                                key={time}
+                                onClick={() => handleTimeSelect(time)}
+                                whileHover={{ scale: 1.02 }}
+                                whileTap={{ scale: 0.98 }}
+                                className={cn(
+                                  "relative w-full py-2 px-3 rounded-md border text-xs font-medium transition-all duration-200", // Smaller
+                                  selectedTime === time
+                                    ? "border-[var(--theme-accent)] bg-gradient-to-r from-[var(--primary)]/20 to-[var(--theme-accent)]/20 text-[var(--foreground)] shadow-md shadow-[var(--primary)]/10"
+                                    : "border-[var(--theme-border)]/50 hover:border-[var(--theme-accent)]/50 text-[var(--foreground)] hover:bg-[var(--theme-dark-base)]/30"
+                                )}
+                              >
+                                {glowingIndex === index && (
+                                  <motion.div
+                                    initial={{ opacity: 0, scale: 0.5 }}
+                                    animate={{ opacity: 1, scale: 1 }}
+                                    className="absolute inset-0 bg-[var(--theme-accent)]/10 rounded-md blur-sm" // Smaller blur
+                                  />
+                                )}
+                                {time}
+                                {selectedTime === time && (
+                                  <motion.div
+                                    initial={{ scale: 0 }}
+                                    animate={{ scale: 1 }}
+                                    className="absolute right-2 top-1/2 transform -translate-y-1/2"
+                                  >
+                                    <Check className="h-3 w-3 text-[var(--theme-accent)]" />{" "}
+                                    {/* Smaller icon */}
+                                  </motion.div>
+                                )}
+                              </motion.button>
+                            ))}
+                          </div>
+
+                          {selectedTime && (
+                            <motion.div
+                              initial={{ opacity: 0, y: 20 }}
+                              animate={{ opacity: 1, y: 0 }}
+                            >
+                              <Button
+                                onClick={handleNext}
+                                className="w-full h-10 bg-gradient-to-r from-[var(--primary)] to-[var(--theme-accent)] hover:from-[var(--primary)]/90 hover:to-[var(--theme-accent)]/90 text-[var(--foreground)] font-medium text-sm shadow-md shadow-[var(--primary)]/20 hover:shadow-[var(--primary)]/30 transition-all" // Smaller
+                              >
+                                Continue →
+                              </Button>
+                            </motion.div>
+                          )}
+                        </motion.div>
+                      ) : (
+                        <div className="flex flex-col items-center justify-center h-full text-center space-y-3">
+                          <div className="p-3 rounded-full bg-[var(--theme-dark-base)]/30">
+                            <Calendar className="h-6 w-6 text-[var(--muted-foreground)]" />{" "}
+                            {/* Smaller */}
+                          </div>
+                          <p className="text-sm text-[var(--muted-foreground)]">
+                            {" "}
+                            {/* Smaller */}
+                            Select a date to see available times
+                          </p>
                         </div>
                       )}
                     </div>
                   </div>
-                </div>
-              </motion.div>
-            )}
-
-            {step === 4 && (
-              <motion.div
-                key="step4"
-                initial={{ opacity: 0, scale: 0.9 }}
-                animate={{ opacity: 1, scale: 1 }}
-                className="text-center space-y-6 py-8"
-              >
-                <motion.div
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ type: "spring", delay: 0.2 }}
-                  className="w-20 h-20 bg-[var(--primary)]/10 rounded-full flex items-center justify-center mx-auto"
-                >
-                  <CheckCircle className="w-10 h-10 text-[var(--primary)]" />
-                </motion.div>
-                
-                <div>
-                  <h3 className="text-2xl font-bold mb-2 text-foreground">
-                    Appointment Confirmed!
-                  </h3>
-                  <p className="text-muted-foreground">
-                    Your consultation has been scheduled successfully.
-                  </p>
-                </div>
-
-                <div className="glass-effect rounded-xl p-6 max-w-md mx-auto">
-                  <div className="space-y-3">
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Date:</span>
-                      <span className="font-medium">
-                        {new Date(appointmentData.date).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Time:</span>
-                      <span className="font-medium">
-                        {appointmentData.time.split(':')[0]}:{appointmentData.time.split(':')[1]} 
-                        {parseInt(appointmentData.time.split(':')[0]) >= 12 ? ' PM' : ' AM'}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span className="text-muted-foreground">Duration:</span>
-                      <span className="font-medium">1 Hour</span>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-3 justify-center">
-                  <Button
-                    onClick={addToGoogleCalendar}
-                    className="glass-effect bg-[var(--primary)] hover:bg-[var(--primary)]/90"
-                  >
-                    <CalendarIcon className="w-4 h-4 mr-2" />
-                    Add to Google Calendar
-                  </Button>
-                  
-                  <Button
-                    variant="outline"
-                    onClick={resetForm}
-                  >
-                    Close
-                  </Button>
-                </div>
-
-                <p className="text-sm text-muted-foreground">
-                  A confirmation email has been sent to {appointmentData.email}
-                </p>
-              </motion.div>
-            )}
-          </div>
-
-          {/* Modal Footer */}
-          {step < 4 && (
-            <div className="flex items-center justify-between p-6 border-t border-[var(--theme-accent)]/20">
-              <div>
-                {step > 1 && (
-                  <Button
-                    variant="ghost"
-                    onClick={prevStep}
-                    className="flex items-center gap-2"
-                  >
-                    <ChevronLeft className="w-4 h-4" />
-                    Back
-                  </Button>
-                )}
-              </div>
-              
-              <div>
-                {step < 3 ? (
-                  <Button
-                    onClick={nextStep}
-                    className="glow-accent group"
-                    style={{ backgroundColor: "var(--primary)" }}
-                  >
-                    {step === 1 ? "Continue to Details" : "Review & Confirm"}
-                    <ChevronRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-                ) : (
-                  <Button
-                    onClick={handleSubmit}
-                    disabled={isSubmitting}
-                    className="glow-accent group"
-                    style={{ backgroundColor: "var(--primary)" }}
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin mr-2" />
-                        Booking...
-                      </>
-                    ) : (
-                      <>
-                        Confirm Booking
-                        <Send className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
-                      </>
-                    )}
-                  </Button>
                 )}
               </div>
             </div>
           )}
         </motion.div>
-      </motion.div>
-    </AnimatePresence>
+      </AnimatePresence>
+      {/* Step Indicator */}
+      <div className="flex justify-center items-center gap-2 mt-4">
+        {(["select-date", "select-time", "fill-details"] as Step[]).map(
+          (s, index) => (
+            <motion.div
+              key={s}
+              className={cn(
+                "h-1.5 rounded-full transition-all duration-300",
+                step === s
+                  ? "w-6 bg-gradient-to-r from-[var(--primary)] to-[var(--theme-accent)]" // Smaller
+                  : "w-1.5 bg-[var(--theme-border)]" // Smaller
+              )}
+              whileHover={{ scale: 1.2 }}
+            />
+          )
+        )}
+      </div>
+    </div>
   );
 }
