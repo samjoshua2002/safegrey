@@ -1,6 +1,32 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@keyframes wave {
+  0% {
+    transform: scale(0.85);
+    opacity: 0;
+  }
+  30% {
+    opacity: 1;
+  }
+  70% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1.2);
+    opacity: 0;
+  }
+}
 
+.animate-wave {
+  animation: wave 6s ease-out infinite;
+}
+
+/* Tailwind lacks delay utilities above defaults, so add custom */
+.delay-200 { animation-delay: .2s; }
+.delay-400 { animation-delay: .4s; }
+.delay-600 { animation-delay: .6s; }
+.delay-800 { animation-delay: .8s; }
+.delay-1000 { animation-delay: 1s; }
 @custom-variant dark (&:is(.dark *));
 html,
 body {

@@ -20,11 +20,9 @@ import {
   Globe,
   Video,
   Calendar,
-  Users,
-  Check,
   Sparkles,
   CheckCircle,
-  X,
+  Check,
 } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
@@ -108,40 +106,35 @@ export function AppointmentModal({ onClose }: BookingSchedulerProps) {
     return days;
   }, []);
 
- // In your AppointmentModal component, replace these two functions:
+  const isDateSelectable = useCallback((day: number) => {
+    const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day)
+    const today = new Date()
 
-const isDateSelectable = useCallback((day: number) => {
-  const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day)
-  const today = new Date()
-  
-  // Reset both dates to midnight for accurate comparison
-  const dateMidnight = new Date(date.getFullYear(), date.getMonth(), date.getDate())
-  const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate())
-  
-  const dayOfWeek = date.getDay()
-  const isToday = dateMidnight.getTime() === todayMidnight.getTime()
-  
-  // Always allow today, for future dates exclude weekends
-  return isToday || (dateMidnight > todayMidnight && dayOfWeek !== 0 && dayOfWeek !== 6)
-}, [currentMonth])
+    // Reset both dates to midnight for accurate comparison
+    const dateMidnight = new Date(date.getFullYear(), date.getMonth(), date.getDate())
+    const todayMidnight = new Date(today.getFullYear(), today.getMonth(), today.getDate())
 
-const handleDateSelect = useCallback((day: number) => {
-  if (isAnimating) return
-  
-  // Check if date is selectable (includes today)
-  if (!isDateSelectable(day)) return
-  
-  setIsAnimating(true)
-  const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day)
-  setSelectedDate(date)
-  
-  // Automatically go to time selection after date is selected
-  setTimeout(() => {
-    setStep("select-time")
-    setIsAnimating(false)
-  }, 300)
-}, [currentMonth, isAnimating, isDateSelectable])
+    const dayOfWeek = date.getDay()
+    const isToday = dateMidnight.getTime() === todayMidnight.getTime()
 
+    // Always allow today, for future dates exclude weekends
+    return isToday || (dateMidnight > todayMidnight && dayOfWeek !== 0 && dayOfWeek !== 6)
+  }, [currentMonth])
+
+  const handleDateSelect = useCallback((day: number) => {
+    if (isAnimating) return
+
+    if (!isDateSelectable(day)) return
+
+    setIsAnimating(true)
+    const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day)
+    setSelectedDate(date)
+
+    setTimeout(() => {
+      setStep("select-time")
+      setIsAnimating(false)
+    }, 300)
+  }, [currentMonth, isAnimating, isDateSelectable])
 
   const handleTimeSelect = useCallback(
     (time: string) => {
@@ -249,33 +242,30 @@ const handleDateSelect = useCallback((day: number) => {
   }, []);
 
   return (
-    <div className="relative w-full max-w-[1200px] mx-auto">
-      {" "}
-      {/* ADDED max-width constraint */}
+    <div className="w-full h-full flex flex-col items-center justify-start pb-4">
       <AnimatePresence mode="wait">
         <motion.div
           key={step}
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
+          exit={{ opacity: 0, y: -15 }}
           transition={{ duration: 0.3 }}
-          className="w-full"
+          className="w-full h-full"
         >
           {isSubmitted ? (
             <motion.div
-              initial={{ opacity: 0, scale: 0.9 }}
+              initial={{ opacity: 0, scale: 0.95 }}
               animate={{ opacity: 1, scale: 1 }}
-              className="flex justify-center items-center py-12"
+              className="flex justify-center items-center h-full py-10"
             >
-              <Card className="border border-[var(--theme-border)] bg-[var(--theme-dark-secondary)]/50 backdrop-blur-sm glow-accent max-w-md w-full mx-auto">
-                <CardContent className="p-12 text-center">
-                  <CheckCircle className="w-16 h-16 text-[var(--theme-accent)] mx-auto mb-6" />
-                  <h3 className="text-2xl font-bold mb-4 text-[var(--foreground)]">
+              <Card className="border border-[var(--theme-border)] bg-[var(--theme-dark-secondary)]/50 backdrop-blur-sm glow-accent max-w-sm w-full mx-auto">
+                <CardContent className="p-8 text-center">
+                  <CheckCircle className="w-16 h-16 text-[var(--theme-accent)] mx-auto mb-4" />
+                  <h3 className="text-2xl font-bold mb-3 text-[var(--foreground)]">
                     Assessment Scheduled!
                   </h3>
-                  <p className="text-[var(--muted-foreground)] mb-6">
-                    Your free security assessment has been scheduled. Our
-                    security experts will contact you shortly.
+                  <p className="text-base text-[var(--muted-foreground)] mb-6">
+                    Your free security assessment has been scheduled. Our experts will contact you shortly.
                   </p>
                   <div className="space-y-3">
                     <Button
@@ -292,14 +282,14 @@ const handleDateSelect = useCallback((day: number) => {
                         });
                       }}
                       variant="outline"
-                      className="glass-effect bg-transparent border-[var(--theme-accent)] text-[var(--foreground)] hover:bg-[var(--theme-accent)]/10"
+                      className="glass-effect w-full h-10 text-sm bg-transparent border-[var(--theme-accent)] text-[var(--foreground)] hover:bg-[var(--theme-accent)]/10"
                     >
-                      Schedule Another Assessment
+                      Schedule Another
                     </Button>
                     {onClose && (
                       <Button
                         onClick={onClose}
-                        className="w-full bg-gradient-to-r from-[var(--primary)] to-[var(--theme-accent)] hover:from-[var(--primary)]/90 hover:to-[var(--theme-accent)]/90 text-[var(--foreground)]"
+                        className="w-full h-10 text-sm bg-gradient-to-r from-[var(--primary)] to-[var(--theme-accent)] hover:from-[var(--primary)]/90 hover:to-[var(--theme-accent)]/90 text-[var(--foreground)]"
                       >
                         Close
                       </Button>
@@ -309,392 +299,356 @@ const handleDateSelect = useCallback((day: number) => {
               </Card>
             </motion.div>
           ) : (
-            <div className="glass-effect rounded-2xl border border-[var(--theme-border)]/30 overflow-hidden w-full">
-              <div className="relative z-10 w-full">
-                {step === "fill-details" ? (
-                  <div className="grid md:grid-cols-2 w-full">
-                    <div className="p-6 space-y-6 bg-gradient-to-br from-[var(--theme-dark-base)]/30 to-[var(--theme-dark-base)]/10 border-b md:border-b-0 md:border-r border-[var(--theme-border)]/30">
-                      <motion.div
-                        initial={{ scale: 0.9 }}
-                        animate={{ scale: 1 }}
-                        className="flex items-center gap-4"
-                      >
-                        <Avatar className="h-14 w-14 ring-3 ring-[var(--theme-accent)]/30 ring-offset-2 ring-offset-[var(--theme-dark-base)]">
-                          <AvatarImage src="/professional-man-avatar.png" />
-                          <AvatarFallback className="bg-gradient-to-br from-[var(--primary)] to-[var(--theme-accent)] text-[var(--foreground)] text-lg font-bold">
-                            {formData.name
-                              ? formData.name.charAt(0).toUpperCase()
-                              : "JO"}
-                          </AvatarFallback>
-                        </Avatar>
-                        <div>
-                          <p className="text-[var(--muted-foreground)] text-sm">
-                            {formData.name || "Your Name"}
-                          </p>
-                          <h2 className="text-2xl font-bold text-[var(--foreground)]">
-                            Free Security Assessment
-                          </h2>
-                        </div>
-                      </motion.div>
-
-                      <div className="space-y-4">
-                        <motion.div
-                          className="flex items-center gap-3 p-4 rounded-xl bg-[var(--theme-dark-base)]/30 border border-[var(--theme-border)]/30"
-                          whileHover={{ scale: 1.02 }}
-                        >
-                          <div className="p-2 rounded-lg bg-[var(--primary)]/10">
-                            <Calendar className="h-5 w-5 text-[var(--primary)]" />
-                          </div>
-                          <div>
-                            <div className="font-medium text-[var(--foreground)]">
-                              {formatSelectedDate()}
-                            </div>
-                            <div className="text-sm text-[var(--muted-foreground)]">
-                              {getTimeRange()}
-                            </div>
-                          </div>
-                        </motion.div>
-
-                        <div className="space-y-3">
-                          <div className="flex items-center gap-3 text-[var(--muted-foreground)]">
-                            <div className="p-2 rounded-lg bg-[var(--primary)]/10">
-                              <Clock className="h-5 w-5 text-[var(--primary)]" />
-                            </div>
-                            <span>30 minutes</span>
-                          </div>
-                          <div className="flex items-center gap-3 text-[var(--muted-foreground)]">
-                            <div className="p-2 rounded-lg bg-[var(--primary)]/10">
-                              <Video className="h-5 w-5 text-[var(--primary)]" />
-                            </div>
-                            <span>Google Meet Video Call</span>
-                          </div>
-                          <div className="flex items-center gap-3 text-[var(--muted-foreground)]">
-                            <div className="p-2 rounded-lg bg-[var(--primary)]/10">
-                              <Globe className="h-5 w-5 text-[var(--primary)]" />
-                            </div>
-                            <span>{timezone}</span>
-                          </div>
-                        </div>
+            <div className="w-full h-full">
+              {step === "fill-details" ? (
+                <div className="grid md:grid-cols-2 w-full h-full">
+                  {/* Sidebar */}
+                  <div className="p-6 md:p-8 space-y-6 bg-gradient-to-br from-[var(--theme-dark-base)]/30 to-[var(--theme-dark-base)]/10 border-b md:border-b-0 md:border-r border-[var(--theme-border)]/30">
+                    <motion.div
+                      initial={{ scale: 0.95 }}
+                      animate={{ scale: 1 }}
+                      className="flex items-center gap-4"
+                    >
+                      <Avatar className="h-14 w-14 ring-2 ring-[var(--theme-accent)]/30 ring-offset-2 ring-offset-[var(--theme-dark-base)]">
+                        <AvatarImage src="/professional-man-avatar.png" />
+                        <AvatarFallback className="text-lg bg-gradient-to-br from-[var(--primary)] to-[var(--theme-accent)] text-[var(--foreground)] font-bold">
+                          {formData.name
+                            ? formData.name.charAt(0).toUpperCase()
+                            : "JO"}
+                        </AvatarFallback>
+                      </Avatar>
+                      <div>
+                        <p className="text-[var(--muted-foreground)] text-sm">
+                          {formData.name || "Your Name"}
+                        </p>
+                        <h2 className="text-xl font-bold text-[var(--foreground)] mt-0.5">
+                          Security Assessment
+                        </h2>
                       </div>
-                    </div>
+                    </motion.div>
 
-                    <div className="p-6 space-y-6">
+                    <div className="space-y-4">
                       <motion.div
-                        initial={{ opacity: 0, x: 20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        className="space-y-4"
+                        className="flex items-center gap-4 p-4 rounded-xl bg-[var(--theme-dark-base)]/30 border border-[var(--theme-border)]/30"
+                        whileHover={{ scale: 1.01 }}
                       >
-                        <div className="space-y-2">
-                          <Label
-                            htmlFor="name"
-                            className="text-[var(--foreground)] flex items-center gap-2"
-                          >
-                            <span className="inline-block w-2 h-2 rounded-full bg-[var(--theme-accent)]"></span>
-                            Your name{" "}
-                            <span className="text-[var(--primary)]">*</span>
-                          </Label>
-                          <Input
-                            id="name"
-                            value={formData.name}
-                            onChange={(e) =>
-                              setFormData({ ...formData, name: e.target.value })
-                            }
-                            required
-                            className="glass-effect h-12 bg-[var(--theme-dark-base)]/30 border-[var(--theme-border)]/50 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:border-[var(--theme-accent)] focus:ring-2 focus:ring-[var(--theme-accent)]/20 transition-all"
-                          />
+                        <div className="p-2.5 rounded-lg bg-[var(--primary)]/10">
+                          <Calendar className="h-5 w-5 text-[var(--primary)]" />
                         </div>
-                        <div className="space-y-2">
-                          <Label
-                            htmlFor="email"
-                            className="text-[var(--foreground)] flex items-center gap-2"
-                          >
-                            <span className="inline-block w-2 h-2 rounded-full bg-[var(--theme-accent)]"></span>
-                            Email address{" "}
-                            <span className="text-[var(--primary)]">*</span>
-                          </Label>
-                          <Input
-                            id="email"
-                            type="email"
-                            value={formData.email}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                email: e.target.value,
-                              })
-                            }
-                            required
-                            className="glass-effect h-12 bg-[var(--theme-dark-base)]/30 border-[var(--theme-border)]/50 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:border-[var(--theme-accent)] focus:ring-2 focus:ring-[var(--theme-accent)]/20 transition-all"
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label
-                            htmlFor="topic"
-                            className="text-[var(--foreground)] flex items-center gap-2"
-                          >
-                            <span className="inline-block w-2 h-2 rounded-full bg-[var(--theme-accent)]"></span>
-                            Security Assessment Focus{" "}
-                            <span className="text-[var(--primary)]">*</span>
-                          </Label>
-                          <Input
-                            id="topic"
-                            value={formData.topic}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                topic: e.target.value,
-                              })
-                            }
-                            required
-                            placeholder="e.g., Network Security, Cloud Security, Compliance"
-                            className="glass-effect h-12 bg-[var(--theme-dark-base)]/30 border-[var(--theme-border)]/50 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:border-[var(--theme-accent)] focus:ring-2 focus:ring-[var(--theme-accent)]/20 transition-all"
-                          />
-                        </div>
-                        <div className="space-y-2">
-                          <Label
-                            htmlFor="notes"
-                            className="text-[var(--foreground)] flex items-center gap-2"
-                          >
-                            <span className="inline-block w-2 h-2 rounded-full bg-[var(--primary)]"></span>
-                            Additional Information
-                          </Label>
-                          <Textarea
-                            id="notes"
-                            placeholder="Please share any specific security concerns or requirements you have."
-                            value={formData.notes}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                notes: e.target.value,
-                              })
-                            }
-                            className="min-h-[120px] glass-effect bg-[var(--theme-dark-base)]/30 border-[var(--theme-border)]/50 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:border-[var(--theme-accent)] focus:ring-2 focus:ring-[var(--theme-accent)]/20 transition-all resize-none"
-                          />
+                        <div>
+                          <div className="font-semibold text-base text-[var(--foreground)]">
+                            {formatSelectedDate()}
+                          </div>
+                          <div className="text-[var(--muted-foreground)] text-sm">
+                            {getTimeRange()}
+                          </div>
                         </div>
                       </motion.div>
 
-                      <div className="space-y-4 pt-4 border-t border-[var(--theme-border)]/30">
-                        <div className="flex justify-between items-center gap-3 pt-2">
-                          <Button
-                            variant="ghost"
-                            onClick={handleBack}
-                            className="text-[var(--foreground)] hover:bg-[var(--theme-dark-base)]/30 hover:text-[var(--primary)] transition-all"
-                          >
-                            ← Back
-                          </Button>
-                          <Button
-                            onClick={handleConfirm}
-                            disabled={
-                              !formData.name ||
-                              !formData.email ||
-                              !formData.topic
-                            }
-                            className="relative bg-gradient-to-r from-[var(--primary)] to-[var(--theme-accent)] hover:from-[var(--primary)]/90 hover:to-[var(--theme-accent)]/90 text-[var(--foreground)] font-semibold px-8 h-12 shadow-lg shadow-[var(--primary)]/20 hover:shadow-[var(--primary)]/30 transition-all group"
-                          >
-                            <Sparkles className="mr-2 h-4 w-4 group-hover:rotate-12 transition-transform" />
-                            Confirm Assessment
-                          </Button>
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-3 text-[var(--muted-foreground)] text-sm">
+                          <Clock className="h-4 w-4 text-[var(--primary)]" />
+                          <span>30 minute session</span>
+                        </div>
+                        <div className="flex items-center gap-3 text-[var(--muted-foreground)] text-sm">
+                          <Video className="h-4 w-4 text-[var(--primary)]" />
+                          <span>Google Meet Video Call</span>
+                        </div>
+                        <div className="flex items-center gap-3 text-[var(--muted-foreground)] text-sm">
+                          <Globe className="h-4 w-4 text-[var(--primary)]" />
+                          <span>{timezone}</span>
                         </div>
                       </div>
                     </div>
                   </div>
-                ) : (
-                  <div className="grid lg:grid-cols-4 w-full">
-                    {/* Host Info Panel */}
-                    <div className="p-6 space-y-6 bg-gradient-to-br from-[var(--theme-dark-base)]/30 to-[var(--theme-dark-base)]/10 border-b lg:border-b-0 lg:border-r border-[var(--theme-border)]/30">
-                      <motion.div
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        className="space-y-4"
-                      >
-                        <div className="flex items-center gap-4">
-                          <Avatar className="h-16 w-16 ring-3 ring-[var(--theme-accent)]/30 ring-offset-2 ring-offset-[var(--theme-dark-base)]">
-                            <AvatarImage src="/professional-man-avatar.png" />
-                            <AvatarFallback className="bg-gradient-to-br from-[var(--primary)] to-[var(--theme-accent)] text-[var(--foreground)] text-xl font-bold">
-                              SJ
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <p className="text-[var(--muted-foreground)]">
-                              Security Expert
-                            </p>
-                            <h2 className="text-2xl font-bold text-[var(--foreground)]">
-                              Free Security Assessment
-                            </h2>
-                          </div>
-                        </div>
 
-                        <div className="space-y-3">
-                          <div className="flex items-center gap-3 text-[var(--muted-foreground)]">
-                            <div className="p-2 rounded-lg bg-[var(--primary)]/10">
-                              <Clock className="h-5 w-5 text-[var(--primary)]" />
-                            </div>
-                            <span>30 minutes</span>
-                          </div>
-                          <div className="flex items-center gap-3 text-[var(--muted-foreground)]">
-                            <div className="p-2 rounded-lg bg-[var(--primary)]/10">
-                              <Video className="h-5 w-5 text-[var(--primary)]" />
-                            </div>
-                            <span>Google Meet Video Call</span>
-                          </div>
-                          <div className="flex items-center gap-3 text-[var(--muted-foreground)]">
-                            <div className="p-2 rounded-lg bg-[var(--primary)]/10">
-                              <Globe className="h-5 w-5 text-[var(--primary)]" />
-                            </div>
-                            <Select
-                              value={timezone}
-                              onValueChange={setTimezone}
-                            >
-                              <SelectTrigger className="h-auto p-0 border-0 shadow-none bg-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)] focus:ring-0">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent className="bg-[var(--theme-dark-secondary)] border-[var(--theme-border)]">
-                                {TIMEZONES.map((tz) => (
-                                  <SelectItem
-                                    key={tz.value}
-                                    value={tz.value}
-                                    className="hover:bg-[var(--theme-dark-base)]"
-                                  >
-                                    {tz.label}
-                                  </SelectItem>
-                                ))}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        </div>
-                      </motion.div>
+                  {/* Form */}
+                  <div className="p-6 md:p-8 space-y-4 bg-[var(--theme-dark-base)]">
+                    <motion.div
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="space-y-4"
+                    >
+                      <div className="space-y-1.5">
+                        <Label
+                          htmlFor="name"
+                          className="text-[var(--foreground)] text-sm flex items-center gap-1.5"
+                        >
+                          <span className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--theme-accent)]"></span>
+                          Your name <span className="text-[var(--primary)]">*</span>
+                        </Label>
+                        <Input
+                          id="name"
+                          value={formData.name}
+                          onChange={(e) =>
+                            setFormData({ ...formData, name: e.target.value })
+                          }
+                          required
+                          className="h-10 text-sm glass-effect bg-[var(--theme-dark-base)]/30 border-[var(--theme-border)]/50 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:border-[var(--theme-accent)] focus:ring-2 focus:ring-[var(--theme-accent)]/20 px-3"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label
+                          htmlFor="email"
+                          className="text-[var(--foreground)] text-sm flex items-center gap-1.5"
+                        >
+                          <span className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--theme-accent)]"></span>
+                          Email address <span className="text-[var(--primary)]">*</span>
+                        </Label>
+                        <Input
+                          id="email"
+                          type="email"
+                          value={formData.email}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              email: e.target.value,
+                            })
+                          }
+                          required
+                          className="h-10 text-sm glass-effect bg-[var(--theme-dark-base)]/30 border-[var(--theme-border)]/50 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:border-[var(--theme-accent)] focus:ring-2 focus:ring-[var(--theme-accent)]/20 px-3"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label
+                          htmlFor="topic"
+                          className="text-[var(--foreground)] text-sm flex items-center gap-1.5"
+                        >
+                          <span className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--theme-accent)]"></span>
+                          Assessment Focus <span className="text-[var(--primary)]">*</span>
+                        </Label>
+                        <Input
+                          id="topic"
+                          value={formData.topic}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              topic: e.target.value,
+                            })
+                          }
+                          required
+                          placeholder="e.g., Network Security"
+                          className="h-10 text-sm glass-effect bg-[var(--theme-dark-base)]/30 border-[var(--theme-border)]/50 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:border-[var(--theme-accent)] focus:ring-2 focus:ring-[var(--theme-accent)]/20 px-3"
+                        />
+                      </div>
+                      <div className="space-y-1.5">
+                        <Label
+                          htmlFor="notes"
+                          className="text-[var(--foreground)] text-sm flex items-center gap-1.5"
+                        >
+                          <span className="inline-block w-1.5 h-1.5 rounded-full bg-[var(--primary)]"></span>
+                          Additional Information
+                        </Label>
+                        <Textarea
+                          id="notes"
+                          placeholder="Anything else we should know?"
+                          value={formData.notes}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              notes: e.target.value,
+                            })
+                          }
+                          className="min-h-[80px] text-sm glass-effect bg-[var(--theme-dark-base)]/30 border-[var(--theme-border)]/50 text-[var(--foreground)] placeholder:text-[var(--muted-foreground)] focus:border-[var(--theme-accent)] focus:ring-2 focus:ring-[var(--theme-accent)]/20 resize-none p-3"
+                        />
+                      </div>
+                    </motion.div>
+
+                    <div className="space-y-3 pt-4 border-t border-[var(--theme-border)]/30">
+                      <div className="flex justify-between items-center gap-3">
+                        <Button
+                          variant="ghost"
+                          size="sm"
+                          onClick={handleBack}
+                          className="h-10 text-sm text-[var(--foreground)] hover:bg-[var(--theme-dark-base)]/30 hover:text-[var(--primary)]"
+                        >
+                          ← Back
+                        </Button>
+                        <Button
+                          onClick={handleConfirm}
+                          size="sm"
+                          disabled={
+                            !formData.name ||
+                            !formData.email ||
+                            !formData.topic
+                          }
+                          className="relative h-10 bg-gradient-to-r from-[var(--primary)] to-[var(--theme-accent)] hover:from-[var(--primary)]/90 hover:to-[var(--theme-accent)]/90 text-[var(--foreground)] text-sm font-semibold px-6 shadow-md shadow-[var(--primary)]/20 transition-all group"
+                        >
+                          <Sparkles className="mr-2 h-4 w-4 group-hover:rotate-12 transition-transform" />
+                          Confirm Booking
+                        </Button>
+                      </div>
                     </div>
-
-                    {/* Calendar Panel */}
-                    <div className="p-6 lg:col-span-2 border-b lg:border-b-0 lg:border-r border-[var(--theme-border)]/30">
-                      <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        className="space-y-6"
-                      >
-                        <div className="flex items-center justify-between">
-                          <div className="flex items-center gap-4">
-                            <h3 className="text-2xl font-bold text-[var(--foreground)]">
-                              {MONTHS[currentMonth.getMonth()]}{" "}
-                              <span className="text-[var(--primary)]">
-                                {currentMonth.getFullYear()}
-                              </span>
-                            </h3>
-                            <div className="flex gap-1">
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-9 w-9 hover:bg-[var(--theme-dark-base)]/30 hover:text-[var(--primary)] transition-all"
-                                onClick={prevMonth}
-                                disabled={isAnimating}
-                              >
-                                <ChevronLeft className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                variant="ghost"
-                                size="icon"
-                                className="h-9 w-9 hover:bg-[var(--theme-dark-base)]/30 hover:text-[var(--primary)] transition-all"
-                                onClick={nextMonth}
-                                disabled={isAnimating}
-                              >
-                                <ChevronRight className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </div>
+                  </div>
+                </div>
+              ) : (
+                <div className="grid md:grid-cols-[300px_1fr] w-full h-full">
+                  {/* Host Panel */}
+                  <div className="p-6 md:p-8 space-y-6 bg-gradient-to-br from-[var(--theme-dark-base)]/30 to-[var(--theme-dark-base)]/10 border-b md:border-b-0 md:border-r border-[var(--theme-border)]/30">
+                    <motion.div
+                      initial={{ opacity: 0, x: -10 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      className="space-y-4"
+                    >
+                      <div className="flex items-center gap-4">
+                        <Avatar className="h-16 w-16 ring-2 ring-[var(--theme-accent)]/30 ring-offset-2 ring-offset-[var(--theme-dark-base)]">
+                          <AvatarImage src="/professional-man-avatar.png" />
+                          <AvatarFallback className="text-lg bg-gradient-to-br from-[var(--primary)] to-[var(--theme-accent)] text-[var(--foreground)] font-bold">
+                            SJ
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <p className="text-[var(--muted-foreground)] text-sm font-medium">
+                            Security Expert
+                          </p>
+                          <h2 className="text-xl font-bold text-[var(--foreground)] leading-tight mt-0.5">
+                            Free Assessment
+                          </h2>
                         </div>
+                      </div>
 
-                        {/* Calendar Grid - Adjusted spacing */}
-                        <div className="grid grid-cols-7 gap-1">
-                          {" "}
-                          {/* Reduced gap */}
-                          {DAYS.map((day) => (
-                            <div key={day} className="text-center py-2">
-                              <span className="text-xs font-semibold text-[var(--muted-foreground)] tracking-wider">
-                                {day}
-                              </span>
-                            </div>
-                          ))}
-                          {getDaysInMonth(currentMonth).map((day, index) => {
-                            if (day === null)
-                              return (
-                                <div key={`empty-${index}`} className="h-10" />
-                              );
-                           const isSelectable = isDateSelectable(day)
-                            const isToday =
-                              day === todayDay &&
-                              currentMonth.getMonth() === todayMonth &&
-                              currentMonth.getFullYear() === todayYear;
-                            const isSelected =
-                              selectedDate &&
-                              selectedDate.getDate() === day &&
-                              selectedDate.getMonth() ===
-                                currentMonth.getMonth() &&
-                              selectedDate.getFullYear() ===
-                                currentMonth.getFullYear();
+                      <div className="space-y-3">
+                        <div className="flex items-center gap-3 text-[var(--muted-foreground)] text-sm">
+                          <div className="p-2 rounded-lg bg-[var(--primary)]/10">
+                            <Clock className="h-4 w-4 text-[var(--primary)]" />
+                          </div>
+                          <span>30 minute session</span>
+                        </div>
+                        <div className="flex items-center gap-3 text-[var(--muted-foreground)] text-sm">
+                          <div className="p-2 rounded-lg bg-[var(--primary)]/10">
+                            <Video className="h-4 w-4 text-[var(--primary)]" />
+                          </div>
+                          <span>Google Meet Call</span>
+                        </div>
+                        <div className="flex items-center gap-3 text-[var(--muted-foreground)] text-sm">
+                          <div className="p-2 rounded-lg bg-[var(--primary)]/10">
+                            <Globe className="h-4 w-4 text-[var(--primary)]" />
+                          </div>
+                          <Select
+                            value={timezone}
+                            onValueChange={setTimezone}
+                          >
+                            <SelectTrigger className="h-8 text-xs p-0 border-0 shadow-none bg-transparent text-[var(--muted-foreground)] hover:text-[var(--foreground)] focus:ring-0 w-[180px]">
+                              <SelectValue />
+                            </SelectTrigger>
+                            <SelectContent className="bg-[var(--theme-dark-secondary)] border-[var(--theme-border)] p-1">
+                              {TIMEZONES.map((tz) => (
+                                <SelectItem
+                                  key={tz.value}
+                                  value={tz.value}
+                                  className="text-xs py-1.5 hover:bg-[var(--theme-dark-base)] cursor-pointer"
+                                >
+                                  {tz.label}
+                                </SelectItem>
+                              ))}
+                            </SelectContent>
+                          </Select>
+                        </div>
+                      </div>
+                    </motion.div>
+                  </div>
 
+                  {/* Combined Calendar & Time Panel */}
+                  <div className="p-6 md:p-8 grid grid-cols-1 lg:grid-cols-[1.2fr_1fr] gap-8 bg-[var(--theme-dark-base)]">
+
+                    {/* Calendar Section */}
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <h3 className="text-lg font-bold text-[var(--foreground)]">
+                          {MONTHS[currentMonth.getMonth()]}{" "}
+                          <span className="text-[var(--primary)]">
+                            {currentMonth.getFullYear()}
+                          </span>
+                        </h3>
+                        <div className="flex gap-2">
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 hover:bg-[var(--theme-dark-base)]/30 hover:text-[var(--primary)]"
+                            onClick={prevMonth}
+                            disabled={isAnimating}
+                          >
+                            <ChevronLeft className="h-5 w-5" />
+                          </Button>
+                          <Button
+                            variant="ghost"
+                            size="icon"
+                            className="h-8 w-8 hover:bg-[var(--theme-dark-base)]/30 hover:text-[var(--primary)]"
+                            onClick={nextMonth}
+                            disabled={isAnimating}
+                          >
+                            <ChevronRight className="h-5 w-5" />
+                          </Button>
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-7 gap-2">
+                        {DAYS.map((day) => (
+                          <div key={day} className="text-center py-1">
+                            <span className="text-[10px] font-semibold text-[var(--muted-foreground)] tracking-wider">
+                              {day.slice(0, 3)}
+                            </span>
+                          </div>
+                        ))}
+                        {getDaysInMonth(currentMonth).map((day, index) => {
+                          if (day === null)
                             return (
-                              <motion.button
-                                key={day}
-                                onClick={() => handleDateSelect(day)}
-                                disabled={!isSelectable}
-                                whileHover={isSelectable ? { scale: 1.05 } : {}}
-                                whileTap={isSelectable ? { scale: 0.95 } : {}}
-                                className={cn(
-                                  "relative h-10 rounded-md text-sm font-medium transition-all duration-200", // Reduced height and text
-                                  isSelected
-                                    ? "bg-gradient-to-br from-[var(--primary)] to-[var(--theme-accent)] text-[var(--foreground)] shadow-lg shadow-[var(--primary)]/30"
-                                    : isToday
-                                    ? "bg-[var(--theme-dark-base)]/50 text-[var(--foreground)] ring-1 ring-[var(--primary)]/30"
-                                    : isSelectable
-                                    ? "bg-[var(--theme-dark-base)]/30 text-[var(--foreground)] hover:bg-[var(--theme-dark-base)]/50 hover:ring-1 hover:ring-[var(--theme-accent)]/20"
-                                    : "text-[var(--muted-foreground)]/30 cursor-not-allowed"
-                                )}
-                              >
-                                {day}
-                                {isSelected && (
-                                  <motion.div
-                                    initial={{ scale: 0 }}
-                                    animate={{ scale: 1 }}
-                                    className="absolute -top-1 -right-1"
-                                  >
-                                    <div className="p-1 rounded-full bg-[var(--theme-accent)]">
-                                      <Check className="h-1.5 w-1.5 text-[var(--foreground)]" />
-                                    </div>
-                                  </motion.div>
-                                )}
-                                {isToday && !isSelected && (
-                                  <div className="absolute bottom-0.5 left-1/2 transform -translate-x-1/2 w-1 h-1 rounded-full bg-[var(--primary)]" />
-                                )}
-                              </motion.button>
+                              <div key={`empty-${index}`} className="h-10" />
                             );
-                          })}
-                        </div>
-                      </motion.div>
+                          const isSelectable = isDateSelectable(day)
+                          const isToday =
+                            day === todayDay &&
+                            currentMonth.getMonth() === todayMonth &&
+                            currentMonth.getFullYear() === todayYear;
+                          const isSelected =
+                            selectedDate &&
+                            selectedDate.getDate() === day &&
+                            selectedDate.getMonth() ===
+                            currentMonth.getMonth() &&
+                            selectedDate.getFullYear() ===
+                            currentMonth.getFullYear();
+
+                          return (
+                            <motion.button
+                              key={day}
+                              onClick={() => handleDateSelect(day)}
+                              disabled={!isSelectable}
+                              whileHover={isSelectable ? { scale: 1.1, zIndex: 10 } : {}}
+                              whileTap={isSelectable ? { scale: 0.95 } : {}}
+                              className={cn(
+                                "relative h-10 w-full rounded-lg text-sm font-medium transition-all duration-200 flex items-center justify-center border border-transparent",
+                                isSelected
+                                  ? "bg-gradient-to-br from-[var(--primary)] to-[var(--theme-accent)] text-[var(--foreground)] shadow-md shadow-[var(--primary)]/30"
+                                  : isToday
+                                    ? "bg-[var(--theme-dark-base)]/50 text-[var(--foreground)] ring-1 ring-[var(--primary)]/40"
+                                    : isSelectable
+                                      ? "text-[var(--foreground)] hover:bg-[var(--theme-dark-base)]/50 hover:border-[var(--theme-border)]/50"
+                                      : "text-[var(--muted-foreground)]/20 cursor-not-allowed"
+                              )}
+                            >
+                              {day}
+                              {isToday && !isSelected && (
+                                <div className="absolute bottom-1 w-1 h-1 rounded-full bg-[var(--primary)]" />
+                              )}
+                            </motion.button>
+                          );
+                        })}
+                      </div>
                     </div>
 
-                    {/* Time Selection Panel */}
-                    <div className="p-6 lg:col-span-1">
+                    {/* Time Section */}
+                    <div className="border-t lg:border-t-0 lg:border-l border-[var(--theme-border)]/30 pt-6 lg:pt-0 lg:pl-6">
                       {selectedDate ? (
                         <motion.div
                           initial={{ opacity: 0, x: 20 }}
                           animate={{ opacity: 1, x: 0 }}
-                          className="space-y-6 h-full flex flex-col"
+                          className="space-y-4 h-full flex flex-col"
                         >
-                          <div className="flex items-center justify-between">
-  <div className="space-y-1">
-    <div className="font-bold text-[var(--foreground)] text-sm">
-      {selectedDate.toLocaleDateString("en-US", { 
-        weekday: "short", 
-        month: "short", 
-        day: "numeric", 
-        year: "numeric" 
-      })}
-    </div>
-  </div>
-</div>
+                          <div className="font-bold text-[var(--foreground)] text-sm mb-1">
+                            Available times for <span className="text-[var(--theme-accent)]">{selectedDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
+                          </div>
 
-                          <div className="space-y-1.5 flex-1 overflow-y-auto px-3 max-h-[280px]">
-                            {" "}
-                            {/* Reduced spacing */}
+                          <div className="space-y-2 flex-1 overflow-y-auto pr-1 max-h-[300px] custom-scrollbar">
                             {TIME_SLOTS.map((time, index) => (
                               <motion.button
                                 key={time}
@@ -702,29 +656,24 @@ const handleDateSelect = useCallback((day: number) => {
                                 whileHover={{ scale: 1.02 }}
                                 whileTap={{ scale: 0.98 }}
                                 className={cn(
-                                  "relative w-full py-2 px-3 rounded-md border text-xs font-medium transition-all duration-200", // Smaller
+                                  "relative w-full py-2.5 px-4 rounded-lg text-sm font-medium transition-all duration-200 border flex items-center justify-between group",
                                   selectedTime === time
-                                    ? "border-[var(--theme-accent)] bg-gradient-to-r from-[var(--primary)]/20 to-[var(--theme-accent)]/20 text-[var(--foreground)] shadow-md shadow-[var(--primary)]/10"
-                                    : "border-[var(--theme-border)]/50 hover:border-[var(--theme-accent)]/50 text-[var(--foreground)] hover:bg-[var(--theme-dark-base)]/30"
+                                    ? "border-[var(--theme-accent)] bg-gradient-to-r from-[var(--primary)]/20 to-[var(--theme-accent)]/20 text-[var(--foreground)]"
+                                    : "border-[var(--theme-border)]/30 hover:border-[var(--theme-accent)]/30 text-[var(--foreground)] hover:bg-[var(--theme-dark-base)]/30"
                                 )}
                               >
-                                {glowingIndex === index && (
+                                {glowingIndex === index && !selectedTime && (
                                   <motion.div
-                                    initial={{ opacity: 0, scale: 0.5 }}
-                                    animate={{ opacity: 1, scale: 1 }}
-                                    className="absolute inset-0 bg-[var(--theme-accent)]/10 rounded-md blur-sm" // Smaller blur
+                                    initial={{ opacity: 0 }}
+                                    animate={{ opacity: 1 }}
+                                    className="absolute inset-0 bg-[var(--theme-accent)]/5 rounded-lg"
                                   />
                                 )}
-                                {time}
-                                {selectedTime === time && (
-                                  <motion.div
-                                    initial={{ scale: 0 }}
-                                    animate={{ scale: 1 }}
-                                    className="absolute right-2 top-1/2 transform -translate-y-1/2"
-                                  >
-                                    <Check className="h-3 w-3 text-[var(--theme-accent)]" />{" "}
-                                    {/* Smaller icon */}
-                                  </motion.div>
+                                <span>{time}</span>
+                                {selectedTime === time ? (
+                                  <Check className="h-4 w-4 text-[var(--theme-accent)]" />
+                                ) : (
+                                  <ChevronRight className="h-3 w-3 text-[var(--muted-foreground)] opacity-0 group-hover:opacity-100 transition-opacity" />
                                 )}
                               </motion.button>
                             ))}
@@ -732,12 +681,13 @@ const handleDateSelect = useCallback((day: number) => {
 
                           {selectedTime && (
                             <motion.div
-                              initial={{ opacity: 0, y: 20 }}
+                              initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
+                              className="pt-2"
                             >
                               <Button
                                 onClick={handleNext}
-                                className="w-full h-10 bg-gradient-to-r from-[var(--primary)] to-[var(--theme-accent)] hover:from-[var(--primary)]/90 hover:to-[var(--theme-accent)]/90 text-[var(--foreground)] font-medium text-sm shadow-md shadow-[var(--primary)]/20 hover:shadow-[var(--primary)]/30 transition-all" // Smaller
+                                className="w-full h-10 bg-gradient-to-r from-[var(--primary)] to-[var(--theme-accent)] text-[var(--foreground)] text-sm font-semibold shadow-md shadow-[var(--primary)]/20 transition-all"
                               >
                                 Continue →
                               </Button>
@@ -745,39 +695,34 @@ const handleDateSelect = useCallback((day: number) => {
                           )}
                         </motion.div>
                       ) : (
-                        <div className="flex flex-col items-center justify-center h-full text-center space-y-3">
-                          <div className="p-3 rounded-full bg-[var(--theme-dark-base)]/30">
-                            <Calendar className="h-6 w-6 text-[var(--muted-foreground)]" />{" "}
-                            {/* Smaller */}
-                          </div>
-                          <p className="text-sm text-[var(--muted-foreground)]">
-                            {" "}
-                            {/* Smaller */}
-                            Select a date to see available times
+                        <div className="flex flex-col items-center justify-center h-full text-center space-y-3 text-[var(--muted-foreground)] rounded-xl bg-[var(--theme-dark-base)]/20 border border-dashed border-[var(--theme-border)]/30 p-6">
+                          <Clock className="h-8 w-8 opacity-20" />
+                          <p className="text-sm max-w-[150px]">
+                            Select a date to view times
                           </p>
                         </div>
                       )}
                     </div>
                   </div>
-                )}
-              </div>
+                </div>
+              )}
             </div>
           )}
         </motion.div>
       </AnimatePresence>
-      {/* Step Indicator */}
-      <div className="flex justify-center items-center gap-2 mt-4">
+
+      {/* Steps */}
+      <div className="flex justify-center items-center gap-2 mt-4 shrink-0">
         {(["select-date", "select-time", "fill-details"] as Step[]).map(
-          (s, index) => (
+          (s) => (
             <motion.div
               key={s}
               className={cn(
                 "h-1.5 rounded-full transition-all duration-300",
                 step === s
-                  ? "w-6 bg-gradient-to-r from-[var(--primary)] to-[var(--theme-accent)]" // Smaller
-                  : "w-1.5 bg-[var(--theme-border)]" // Smaller
+                  ? "w-8 bg-gradient-to-r from-[var(--primary)] to-[var(--theme-accent)]"
+                  : "w-2 bg-[var(--theme-border)]"
               )}
-              whileHover={{ scale: 1.2 }}
             />
           )
         )}

@@ -20,7 +20,7 @@ export function AppointmentModalWrapper({ isOpen, onClose }: ModalWrapperProps) 
       document.body.style.overflow = 'unset'
       document.body.classList.remove('modal-open')
     }
-    
+
     return () => {
       document.body.style.overflow = 'unset'
       document.body.classList.remove('modal-open')
@@ -30,44 +30,38 @@ export function AppointmentModalWrapper({ isOpen, onClose }: ModalWrapperProps) 
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-[9999] overflow-y-auto">
-      {/* Dark overlay with blur - covers ENTIRE screen */}
-      <div 
-        className="fixed inset-0 bg-black backdrop-blur-xl"
+    <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+      <div
+        className="fixed inset-0"
         onClick={onClose}
         aria-hidden="true"
       />
-      
-      {/* Modal container - centered with proper spacing */}
-      <div className="relative min-h-screen flex items-center justify-center mt-8 p-4 sm:p-6 lg:p-8">
-        {/* Modal content */}
-        <div 
-          className="relative w-full max-w-7xl bg-[var(--theme-dark-base)] border border-[var(--theme-border)]/30 rounded-2xl shadow-2xl overflow-hidden"
-          onClick={(e) => e.stopPropagation()}
+
+      {/* Modal container - Reduced height, no outer overflow */}
+      <div
+        className="relative w-full max-w-6xl h-auto max-h-[85vh] bg-[var(--theme-dark-base)] border border-[var(--theme-border)]/30 rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-4 right-4 z-50 p-2 rounded-full bg-black/40 hover:bg-black/60 text-white transition-colors backdrop-blur-md border border-white/10"
+          aria-label="Close modal"
         >
-          {/* Close button */}
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 z-50 p-2 rounded-full bg-black/60 hover:bg-black/80 text-white transition-colors backdrop-blur-sm shadow-lg"
-            aria-label="Close modal"
-          >
-            <X className="h-5 w-5" />
-          </button>
-          
-          {/* Header - Now inside the modal, not blurred */}
-          <div className="p-6 bg-[var(--theme-dark-base)] border-b border-[var(--theme-border)]/30">
-            <h2 className="text-xl md:text-3xl font-bold text-[var(--foreground)] text-center">
-              Schedule Your Free Security Assessment
-            </h2>
-            <p className="text-center text-[var(--muted-foreground)] mt-2 text-sm">
-              Book a 30-minute consultation with our security experts to assess your needs
-            </p>
-          </div>
-          
-          {/* Main content */}
-          <div className="max-h-[70vh] overflow-y-auto p-6">
-            <AppointmentModal onClose={onClose} />
-          </div>
+          <X className="h-4 w-4" />
+        </button>
+
+        {/* Header - Compact */}
+        <div className="p-6 bg-gradient-to-r   border-b border-[var(--theme-border)]/30 shrink-0 relative z-10 text-left">
+          <h2 className="text-2xl font-bold bg-clip-text text-white">
+            Schedule Your Free Security Assessment
+          </h2>
+         
+        </div>
+
+        {/* Main content - Scrollable only inside */}
+        <div className="flex-1 overflow-y-auto custom-scrollbar bg-[var(--theme-dark-base)]">
+          <AppointmentModal onClose={onClose} />
         </div>
       </div>
     </div>
