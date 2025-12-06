@@ -94,7 +94,7 @@ export function HeroSection() {
                 style={{ backgroundColor: "var(--primary)", color: "var(--foreground)" }}
                 onClick={() => setIsModalOpen(true)}
               >
-                Start Your Security Assessment
+                Book your consultation
                 <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
               </Button>
 
