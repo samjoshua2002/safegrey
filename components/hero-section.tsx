@@ -112,9 +112,20 @@ export function HeroSection() {
 
           {/* Right Side - Radar System */}
           {mounted && (
-            <div className="hidden lg:flex absolute  lg:right-[-40%] top-1/2 -translate-y-1/2 w-[120%] h-[120%] items-center justify-center pointer-events-none md:pointer-events-auto">
-              <div className="relative w-full h-full scale-125 md:scale-100 lg:scale-110">
+            <div className="hidden lg:flex absolute p-10 lg:right-[-40%] w-[120%] min-h-screen items-center justify-center pointer-events-none md:pointer-events-auto">
+
+              <div className="relative w-full h-full scale-125 md:scale-125 lg:scale-110">
+
+                {/* Edge fade / glow */}
+                <div
+                  className="absolute inset-0 rounded-full
+                 bg-[radial-gradient(circle,_rgba(174,32,18,0.28)_0%,_rgba(174,32,18,0.14)_40%,_rgba(174,32,18,0.06)_60%,_transparent_75%)]
+                 blur-2xl"
+                />
+
+                {/* Radar */}
                 <RadarSystem onScan={handleRadarScan} />
+
               </div>
             </div>
           )}

@@ -126,7 +126,7 @@ export const RadarSystem: React.FC<RadarSystemProps> = ({ onScan }) => {
 
   return (
     <div
-      className="relative flex items-center justify-center w-full h-full min-h-[600px] overflow-hidden"
+      className="relative flex items-center justify-center w-full h-full min-h-screen overflow-hidden"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
