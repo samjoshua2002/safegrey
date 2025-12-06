@@ -181,40 +181,29 @@ export const RadarSystem: React.FC<RadarSystemProps> = ({ onScan }) => {
           />
         </div>
 
-        {/* Concentric Reference Circles - Red Tinted */}
-        <div className="absolute flex items-center justify-center pointer-events-none">
-          {[0.2, 0.4, 0.6, 0.8, 1.0].map((scale, index) => (
-            <div
-              key={index}
-              className="absolute rounded-full border border-[var(--primary)]/10"
-              style={{
-                width: `${radius * 2 * scale}px`,
-                height: `${radius * 2 * scale}px`,
-                boxShadow: 'inset 0 0 20px rgba(var(--primary-rgb),0.05)',
-                background: index % 2 === 0
-                  ? 'radial-gradient(circle, transparent 70%, rgba(var(--primary-rgb),0.02) 100%)'
-                  : 'transparent',
-              }}
-            />
-          ))}
-        </div>
+      {/* Animated Concentric Circles */}
+<div className="absolute flex items-center justify-center pointer-events-none">
+  {[0.2, 0.4, 0.6, 0.8, 1.0].map((scale, index) => (
+    <div
+      key={index}
+      className={`
+        absolute rounded-full border border-[var(--primary)]/20 border-dashed
+        transition-opacity duration-500
+         'animate-spin-slow opacity-100' 
+      `}
+      style={{
+        width: `${radius * 2 * scale}px`,
+        height: `${radius * 2 * scale}px`,
+        boxShadow: 'inset 0 0 10px rgba(var(--primary-rgb),0.05)',
+      }}
+    />
+  ))}
+</div>
 
-        {/* Radar Scan Lines */}
-        <div className="absolute inset-0 overflow-hidden rounded-full">
-          {Array.from({ length: 12 }).map((_, index) => (
-            <div
-              key={index}
-              className="absolute top-1/2 left-1/2 w-px h-full bg-gradient-to-b from-transparent via-[var(--primary)]/20 to-transparent"
-              style={{
-                transform: `translate(-50%, -50%) rotate(${index * 30}deg)`,
-                transformOrigin: 'center center',
-              }}
-            />
-          ))}
-        </div>
+    
 
         {/* The Beam */}
-        <RadarBeam rotation={rotation} radius={radius * 1.5} />
+        <RadarBeam rotation={rotation} radius={radius * 1.2} />
 
         {/* Central Hub - Enhanced - Pure Dark & Red */}
         <div className="relative z-40 flex items-center justify-center w-28 h-28 md:w-40 md:h-40 rounded-full bg-black backdrop-blur-xl border border-[var(--primary)]/20 shadow-[0_0_60px_rgba(var(--primary-rgb),0.4)] group cursor-pointer overflow-hidden transition-all duration-700 hover:scale-110 hover:shadow-[0_0_80px_rgba(var(--primary-rgb),0.6)] animate-bounce-slow">

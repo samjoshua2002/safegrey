@@ -119,7 +119,7 @@ export function HeroSection() {
                 {/* Edge fade / glow */}
                 <div
                   className="absolute inset-0 rounded-full
-                 bg-[radial-gradient(circle,_rgba(174,32,18,0.28)_0%,_rgba(174,32,18,0.14)_40%,_rgba(174,32,18,0.06)_60%,_transparent_75%)]
+                
                  blur-2xl"
                 />
 
