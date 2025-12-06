@@ -114,9 +114,7 @@ export function Footer() {
               </div>
               <div className="flex items-start text-sm text-[var(--theme-text-secondary)]">
                 <MapPin className="w-4 h-4 mr-2 text-[var(--theme-accent)]" />
-                No. 50 & 51, TEJA RESIDENCY - 1, <br /> COCONUT GARDEN,
-                KODIGEHALLI MAIN ROAD, <br />AYYAPPA NAGAR,
-                K.R PURAM, <br /> BANGALORE - 560036
+               BANGALORE - 560036
               </div>
             </div>
           </div>
