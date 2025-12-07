@@ -1,18 +1,20 @@
 import React from 'react';
 
 interface RadarBeamProps {
-  rotation: number;
   radius: number;
 }
 
-export const RadarBeam: React.FC<RadarBeamProps> = ({ rotation, radius }) => {
+// Wrapped in memo - rotation is now applied via parent's style transform on the container
+export const RadarBeam = React.memo(({ radius }: RadarBeamProps) => {
   return (
     <div
-      className="absolute left-1/2 top-1/2 pointer-events-none z-10"
+      className="absolute inset-0 pointer-events-none z-10"
       style={{
         width: `${radius * 2}px`,
         height: `${radius * 2}px`,
-        transform: `translate(-50%, -50%) rotate(${rotation}deg)`,
+        left: '50%',
+        top: '50%',
+        transform: 'translate(-50%, -50%)', // Centering only, rotation comes from parent wrapper
       }}
     >
       {/* 
@@ -73,7 +75,8 @@ export const RadarBeam: React.FC<RadarBeamProps> = ({ rotation, radius }) => {
           opacity: 0.4
         }}
       />
-
     </div>
   );
-};
+});
+
+RadarBeam.displayName = 'RadarBeam';
