@@ -31,6 +31,7 @@ const satoshi = localFont({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://safegrey.com"),
   title: {
     default: "Safegrey",
     template: "%s | Safegrey",
@@ -83,7 +84,7 @@ export const metadata: Metadata = {
       "Safegrey provides advanced cybersecurity services including Penetration Testing, Red Teaming, SOC, and Risk Management. Secure your digital future with our adversary-focused approach.",
     images: [
       {
-        url: "/og-image.jpg", // Ensure this image exists or use a valid URL
+        url: "/logo.png",
         width: 1200,
         height: 630,
         alt: "Safegrey Cybersecurity",
@@ -95,7 +96,7 @@ export const metadata: Metadata = {
     title: "Safegrey",
     description:
       "Safegrey provides advanced cybersecurity services including Penetration Testing, Red Teaming, SOC, and Risk Management. Secure your digital future with our adversary-focused approach.",
-    images: ["/og-image.jpg"],
+    images: ["/logo.png"],
   },
   robots: {
     index: true,
