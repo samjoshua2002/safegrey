@@ -84,7 +84,8 @@ export const metadata: Metadata = {
       "Safegrey provides advanced cybersecurity services including Penetration Testing, Red Teaming, SOC, and Risk Management. Secure your digital future with our adversary-focused approach.",
     images: [
       {
-        url: "/logo.png",
+
+        url: "/linkimg.png",
         width: 1200,
         height: 630,
         alt: "Safegrey Cybersecurity",
@@ -96,7 +97,8 @@ export const metadata: Metadata = {
     title: "Safegrey",
     description:
       "Safegrey provides advanced cybersecurity services including Penetration Testing, Red Teaming, SOC, and Risk Management. Secure your digital future with our adversary-focused approach.",
-    images: ["/logo.png"],
+    images: ["/linkimg.png"],
+
   },
   robots: {
     index: true,
