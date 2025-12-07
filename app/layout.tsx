@@ -36,6 +36,23 @@ export const metadata: Metadata = {
     default: "Safegrey",
     template: "%s | Safegrey",
   },
+  authors: [{ name: "Sam Joshua" }],
+  creator: "Sam Joshua",
+  publisher: "Safegrey",
+  alternates: {
+    canonical: "https://safegrey.com",
+    languages: {
+      "en-US": "https://safegrey.com",
+    },
+  },
+  category: "Cybersecurity",
+  applicationName: "Safegrey",
+  referrer: "origin-when-cross-origin",
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
   icons: {
     icon: "/fav.svg",      // or .svg
     apple: "/fav.svg",
