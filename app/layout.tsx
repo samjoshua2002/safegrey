@@ -129,7 +129,7 @@ export default function RootLayout({
           "Safegrey provides advanced cybersecurity services including Penetration Testing, Red Teaming, SOC, and Risk Management.",
         contactPoint: {
           "@type": "ContactPoint",
-          telephone: "+1-555-555-5555",
+          telephone: "+91-7540081007",
           contactType: "customer service",
         },
       },
