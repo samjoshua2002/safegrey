@@ -23,7 +23,9 @@ import {
   Sparkles,
   CheckCircle,
   Check,
+  Loader2,
 } from "lucide-react";
+import { toast } from "sonner";
 import { Card, CardContent } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { motion, AnimatePresence } from "framer-motion";
@@ -92,6 +94,7 @@ export function AppointmentModal({ onClose }: BookingSchedulerProps) {
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const getDaysInMonth = useCallback((date: Date) => {
     const year = date.getFullYear();
@@ -169,14 +172,38 @@ export function AppointmentModal({ onClose }: BookingSchedulerProps) {
     }, 300);
   }, [step, isAnimating]);
 
-  const handleConfirm = useCallback(() => {
-    console.log({
-      date: selectedDate,
-      time: selectedTime,
-      timezone,
-      ...formData,
-    });
-    setIsSubmitted(true);
+  const handleConfirm = useCallback(async () => {
+    if (!selectedDate || !selectedTime) return;
+
+    setIsLoading(true);
+    try {
+      const response = await fetch("/api/book-appointment", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...formData,
+          date: selectedDate.toISOString(),
+          time: selectedTime,
+          timezone,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to book appointment");
+      }
+
+      setIsSubmitted(true);
+      toast.success("Appointment booked successfully!");
+    } catch (error) {
+      console.error("Booking error:", error);
+      toast.error(error instanceof Error ? error.message : "Something went wrong. Please try again.");
+    } finally {
+      setIsLoading(false);
+    }
   }, [selectedDate, selectedTime, timezone, formData]);
 
   const formatSelectedDate = useCallback(() => {
@@ -470,12 +497,17 @@ export function AppointmentModal({ onClose }: BookingSchedulerProps) {
                           disabled={
                             !formData.name ||
                             !formData.email ||
-                            !formData.topic
+                            !formData.topic ||
+                            isLoading
                           }
                           className="relative h-10 bg-gradient-to-r from-[var(--primary)] to-[var(--theme-accent)] hover:from-[var(--primary)]/90 hover:to-[var(--theme-accent)]/90 text-[var(--foreground)] text-sm font-semibold px-6 shadow-md shadow-[var(--primary)]/20 transition-all group"
                         >
-                          <Sparkles className="mr-2 h-4 w-4 group-hover:rotate-12 transition-transform" />
-                          Confirm Booking
+                          {isLoading ? (
+                            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                          ) : (
+                            <Sparkles className="mr-2 h-4 w-4 group-hover:rotate-12 transition-transform" />
+                          )}
+                          {isLoading ? "Booking..." : "Confirm Booking"}
                         </Button>
                       </div>
                     </div>

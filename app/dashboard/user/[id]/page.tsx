@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { format } from "date-fns"
-import { Mail, Phone, Building, Briefcase, Calendar } from "lucide-react"
+import { Mail, Phone, Building, Briefcase, Calendar, Video } from "lucide-react"
 
 export const dynamic = 'force-dynamic'
 
@@ -33,11 +33,22 @@ interface Message {
     submittedAt: string
 }
 
+interface Booking {
+    _id: string
+    topic: string
+    date: string
+    time: string
+    timezone: string
+    meetingLink: string
+    createdAt: string
+}
+
 export default function UserDetailsPage() {
     const params = useParams()
     const [user, setUser] = useState<User | null>(null)
     const [downloads, setDownloads] = useState<Download[]>([])
     const [messages, setMessages] = useState<Message[]>([])
+    const [bookings, setBookings] = useState<Booking[]>([])
     const [loading, setLoading] = useState(true)
 
     useEffect(() => {
@@ -51,6 +62,7 @@ export default function UserDetailsPage() {
                 setUser(data.user)
                 setDownloads(data.downloads)
                 setMessages(data.messages)
+                setBookings(data.bookings)
             } catch (error) {
                 console.error("Error fetching user details:", error)
             } finally {
@@ -138,6 +150,45 @@ export default function UserDetailsPage() {
                                 </div>
                             ) : (
                                 <p className="text-[var(--muted-foreground)]">No downloads yet.</p>
+                            )}
+                        </CardContent>
+                    </Card>
+
+                    {/* Bookings Section */}
+                    <Card className="border-[var(--theme-border)] bg-[var(--theme-dark-secondary)]/30">
+                        <CardHeader>
+                            <CardTitle className="text-[var(--foreground)]">Scheduled Bookings</CardTitle>
+                        </CardHeader>
+                        <CardContent>
+                            {bookings.length > 0 ? (
+                                <div className="space-y-4">
+                                    {bookings.map((booking) => (
+                                        <div key={booking._id} className="p-4 rounded-lg bg-[var(--theme-dark-base)]/50 border border-[var(--theme-border)]">
+                                            <div className="flex justify-between items-start mb-2">
+                                                <div>
+                                                    <p className="font-medium text-[var(--foreground)]">{booking.topic}</p>
+                                                    <div className="flex items-center gap-2 text-sm text-[var(--muted-foreground)] mt-1">
+                                                        <Calendar className="h-3 w-3" />
+                                                        <span>{format(new Date(booking.date), "PPP")} at {booking.time}</span>
+                                                    </div>
+                                                </div>
+                                                <a
+                                                    href={booking.meetingLink}
+                                                    target="_blank"
+                                                    className="flex items-center gap-1 text-sm text-[var(--theme-accent)] hover:underline"
+                                                >
+                                                    <Video className="h-3 w-3" />
+                                                    Join
+                                                </a>
+                                            </div>
+                                            <div className="text-xs text-[var(--muted-foreground)]">
+                                                Booked on {format(new Date(booking.createdAt), "PPP p")}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <p className="text-[var(--muted-foreground)]">No bookings scheduled.</p>
                             )}
                         </CardContent>
                     </Card>
