@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import fs from 'fs';
 import path from 'path';
+import connectDB from '@/lib/db';
+import DatasheetDownload from '@/models/DatasheetDownload';
+import User from '@/models/User';
 
 // Personal email domains to block
 const PERSONAL_EMAIL_DOMAINS = [
@@ -228,20 +231,39 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Configure nodemailer for Zoho Mail
+    // Save to database
+    try {
+      await connectDB();
+
+      // Find or create user
+      let user = await User.findOne({ email });
+      if (!user) {
+        user = await User.create({
+          name,
+          email,
+        });
+      }
+
+      await DatasheetDownload.create({
+        userId: user._id,
+        name,
+        email,
+        serviceType: assessmentType,
+        serviceCategory: 'Security Assessment',
+        downloadedAt: new Date(),
+      });
+    } catch (dbError) {
+      console.error('Error saving to database:', dbError);
+      // Continue to send email even if DB save fails, but log the error
+    }
+
+    // Configure nodemailer
     const transporter = nodemailer.createTransport({
-      host: 'smtp.zoho.com',
-      port: 587,
-      secure: false, // use STARTTLS
-      requireTLS: true,
+      service: 'gmail',
       auth: {
         user: process.env.EMAIL_USER,
         pass: process.env.EMAIL_PASS,
       },
-      tls: {
-        ciphers: 'SSLv3',
-        rejectUnauthorized: false
-      }
     });
 
     // Get PDF path

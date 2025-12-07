@@ -36,6 +36,7 @@ export function ContactForm() {
       company: formData.get("company"),
       designation: formData.get("designation"),
       phone: formData.get("phone"),
+      message: formData.get("message"),
     }
 
     try {
@@ -128,6 +129,17 @@ export function ContactForm() {
           <div className="space-y-2">
             <Label htmlFor="phone" className="text-[var(--foreground)]">Phone Number *</Label>
             <Input name="phone" id="phone" type="tel" placeholder="+1 (555) 123-4567" required className="glass-effect bg-transparent border-[var(--theme-border)] text-[var(--foreground)]" />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="message" className="text-[var(--foreground)]">Message *</Label>
+            <textarea
+              name="message"
+              id="message"
+              placeholder="How can we help you?"
+              required
+              className="flex min-h-[120px] w-full rounded-md border border-[var(--theme-border)] bg-transparent px-3 py-2 text-sm text-[var(--foreground)] ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50 glass-effect"
+            />
           </div>
 
           <div className="space-y-4 pt-2">

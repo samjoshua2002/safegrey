@@ -72,7 +72,7 @@ export function ServicesOverview() {
       <div className="relative z-10 max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_auto_1fr] gap-12 items-center">
         {/* Left Side */}
         <div>
-          <h2 className="text-4xl md:text-5xl font-extrabold leading-tight mb-6 text-white">
+          <h2 className="text-4xl md:text-5xl font-extrabold leading-tight mb-6 text-[var(--foreground)]">
             Cybersecurity has an{' '}
             <span className="bg-gradient-to-r from-[var(--primary)] via-[#c43b2b] to-[#ff7363] 
                              bg-[length:200%_200%] bg-clip-text text-transparent animate-gradient-x">

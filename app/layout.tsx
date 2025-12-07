@@ -6,6 +6,7 @@ import "./globals.css";
 import localFont from "next/font/local";
 import { CursorGlow } from "@/components/ui/cursor-glow";
 import { CookieConsent } from "@/components/cookie-consent";
+import { Toaster } from "@/components/ui/sonner";
 
 // Import Satoshi font
 const satoshi = localFont({
@@ -34,6 +35,10 @@ export const metadata: Metadata = {
   title: {
     default: "Safegrey",
     template: "%s | Safegrey",
+  },
+  icons: {
+    icon: "/fav.svg",      // or .svg
+    apple: "/fav.svg",
   },
   description:
     "Safegrey provides advanced cybersecurity services including Penetration Testing, Red Teaming, SOC, and Risk Management. Secure your digital future with our adversary-focused approach.",
@@ -79,6 +84,7 @@ export const metadata: Metadata = {
       "Safegrey provides advanced cybersecurity services including Penetration Testing, Red Teaming, SOC, and Risk Management. Secure your digital future with our adversary-focused approach.",
     images: [
       {
+
         url: "/linkimg.png",
         width: 1200,
         height: 630,
@@ -92,6 +98,7 @@ export const metadata: Metadata = {
     description:
       "Safegrey provides advanced cybersecurity services including Penetration Testing, Red Teaming, SOC, and Risk Management. Secure your digital future with our adversary-focused approach.",
     images: ["/linkimg.png"],
+
   },
   robots: {
     index: true,
@@ -150,6 +157,7 @@ export default function RootLayout({
         <CursorGlow />
         <CookieConsent />
         <Suspense fallback={null}>{children}</Suspense>
+        <Toaster />
         <Analytics />
       </body>
     </html>

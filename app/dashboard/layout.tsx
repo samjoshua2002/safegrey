@@ -3,7 +3,7 @@
 import { useState } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
-import { LayoutDashboard, PlusCircle, MessageSquare, LogOut, Menu, X } from "lucide-react"
+import { LayoutDashboard, PlusCircle, MessageSquare, LogOut, Menu, X, Calendar } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { cn } from "@/lib/utils"
 
@@ -34,16 +34,27 @@ export default function DashboardLayout({
     }
 
     const navItems = [
+
         {
-            title: "Create Service",
-            href: "/dashboard/create-service",
-            icon: PlusCircle,
+            title: "Service",
+            href: "/dashboard/service",
+            icon: LayoutDashboard,
+        },
+        {
+            title: "Bookings",
+            href: "/dashboard/bookings",
+            icon: Calendar,
         },
         {
             title: "Contact",
             href: "/dashboard/contact",
             icon: MessageSquare,
         },
+        {
+            title: "Upcoming Features",
+            href: "/dashboard/create-service",
+            icon: PlusCircle,
+        }
     ]
 
     return (

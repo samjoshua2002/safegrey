@@ -1,180 +1,71 @@
-"use client";
 
+import dynamic from 'next/dynamic';
 import { Navigation } from "@/components/navigation";
-import { HeroSection } from "@/components/hero-section";
-import { ServicesOverview } from "@/components/services-overview";
-
-import { TestimonialsSection } from "@/components/testimonials-section";
-
-import { ServicesAccordion } from "@/components/services-home";
 import { Footer } from "@/components/footer";
-import EcosystemSection from "@/components/ui/ecosystem-section";
-import { useEffect, useRef } from "react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { LogoSection } from "@/components/ui/logosection";
+import { ScrollAnimationWrapper } from "@/components/scroll-animation-wrapper";
 
-// Register ScrollTrigger plugin
-if (typeof window !== "undefined") {
-  gsap.registerPlugin(ScrollTrigger);
-}
+// Dynamically import heavy components
+const HeroSection = dynamic(() => import("@/components/hero-section").then(mod => mod.HeroSection), {
+  loading: () => <div className="min-h-screen bg-[var(--theme-dark-base)]" />, // Placeholder
+});
+const ServicesOverview = dynamic(() => import("@/components/services-overview").then(mod => mod.ServicesOverview), {
+  ssr: true // Keep SSR for SEO critical content above/near fold
+});
+const ReviewTestimonialsSection = dynamic(() => import("@/components/testimonials-section").then(mod => mod.TestimonialsSection), { ssr: false });
+const ReviewServicesAccordion = dynamic(() => import("@/components/services-home"), { ssr: false });
+const ReviewEcosystemSection = dynamic(() => import("@/components/ui/ecosystem-section"), { ssr: false });
+const ReviewLogoSection = dynamic(() => import("@/components/ui/logosection").then(mod => mod.LogoSection), { ssr: false });
+const TestimonialsSection = ReviewTestimonialsSection;
+const ServicesAccordion = ReviewServicesAccordion;
+const EcosystemSection = ReviewEcosystemSection;
+const LogoSection = ReviewLogoSection;
 
 export default function HomePage() {
-  const heroRef = useRef(null);
-  const servicesRef = useRef(null);
-  const statsRef = useRef(null);
-  const ecosystemRef = useRef(null);
-  const testimonialsRef = useRef(null);
-  const ctaRef = useRef(null);
-  const servicesSectionRef = useRef(null);
-  const logoRef = useRef(null);
-  const servicesAccordionRef = useRef(null);
-
-  useEffect(() => {
-    const sections = [
-      {
-        ref: heroRef,
-        from: { opacity: 0, y: 50 },
-        to: { opacity: 1, y: 0, duration: 1 },
-      },
-      {
-        ref: servicesRef,
-        from: { opacity: 0, y: 80 },
-        to: { opacity: 1, y: 0, duration: 1 },
-      },
-      {
-        ref: statsRef,
-        from: { opacity: 0, scale: 0.9 },
-        to: { opacity: 1, scale: 1, duration: 1 },
-      },
-      {
-        ref: ecosystemRef,
-        from: { opacity: 0, x: -100 },
-        to: { opacity: 1, x: 0, duration: 1.2 },
-      },
-      {
-        ref: testimonialsRef,
-        from: { opacity: 0, y: 100 },
-        to: { opacity: 1, y: 0, duration: 1 },
-      },
-      {
-        ref: ctaRef,
-        from: { opacity: 0, scale: 0.95 },
-        to: { opacity: 1, scale: 1, duration: 1 },
-      },
-      {
-        ref: servicesSectionRef,
-        from: { opacity: 0, y: 50 },
-        to: { opacity: 1, y: 0, duration: 1 },
-      },
-      {
-        ref: logoRef,
-        from: { opacity: 0, y: 50 },
-        to: { opacity: 1, y: 0, duration: 1 },
-      },
-    ];
-
-    sections.forEach(({ ref, from, to }) => {
-      if (ref.current) {
-        gsap.fromTo(ref.current, from, {
-          ...to,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: ref.current,
-            start: "top 80%",
-            end: "bottom 20%",
-            toggleActions: "play none none reverse",
-          },
-        });
-      }
-    });
-
-    // Clean up ScrollTrigger instances
-    return () => {
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    };
-  }, []);
+  const spacerStyle = {
+    background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
+  };
 
   return (
- <main className="min-h-screen">
-  <Navigation />
+    <main className="min-h-screen">
+      <Navigation />
 
-  <div ref={heroRef}>
-    <HeroSection />
-  </div>
-  <div
-    className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent"
-    style={{
-      background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
-    }}
-  />
+      <ScrollAnimationWrapper animation={{ from: { opacity: 0, y: 50 }, to: { opacity: 1, y: 0, duration: 1 } }}>
+        <HeroSection />
+      </ScrollAnimationWrapper>
 
-  <div ref={servicesRef}>
-    <ServicesOverview />
-  </div>
-  <div
-    className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent"
-    style={{
-      background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
-    }}
-  />
+      <div className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent" style={spacerStyle} />
 
-  {/* <div ref={statsRef}>
-    <StatsSection />
-  </div>
-  <div
-    className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent mt-20"
-    style={{
-      background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
-    }}
-  /> */}
+      <ScrollAnimationWrapper animation={{ from: { opacity: 0, y: 80 }, to: { opacity: 1, y: 0, duration: 1 } }}>
+        <ServicesOverview />
+      </ScrollAnimationWrapper>
 
-  <div ref={ecosystemRef}>
-    <EcosystemSection />
-  </div>
-  <div
-    className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent"
-    style={{
-      background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
-    }}
-  />
+      <div className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent" style={spacerStyle} />
 
-  <div ref={testimonialsRef}>
-    <TestimonialsSection />
-  </div>
-  <div
-    className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent"
-    style={{
-      background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
-    }}
-  />
+      <ScrollAnimationWrapper animation={{ from: { opacity: 0, x: -100 }, to: { opacity: 1, x: 0, duration: 1.2 } }}>
+        <EcosystemSection />
+      </ScrollAnimationWrapper>
 
-  {/* <div ref={servicesSectionRef}>
-    <ServicesSection />
-  </div> */}
+      <div className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent" style={spacerStyle} />
 
-  <div ref={servicesAccordionRef}>
-    <ServicesAccordion />
-  </div>
-  <div
-    className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent"
-    style={{
-      background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
-    }}
-  />
+      <ScrollAnimationWrapper animation={{ from: { opacity: 0, y: 100 }, to: { opacity: 1, y: 0, duration: 1 } }}>
+        <TestimonialsSection />
+      </ScrollAnimationWrapper>
 
-  <div ref={logoRef}>
-    <LogoSection />
-  </div>
-  <div
-    className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent"
-    style={{
-      background: `linear-gradient(to right, transparent, var(--primary), transparent)`,
-    }}
-  />
+      <div className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent" style={spacerStyle} />
 
-  <Footer />
-</main>
+      <ScrollAnimationWrapper animation={{ from: { opacity: 0, y: 50 }, to: { opacity: 1, y: 0, duration: 1 } }}>
+        <ServicesAccordion />
+      </ScrollAnimationWrapper>
 
+      <div className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent" style={spacerStyle} />
+
+      <ScrollAnimationWrapper animation={{ from: { opacity: 0, y: 50 }, to: { opacity: 1, y: 0, duration: 1 } }}>
+        <LogoSection />
+      </ScrollAnimationWrapper>
+
+      <div className="h-px bg-gradient-to-r from-transparent via-zinc-500/50 to-transparent" style={spacerStyle} />
+
+      <Footer />
+    </main>
   );
 }
