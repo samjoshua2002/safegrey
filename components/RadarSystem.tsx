@@ -32,7 +32,7 @@ export const RadarSystem: React.FC<RadarSystemProps> = ({ onScan }) => {
   const isHoveredRef = useRef(false);
 
   const [radius, setRadius] = useState(400);
-  const [waveAmplitude, setWaveAmplitude] = useState(1);
+  // const [waveAmplitude, setWaveAmplitude] = useState(1);
 
   // Calculate service positions and angles once based on radius
   const servicesWithPosition = useMemo(() => {
@@ -61,13 +61,13 @@ export const RadarSystem: React.FC<RadarSystemProps> = ({ onScan }) => {
     });
   }, [radius]);
 
-  // Pulse animation for waves (Low frequency update is fine, or move to CSS)
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setWaveAmplitude(prev => 0.8 + Math.sin(Date.now() * 0.003) * 0.2);
-    }, 50);
-    return () => clearInterval(interval);
-  }, []);
+  // // Pulse animation for waves (Low frequency update is fine, or move to CSS)
+  // useEffect(() => {
+  //   const interval = setInterval(() => {
+  //     setWaveAmplitude(prev => 0.8 + Math.sin(Date.now() * 0.003) * 0.2);
+  //   }, 50);
+  //   return () => clearInterval(interval);
+  // }, []);
 
   // Resize handler
   useEffect(() => {
@@ -85,48 +85,47 @@ export const RadarSystem: React.FC<RadarSystemProps> = ({ onScan }) => {
   // OPTIMIZED ANIMATION LOOP
   // ---------------------------------------------------------------------------
   useEffect(() => {
-    const beamWidth = 45; // Beam width in degrees
+    const beamWidth = 15; // Beam width in degrees
 
-    const animate = () => {
-      // 1. Update Rotation
-      const speed = isHoveredRef.current ? 0.05 : 0.2;
-      rotationRef.current = (rotationRef.current + speed) % 360;
+    const animate = (timestamp: number) => {
+  // 1. Update Rotation - CONSTANT FAST SPEED (no hover slowdown)
+  const speed = isHoveredRef.current ? 0.9 : 1.2;// Always fast, consistent speed
+  rotationRef.current = (rotationRef.current + speed) % 360;
 
-      // 2. Direct DOM Manipulation (Zero React Render)
-      if (beamRef.current) {
-        beamRef.current.style.transform = `translate(-50%, -50%) rotate(${rotationRef.current}deg)`;
-      }
-      if (centerLogoRef.current) {
-        centerLogoRef.current.style.transform = `rotate(${rotationRef.current}deg)`;
-      }
+  // 2. Direct DOM Manipulation (Zero React Render)
+  if (beamRef.current) {
+    beamRef.current.style.transform = `translate(-50%, -50%) rotate(${rotationRef.current}deg)`;
+  }
 
-      // 3. Check Interactions (Batch State Updates)
-      if (onScan) onScan(rotationRef.current);
+  // 3. Check Interactions (Batch State Updates)
+  if (onScan) onScan(rotationRef.current);
 
-      const newActiveIds = new Set<string>();
-      const currentRot = rotationRef.current;
+  const newActiveIds = new Set<string>();
+  const currentRot = rotationRef.current;
+  const beamHalfWidth = 10;
 
-      servicesWithPosition.forEach(service => {
-        // Simple angle distance check with wrap-around
-        let diff = Math.abs(currentRot - service.angle);
-        if (diff > 180) diff = 360 - diff;
+  // Optimized: Use for loop instead of forEach
+  for (let i = 0; i < servicesWithPosition.length; i++) {
+    const service = servicesWithPosition[i];
+    let diff = Math.abs(currentRot - service.angle);
+    diff = Math.min(diff, 360 - diff);
+    
+    if (diff < beamHalfWidth) {
+      newActiveIds.add(service.id);
+    }
+  }
 
-        if (diff < (beamWidth / 2)) {
-          newActiveIds.add(service.id);
-        }
-      });
+  // Only trigger React render if active set changes
+  setActiveServiceIds(prev => {
+    if (prev.size !== newActiveIds.size) return newActiveIds;
+    for (let id of newActiveIds) {
+      if (!prev.has(id)) return newActiveIds;
+    }
+    return prev;
+  });
 
-      // Only trigger React render if active set changes
-      setActiveServiceIds(prev => {
-        if (prev.size !== newActiveIds.size) return newActiveIds;
-        for (let id of newActiveIds) {
-          if (!prev.has(id)) return newActiveIds;
-        }
-        return prev; // No change, return same ref to avoid re-render
-      });
-
-      requestRef.current = requestAnimationFrame(animate);
-    };
+  requestRef.current = requestAnimationFrame(animate);
+};
 
     requestRef.current = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(requestRef.current);
@@ -137,14 +136,14 @@ export const RadarSystem: React.FC<RadarSystemProps> = ({ onScan }) => {
   const handleMouseLeave = () => { isHoveredRef.current = false; };
 
   // Generate wave rings config static or cached
-  const waveRings = useMemo(() => [
-    { size: 1.0, speed: 1.1, opacity: 0.18, blur: 12, delay: 0 },
-    { size: 1.2, speed: 1.0, opacity: 0.14, blur: 16, delay: 60 },
-    { size: 1.4, speed: 0.9, opacity: 0.12, blur: 20, delay: 120 },
-    { size: 1.6, speed: 0.8, opacity: 0.08, blur: 24, delay: 180 },
-    { size: 1.8, speed: 0.7, opacity: 0.05, blur: 28, delay: 240 },
-    { size: 2.0, speed: 0.6, opacity: 0.03, blur: 32, delay: 300 },
-  ], []);
+const waveRings = useMemo(() => [
+  { size: 1.0, duration: '8s', opacity: 0.20, blur: 12, delay: '0s' },
+  { size: 1.2, duration: '9s', opacity: 0.16, blur: 16, delay: '0.5s' },
+  { size: 1.4, duration: '10s', opacity: 0.14, blur: 20, delay: '1s' },
+  { size: 1.6, duration: '11s', opacity: 0.10, blur: 24, delay: '1.5s' },
+  { size: 1.8, duration: '12s', opacity: 0.08, blur: 28, delay: '2s' },
+  { size: 2.0, duration: '13s', opacity: 0.05, blur: 32, delay: '2.5s' },
+], []);
 
   return (
     <div
@@ -155,8 +154,8 @@ export const RadarSystem: React.FC<RadarSystemProps> = ({ onScan }) => {
       {/* Background elements remain same... */}
       <div className="absolute inset-0 bg-transparent">
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-[var(--primary)]/20 rounded-full blur-3xl animate-pulse-slow"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-[var(--theme-accent-dim)]/20 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-red-500/20 rounded-full blur-3xl animate-pulse-slow"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-red-600/15 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
         </div>
       </div>
 
@@ -166,77 +165,84 @@ export const RadarSystem: React.FC<RadarSystemProps> = ({ onScan }) => {
         {/* Wave Rings */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           {waveRings.map((wave, index) => (
-            <div
-              key={index}
-              className="absolute rounded-full border border-[var(--primary)]/30"
-              style={{
-                width: `${radius * 2 * wave.size}px`,
-                height: `${radius * 2 * wave.size}px`,
-                opacity: wave.opacity * waveAmplitude * 1.5,
-                filter: `blur(${wave.blur * 0.8}px)`,
-                animation: `pulse ${3 / wave.speed}s ease-in-out infinite`,
-                animationDelay: `${wave.delay}ms`,
-                boxShadow: `inset 0 0 ${20 * wave.size}px rgba(var(--primary-rgb), 0.2), 0 0 ${40 * wave.size}px rgba(var(--primary-rgb), 0.1)`,
-                background: `radial-gradient(circle, rgba(var(--primary-rgb), ${0.05 * waveAmplitude}) 0%, transparent 70%)`,
-              }}
-            />
-          ))}
+  <div
+    key={index}
+    className="absolute rounded-full border border-red-400/40 gpu-accelerated"
+    style={{
+      width: `${radius * 2 * wave.size}px`,
+      height: `${radius * 2 * wave.size}px`,
+      opacity: wave.opacity,
+      filter: `blur(${wave.blur * 0.8}px)`,
+      animation: `smooth-pulse ${wave.duration} cubic-bezier(0.4, 0, 0.6, 1) infinite`,
+      animationDelay: wave.delay,
+      boxShadow: 'inset 0 0 40px rgba(239, 68, 68, 0.4), 0 0 80px rgba(239, 68, 68, 0.3)',
+      background: 'radial-gradient(circle, rgba(239, 68, 68, 0.15) 0%, rgba(185, 28, 28, 0.08) 50%, transparent 70%)',
+    }}
+  />
+))}
 
-          {/* Dynamic Grid Pattern */}
-          <div
-            className="absolute rounded-full"
+          {/* Dynamic Grid Pattern - More Visible */}
+<div
+            className="absolute rounded-full opacity-30"
             style={{
               width: `${radius * 2 * 1.5}px`,
               height: `${radius * 2 * 1.5}px`,
               backgroundImage: `
-                radial-gradient(circle at 30% 30%, rgba(var(--primary-rgb),0.1) 0%, transparent 50%),
-                radial-gradient(circle at 70% 70%, rgba(var(--primary-rgb),0.05) 0%, transparent 50%),
-                conic-gradient(from 0deg, transparent 0deg 90deg, rgba(var(--primary-rgb),0.05) 90deg 180deg, transparent 180deg 270deg, rgba(var(--primary-rgb),0.05) 270deg 360deg)
+                conic-gradient(from 0deg at 50% 50%, 
+                  transparent 0deg 45deg, 
+                  rgba(239, 68, 68, 0.08) 45deg 90deg, 
+                  transparent 90deg 135deg, 
+                  rgba(239, 68, 68, 0.08) 135deg 180deg,
+                  transparent 180deg 225deg,
+                  rgba(239, 68, 68, 0.08) 225deg 270deg,
+                  transparent 270deg 315deg,
+                  rgba(239, 68, 68, 0.08) 315deg 360deg
+                )
               `,
+              maskImage: 'radial-gradient(circle at center, black 30%, transparent 70%)',
+              WebkitMaskImage: 'radial-gradient(circle at center, black 30%, transparent 70%)',
             }}
           />
         </div>
 
         {/* Static Circles */}
-        <div className="absolute flex items-center justify-center pointer-events-none">
-          {[0.2, 0.4, 0.6, 0.8, 1.0].map((scale, index) => (
-            <div
-              key={index}
-              className="absolute rounded-full border border-[var(--primary)]/20 border-dashed animate-spin-slow opacity-100"
-              style={{
-                width: `${radius * 2 * scale}px`,
-                height: `${radius * 2 * scale}px`,
-                boxShadow: 'inset 0 0 10px rgba(var(--primary-rgb),0.05)',
-              }}
-            />
-          ))}
-        </div>
+        {/* Static Circles - More Visible */}
+<div className="absolute flex items-center justify-center pointer-events-none">
+  {[0.2, 0.4, 0.6, 0.8, 1.0].map((scale, index) => (
+    <div
+      key={index}
+      className="absolute rounded-full border border-red-500/40 animate-spin-slow"
+      style={{
+        width: `${radius * 2 * scale}px`,
+        height: `${radius * 2 * scale}px`,
+        borderWidth: index === 0 ? '2px' : '1px',
+        boxShadow: 'inset 0 0 20px rgba(239, 68, 68, 0.3), 0 0 30px rgba(239, 68, 68, 0.2)',
+        opacity: 0.7 - (index * 0.1),
+      }}
+    />
+  ))}
+</div>
 
         {/* The Beam Container - Rotated via DOM Ref */}
         <div ref={beamRef} className="absolute left-1/2 top-1/2 will-change-transform z-10" style={{ transform: 'translate(-50%, -50%)' }}>
           <RadarBeam radius={radius * 1.2} />
         </div>
 
-        {/* Central Hub */}
-        <div className="relative z-40 flex items-center justify-center w-28 h-28 md:w-40 md:h-40 rounded-full bg-black backdrop-blur-xl border border-[var(--primary)]/20 shadow-[0_0_60px_rgba(var(--primary-rgb),0.4)] group cursor-pointer overflow-hidden transition-all duration-700 hover:scale-110 hover:shadow-[0_0_80px_rgba(var(--primary-rgb),0.6)] animate-bounce-slow">
-          <div className="absolute inset-0 bg-gradient-to-br from-[var(--primary)]/30 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500 animate-pulse-fast"></div>
-          <div className="absolute inset-4 rounded-full border border-[var(--primary)]/40 animate-spin-medium"></div>
-          <div className="absolute inset-6 rounded-full border border-[var(--primary)]/20 animate-spin-medium-reverse"></div>
-
-          {/* Central Logo - Rotated via DOM Ref */}
-          <div
-            ref={centerLogoRef}
-            className="relative z-10 w-10 h-10 md:w-16 md:h-16 flex items-center justify-center will-change-transform"
-          >
-            <img
-              src="/fav.svg"
-              alt="Central System"
-              className="w-8 h-8 md:w-14 md:h-14 object-contain opacity-90 group-hover:opacity-100 group-hover:scale-125 transition-all duration-500 ease-out filter drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.7)]"
-            />
-            <div className="absolute inset-0 rounded-full bg-[var(--primary)]/20 blur-xl group-hover:blur-2xl transition-all duration-500"></div>
-          </div>
-          <div className="absolute -inset-2 rounded-full bg-[var(--primary)]/10 blur-md group-hover:blur-xl transition-all duration-700"></div>
-        </div>
+     <div className="relative z-40 flex items-center justify-center w-28 h-28 md:w-40 md:h-40 rounded-full bg-black backdrop-blur-xl border border-[var(--primary)]/20 shadow-[0_0_60px_rgba(var(--primary-rgb),0.4)] group cursor-pointer overflow-hidden transition-all duration-700 hover:scale-110 hover:shadow-[0_0_80px_rgba(var(--primary-rgb),0.6)]">
+  <div className="absolute inset-0 bg-gradient-to-br from-[var(--primary)]/30 via-transparent to-transparent opacity-60 group-hover:opacity-80 transition-opacity duration-500"></div>
+  
+  {/* Central Logo - Simple, no rotation */}
+  <div className="relative z-10 w-10 h-10 md:w-16 md:h-16 flex items-center justify-center">
+    <div className="w-8 h-8 md:w-14 md:h-14 flex items-center justify-center">
+      <img
+        src="/fav.svg"
+        alt="Central System"
+        className="w-full h-full object-contain opacity-90 group-hover:opacity-100 group-hover:scale-125 transition-all duration-500 ease-out filter drop-shadow-[0_0_15px_rgba(var(--primary-rgb),0.7)]"
+      />
+    </div>
+  </div>
+  <div className="absolute -inset-2 rounded-full bg-[var(--primary)]/10 blur-md group-hover:blur-xl transition-all duration-700"></div>
+</div>
 
         {/* Icons placed according to calculated x/y, active state from set */}
         {servicesWithPosition.map((service) => (
@@ -285,6 +291,27 @@ export const RadarSystem: React.FC<RadarSystemProps> = ({ onScan }) => {
         .animate-spin-medium { animation: spin 8s linear infinite; }
         .animate-spin-medium-reverse { animation: spin 10s linear infinite reverse; }
       `}</style>
+      <style jsx>{`
+  /* Smoother pulse animation */
+  @keyframes smooth-pulse { 
+    0% { 
+      transform: scale(0.98); 
+      opacity: 0.15; 
+    } 
+    50% { 
+      transform: scale(1.02); 
+      opacity: 0.25; 
+    }
+    100% { 
+      transform: scale(0.98); 
+      opacity: 0.15; 
+    } 
+  }
+  
+  .animate-pulse {
+    animation: smooth-pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+`}</style>
     </div>
   );
 };
