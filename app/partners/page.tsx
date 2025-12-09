@@ -4,6 +4,7 @@ import { Metadata } from "next"
 import Image from "next/image"
 import { PartnersGrid } from "@/components/partners-grid"
 import { PartnerProcess } from "@/components/partner-process"
+import { GridCard } from "@/components/grid-card"
 
 export const metadata: Metadata = {
     title: "Our Partners - Safegrey",
@@ -15,8 +16,9 @@ export default function PartnersPage() {
         <main className="min-h-screen bg-[var(--theme-dark-base)]">
             <Navigation />
 
-           <PartnersGrid/>
-           <PartnerProcess/>
+            <PartnersGrid />
+            <GridCard />
+            <PartnerProcess />
 
             <Footer />
         </main>
