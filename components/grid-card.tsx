@@ -117,16 +117,22 @@ export function GridCard() {
 
     return (
         <>
-         
+            {/* Intro Section */}
+            <section className="relative w-full h-screen px-4 flex items-center justify-center overflow-hidden bg-[var(--theme-dark-base)]">
+                <h1 className="w-full md:w-1/2 mx-auto text-center text-[var(--theme-text-primary)] text-[clamp(2rem,10vw,5rem)] font-medium tracking-tight leading-[0.9]">
+                    The art of selling becomes the art of{" "}
+                    <span className="text-gradient">sensing</span>.
+                </h1>
+            </section>
 
             {/* Spotlight Section */}
             <section
                 ref={spotlightRef}
-               className="relative w-full h-screen px-4 flex items-center justify-center overflow-hidden bg-white"
+                className="relative w-full h-screen px-4 flex items-center justify-center overflow-hidden bg-[var(--theme-dark-secondary)]"
             >
-                <h1 className="w-full md:w-1/2 mx-auto text-center text-black text-[clamp(2rem,10vw,5rem)] font-medium tracking-tight leading-[0.9] relative z-0">
+                <h1 className="w-full md:w-1/2 mx-auto text-center text-[var(--theme-text-primary)] text-[clamp(2rem,10vw,5rem)] font-medium tracking-tight leading-[0.9] relative z-0">
                     time stretches differently inside this{" "}
-                    <span className="text-black">frame</span>.
+                    <span className="text-gradient">frame</span>.
                 </h1>
                 <div className="absolute top-0 left-0 w-full h-full pointer-events-none z-10">
                     {images.map((src, index) => (
@@ -151,12 +157,12 @@ export function GridCard() {
             </section>
 
             {/* Outro Section */}
-            {/* <section className="relative w-full h-screen px-4 flex items-center justify-center overflow-hidden bg-[var(--theme-dark-base)]">
+            <section className="relative w-full h-screen px-4 flex items-center justify-center overflow-hidden bg-[var(--theme-dark-base)]">
                 <h1 className="w-full md:w-1/2 mx-auto text-center text-[var(--theme-text-primary)] text-[clamp(2rem,10vw,5rem)] font-medium tracking-tight leading-[0.9]">
                     we make visuals breathe with{" "}
                     <span className="text-gradient">quiet precision</span>
                 </h1>
-            </section> */}
+            </section>
         </>
     )
 }
