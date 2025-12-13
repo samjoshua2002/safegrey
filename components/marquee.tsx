@@ -229,11 +229,7 @@ const Marquee: React.FC = () => {
             className="marquee-container relative w-full h-full bg-[#0f0606] text-[#f8f9fa] overflow-hidden"
             ref={containerRef}
         >
-            <section className="hero relative w-full h-[100svh] p-8 flex flex-col justify-center items-center text-center">
-                <h1 className="text-[4rem] font-medium tracking-[-0.075rem] leading-[1.125] w-3/4 mx-auto max-[1000px]:text-[2.25rem] max-[1000px]:tracking-[-0.05rem] max-[1000px]:w-full text-gradient">
-                    Digital fortresses are built on vigilance, where every packet of data is scrutinized.
-                </h1>
-            </section>
+          
 
             <section className="marquee relative w-full h-[50svh] overflow-hidden" ref={marqueeRef}>
                 <div className="marquee-wrapper absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 -rotate-[5deg] w-[150%] h-full max-[1000px]:w-[300%]" ref={marqueeWrapperRef}>
