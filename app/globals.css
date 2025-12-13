@@ -184,6 +184,40 @@ body {
     background: linear-gradient(135deg, #0f0606 0%, #150808 100%);
     min-height: 100vh;
   }
+
+  /* Custom Scrollbar Styles */
+  /* For Webkit browsers (Chrome, Safari, Edge) */
+  ::-webkit-scrollbar {
+    width: 12px;
+    height: 12px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: var(--theme-dark-base);
+    border-radius: 10px;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--theme-accent) 0%, var(--theme-accent-dim) 100%);
+    border-radius: 10px;
+    border: 2px solid var(--theme-dark-base);
+    transition: all 0.3s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, #c92515 0%, var(--theme-accent) 100%);
+    box-shadow: 0 0 10px rgba(174, 32, 18, 0.5);
+  }
+
+  ::-webkit-scrollbar-thumb:active {
+    background: var(--theme-accent);
+  }
+
+  /* For Firefox */
+  * {
+    scrollbar-width: thin;
+    scrollbar-color: var(--theme-accent) var(--theme-dark-base);
+  }
 }
 @layer base {
   * {

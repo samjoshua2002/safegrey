@@ -5,6 +5,7 @@ import Image from "next/image"
 import { PartnersGrid } from "@/components/partners-grid"
 import { PartnerProcess } from "@/components/partner-process"
 import { GridCard } from "@/components/grid-card"
+import Marquee from "@/components/marquee"
 
 export const metadata: Metadata = {
     title: "Our Partners - Safegrey",
@@ -18,6 +19,7 @@ export default function PartnersPage() {
 
             <PartnersGrid />
             <GridCard />
+            <Marquee />
             <PartnerProcess />
 
             <Footer />

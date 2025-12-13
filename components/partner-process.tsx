@@ -217,57 +217,7 @@ export function PartnerProcess() {
                 </div>
             </div>
 
-            {/* Enhanced Partner Categories Section */}
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
-                <div className="text-center mb-16">
-                    <h1 className="text-6xl sm:text-8xl md:text-9xl lg:text-[12rem] xl:text-[16rem] font-black text-[var(--foreground)] tracking-tighter leading-none mb-4">
-                        Safe<span className="text-[var(--theme-accent)]">Grey</span>
-                    </h1>
-                    <p className="text-xl text-[var(--muted-foreground)] max-w-2xl mx-auto">
-                        Building the future of cybersecurity through strategic partnerships and innovative solutions.
-                    </p>
-                </div>
-
-                {/* Enhanced navigation with badges */}
-                <div className="flex flex-wrap justify-center gap-4 mb-16">
-                    {[
-                        { name: "Technology Partners", count: "120+" },
-                        { name: "Solution Partners", count: "85+" },
-                        { name: "Resellers", count: "200+" },
-                        { name: "Integrations", count: "50+" }
-                    ].map((category, index) => (
-                        <a
-                            key={index}
-                            href="#_"
-                            className="group relative px-6 py-4 rounded-xl border border-[var(--theme-border)] bg-[var(--theme-card-bg)] hover:border-[var(--theme-accent)] transition-all duration-300 hover:shadow-lg min-w-[200px] text-center"
-                        >
-                            <div className="font-medium text-[var(--foreground)] group-hover:text-[var(--theme-accent)] transition-colors">
-                                {category.name}
-                            </div>
-                            <div className="text-sm text-[var(--muted-foreground)] mt-1">
-                                {category.count}
-                            </div>
-                            <div className="absolute inset-0 rounded-xl border-2 border-[var(--theme-accent)] opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-                        </a>
-                    ))}
-                </div>
-
-                {/* Enhanced CTA Section */}
-                <div className="text-center max-w-4xl mx-auto">
-                    <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold text-[var(--foreground)] uppercase mb-8 lg:text-balance">
-                        Collaborate, <span className="text-[var(--theme-accent)]">Secure</span>, and launch your next big initiative
-                    </h2>
-
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mt-12">
-                        <button className="px-8 py-4 bg-[var(--theme-accent)] text-white font-semibold rounded-xl hover:bg-[var(--theme-accent)]/90 transition-colors duration-300 transform hover:scale-105">
-                            Become a Partner
-                        </button>
-                        <button className="px-8 py-4 border border-[var(--theme-border)] text-[var(--foreground)] font-semibold rounded-xl hover:border-[var(--theme-accent)] transition-colors duration-300">
-                            Learn More
-                        </button>
-                    </div>
-                </div>
-            </div>
+          
 
             {/* New Stats Section */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">

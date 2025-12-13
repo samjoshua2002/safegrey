@@ -10,6 +10,7 @@ import { AboutSection } from "@/components/about-section"
 import { Metadata } from "next"
 import { BookingScheduler } from "@/components/booking-sheduler"
 
+
 export const metadata: Metadata = {
   title: "About Us",
   description: "Learn about Safegrey's mission, values, and the expert team behind our advanced cybersecurity solutions.",
@@ -27,6 +28,7 @@ export default function AboutPage() {
       <TeamSection />
       <CompanyStats />
       <CTASection /> */}
+    
       <BookingScheduler/>
       <Footer />
 
