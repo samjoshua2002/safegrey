@@ -49,7 +49,7 @@ export function HeroSection() {
     overflow-hidden
     bg-[var(--theme-dark-base)]
     text-[var(--foreground)]
-    px-4
+    px-2
     py-12
     sm:px-6
     sm:py-16
