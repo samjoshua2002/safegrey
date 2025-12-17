@@ -77,7 +77,7 @@ export function ServicesPageContent() {
     }
 
     return (
-        <main className="min-h-screen">
+        <main className="lg:min-h-screen h-auto ">
             <Navigation onServiceSelect={handleServiceSelect} />
 
             <ServicesHero onServiceSelect={handleServiceSelect} />

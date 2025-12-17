@@ -186,31 +186,15 @@ const services = [
 // -------------------------------------------------------------------
 // COLORS - Made more transparent for better image visibility
 // -------------------------------------------------------------------
+// Transparent glass-like colors
 const rowColors = [
-  "rgba(46, 46, 46, 0.7)",
-  "rgba(69, 6, 6, 0.7)",
-  "rgba(58, 58, 58, 0.7)",
-  "rgba(69, 6, 6, 0.75)",
-  "rgba(26, 26, 26, 0.7)",
-  "rgba(107, 123, 127, 0.7)",
+  "rgba(30, 30, 31, 0.25)", // Dark grey glass
+  "rgba(46, 46, 46, 0.2)", // Medium dark grey
+  "rgba(128, 128, 128, 0.15)", // Cool grey glass
+  "rgba(174, 32, 18, 0.25)", // Deep red glass
+  "rgba(140, 26, 15, 0.2)", // Dark red glass
+  "rgba(69, 6, 6, 0.15)", // Very dark red glass
 ];
-
-const rowImages = [
-  "/service.webp",
-  "/a2.webp",
-  "/a3.webp",
-  "/img.png",
-  "/image2.webp",
-  "/a4.webp",
-];
-
-// Preload images
-if (typeof window !== "undefined") {
-  rowImages.forEach((src) => {
-    const img = new Image();
-    img.src = src;
-  });
-}
 
 // -------------------------------------------------------------------
 // MAIN COMPONENT
@@ -228,12 +212,11 @@ export default function ServicesAccordion() {
   }, []);
 
   const handleAccordionToggle = useCallback((key: string) => {
-    setActiveKey(prev => prev === key ? null : key);
+    setActiveKey((prev) => (prev === key ? null : key));
   }, []);
 
   return (
-    <section className="relative w-full py-20 px-4 md:px-6 lg:px-12">
-
+    <section className="relative w-full py-12 lg:py-20 px-4 md:px-6 lg:px-12">
       {/* Dotted clusters */}
       <div className="absolute inset-0 opacity-30">
         <div className="absolute top-20 left-10 grid grid-cols-3 gap-8">
@@ -266,15 +249,16 @@ export default function ServicesAccordion() {
       </div>
 
       {/* ---------------- ACCORDION CONTAINER ---------------- */}
-      <div className="relative w-full max-w-7xl mx-auto rounded-2xl overflow-hidden shadow-2xl ">
+      <div className="relative w-full max-w-7xl mx-auto rounded-2xl overflow-hidden shadow-2xl border border-white/10 ">
         {/* Default dark background - NO OVERLAY */}
-        <div className="absolute inset-0 bg-gradient-to-br from-gray-900 via-gray-800 to-black" />
 
         {/* Content wrapper */}
         <div className="relative z-10">
           {services.map((service, index) => {
             const isOpen = activeKey === service.key;
             const isHovered = hoverIndex === index;
+
+            // Show image **only** when hovered or opened
             const showImage = isOpen || isHovered;
 
             return (
@@ -283,45 +267,45 @@ export default function ServicesAccordion() {
                 onMouseEnter={() => handleMouseEnter(index)}
                 onMouseLeave={handleMouseLeave}
                 className="border-b border-white/10 relative overflow-hidden"
-                style={{
-                  backgroundColor: rowColors[index],
-                  zIndex: isOpen ? 20 : isHovered ? 10 : 1,
-                }}
+                style={{ zIndex: isOpen ? 20 : isHovered ? 10 : 1 }}
               >
-                {/* INDIVIDUAL ACCORDION IMAGE - Only for this specific accordion */}
-                {/* Simple CSS transition version - smoothest */}
-                <div className="absolute inset-0 overflow-hidden">
-                  <div
-                    className={`absolute inset-0 bg-cover bg-center bg-no-repeat transition-opacity duration-300 ease-in-out will-change-[opacity] ${showImage ? 'opacity-100' : 'opacity-0'
-                      }`}
-                    style={{
-                      backgroundImage: `url(${rowImages[index]})`,
-                      filter: "brightness(0.95)",
-                    }}
-                  />
-
-                  <div
-                    className={`absolute inset-0 transition-opacity duration-300 ease-in-out will-change-[opacity] ${showImage ? 'opacity-50' : 'opacity-0'
-                      }`}
-                    style={{
-                      background: "linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6))",
-                    }}
-                  />
+                {/* Background */}
+                <div className="absolute inset-0">
+                  {showImage ? (
+                    <motion.div
+                      className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+                      style={{ backgroundImage: "url('/a3.webp')" }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      transition={{ duration: 0.3 }}
+                    />
+                  ) : (
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        backgroundColor: rowColors[index % rowColors.length],
+                      }}
+                    />
+                  )}
                 </div>
 
-                {/* Content */}
+                {/* Row content */}
                 <div className="relative z-10">
-                  {/* HEADER */}
                   <button
                     className="w-full flex items-center justify-between px-4 md:px-7 py-6 text-left hover:bg-white/5 transition-colors duration-200 cursor-pointer"
                     onClick={() => handleAccordionToggle(service.key)}
                   >
                     <div className="flex items-center gap-4">
-                      {/* Red indicator */}
-                      <div className={`w-2 h-8 rounded-full transition-all duration-200 ${isOpen ? "bg-red-500 shadow-lg shadow-red-500/50" :
-                          isHovered ? "bg-red-500/80" : "bg-red-500/50"
-                        }`} />
-
+                      <div
+                        className={`w-2 h-8 rounded-full transition-all duration-200 ${
+                          isOpen
+                            ? "bg-red-500 shadow-lg shadow-red-500/50"
+                            : isHovered
+                            ? "bg-red-500/80"
+                            : "bg-red-500/50"
+                        }`}
+                      />
                       <span className="md:text-2xl text-lg font-semibold text-white tracking-wide">
                         {service.title}
                       </span>
@@ -329,13 +313,14 @@ export default function ServicesAccordion() {
 
                     <div className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors duration-200">
                       <ChevronDown
-                        className={`text-white transition-transform duration-200 ${isOpen ? 'rotate-180' : ''}`}
+                        className={`text-white transition-transform duration-200 ${
+                          isOpen ? "rotate-180" : ""
+                        }`}
                         size={24}
                       />
                     </div>
                   </button>
 
-                  {/* CONTENT */}
                   <AnimatePresence>
                     {isOpen && (
                       <motion.div
@@ -351,7 +336,11 @@ export default function ServicesAccordion() {
                               key={i}
                               initial={{ opacity: 0, y: 10 }}
                               animate={{ opacity: 1, y: 0 }}
-                              transition={{ delay: i * 0.04, duration: 0.2, ease: [0.4, 0, 0.2, 1] }}
+                              transition={{
+                                delay: i * 0.04,
+                                duration: 0.2,
+                                ease: [0.4, 0, 0.2, 1],
+                              }}
                               className="p-5 bg-gradient-to-br from-white/15 to-white/5 border border-white/20 rounded-xl backdrop-blur-sm hover:bg-white/15 transition-all duration-200 group"
                             >
                               <div className="flex gap-4">

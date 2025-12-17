@@ -193,7 +193,7 @@ export function ManagedSecurityServices() {
         "Rapid Detection of Suspicious Activity",
         "Clear, High-Fidelity Alerts",
         "Analyst-Driven Investigation",
-        "Actionable Response Support"
+        // "Actionable Response Support"
       ],
 
       features: [
@@ -214,7 +214,7 @@ export function ManagedSecurityServices() {
       highlights: [
         "Continuous Exposure Awareness",
         "Prioritised Risk-Based Insights",
-        "Clear Focus on High-Impact Issues",
+        // "Clear Focus on High-Impact Issues",
         "Streamlined Remediation Guidance",
         "Improved Security Hygiene Over Time"
       ],
@@ -239,7 +239,7 @@ export function ManagedSecurityServices() {
         "Technique-by-Technique Validation",
         "Clear Detection Gaps Identified",
         "Real-Time Improvement Cycles",
-        "Stronger Coordination Between Teams"
+        // "Stronger Coordination Between Teams"
       ],
 
       features: [
@@ -262,10 +262,10 @@ export function ManagedSecurityServices() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-left mb-20">
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent leading-relaxed">
             Managed Security Services
           </h2>
-          <p className="text-xl md:text-lg md:text-justify text-muted-foreground mx-auto leading-relaxed">
+          <p className="text-xl md:text-lg text-justify text-muted-foreground mx-auto leading-relaxed">
             Security operations demand constant attention, and many organisations struggle to maintain the visibility and expertise needed to stay ahead of evolving threats. Managed Security Services provide continuous monitoring, rapid detection, and structured response support, ensuring that risks are addressed before they escalate. These services strengthen day-to-day security operations by combining skilled analysts, proven processes, and reliable visibility into what is happening across your environment. The result is a more controlled, informed, and resilient security posture without the overhead of managing everything internally.
           </p>
         </div>
@@ -281,7 +281,20 @@ export function ManagedSecurityServices() {
                   className="flex flex-col items-center gap-2 py-4 px-2 data-[state=active]:bg-background data-[state=active]:shadow-lg rounded-xl transition-all duration-300 hover:scale-105 group"
                 >
                   <Icon className="w-5 h-5 text-muted-foreground group-data-[state=active]:text-accent transition-colors" />
-                  <span className="text-xs md:text-sm font-medium text-center leading-tight">{service.title}</span>
+<span
+  className="
+    text-xs
+    md:text-sm
+    font-medium
+    text-center
+    leading-tight
+    break-words
+    whitespace-normal
+    max-w-full
+  "
+>
+  {service.title}
+</span>
                 </TabsTrigger>
               )
             })}
@@ -296,11 +309,11 @@ export function ManagedSecurityServices() {
 
                     {/* Header Section */}
                     <div className="space-y-4">
-                      <h3 className="text-4xl md:text-5xl font-bold leading-tight">
+                      <h3 className="text-3xl md:text-5xl font-bold leading-tight">
                         {service.fullTitle}
                       </h3>
 
-                      <p className="text-lg md:text-lg md:text-justify text-muted-foreground leading-relaxed">
+                      <p className="text-lg md:text-lg text-justify text-muted-foreground leading-relaxed">
                         {service.description}
                       </p>
                     </div>

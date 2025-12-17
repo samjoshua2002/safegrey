@@ -191,7 +191,7 @@ export function SecurityEnablementServices() {
         "Ongoing Security Visibility",
         "Predictable Monthly or Yearly Coverage",
         "Expert-Led Reviews & Recommendations",
-        "Consistent Posture Improvement",
+        // "Consistent Posture Improvement",
         "Flexible Subscription Options"
       ],
       features: [
@@ -210,7 +210,7 @@ export function SecurityEnablementServices() {
       icon: UserCheck,
       description: "Security Staffing provides organisations with skilled professionals who can support daily operations, ongoing projects, or long-term security needs. Whether you require analysts, engineers, or specialised expertise, this service ensures the right talent is available without the challenges of recruiting and training internally. Each engagement is tailored to fit operational priorities, helping teams increase capacity, improve response capability, and maintain consistent security performance.",
       highlights: [
-        "On-Demand Security Talent",
+        // "On-Demand Security Talent",
         "Short-Term or Long-Term Engagements",
         "Skilled Analysts & Engineers",
         "Reduced Hiring & Training Overhead",
@@ -233,10 +233,10 @@ export function SecurityEnablementServices() {
       description: "CryptX is built for offensive teams who want reliable evasion without turning every engagement into a research project. The platform transforms raw shellcode into tailored execution artefacts using a flexible, cloud-driven workflow. Each build incorporates evolving evasion logic designed to reduce detection and minimise analyst scrutiny. Instead of maintaining custom loaders or rewriting tooling every few months, teams can generate what they need in minutes and move straight to the operation. CryptX gives red teams a repeatable, controlled way to prepare tradecraft while keeping development effort close to zero.",
       highlights: [
         "Rapid creation of customised execution artefacts",
-        "Continually updated evasion logic powered by platform intelligence",
+        // "Continually updated evasion logic powered by platform intelligence",
         "Artefacts built without relying on static signatures",
         "API-first design for seamless pipeline integration",
-        "Built to save time, reduce effort, and increase operational tempo"
+        // "Built to save time, reduce effort, and increase operational tempo"
       ],
       features: [
         "Cloud-based generator for EXE, DLL, and packaged output formats",
@@ -257,10 +257,10 @@ export function SecurityEnablementServices() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-left mb-20">
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent leading-relaxed">
             Security Enablement Services
           </h2>
-          <p className="text-xl md:text-lg md:text-justify text-muted-foreground mx-auto leading-relaxed">
+          <p className="text-xl md:text-lg text-justify text-muted-foreground mx-auto leading-relaxed">
             Organisations often struggle to maintain the skills, resources, and continuous oversight needed to stay ahead of evolving threats. Security Enablement Services provide ongoing support, specialised expertise, and purpose-built tools that strengthen operational capability throughout the year. These services help teams address talent gaps, improve defensive maturity, and gain consistent access to actionable security insights. With flexible models and practical guidance, organisations can scale their security efforts without the burden of managing everything internally.
           </p>
         </div>
@@ -276,7 +276,21 @@ export function SecurityEnablementServices() {
                   className="flex flex-col items-center gap-2 py-4 px-2 data-[state=active]:bg-background data-[state=active]:shadow-lg rounded-xl transition-all duration-300 hover:scale-105 group"
                 >
                   <Icon className="w-5 h-5 text-muted-foreground group-data-[state=active]:text-accent transition-colors" />
-                  <span className="text-xs md:text-sm font-medium text-center leading-tight">{service.title}</span>
+                  <span
+  className="
+    text-xs
+    md:text-sm
+    font-medium
+    text-center
+    leading-tight
+    break-words
+    whitespace-normal
+    max-w-full
+  "
+>
+  {service.title}
+</span>
+
                 </TabsTrigger>
               )
             })}
@@ -291,11 +305,11 @@ export function SecurityEnablementServices() {
 
                     {/* Header Section */}
                     <div className="space-y-4">
-                      <h3 className="text-4xl md:text-5xl font-bold leading-tight">
+                      <h3 className="text-3xl md:text-5xl font-bold leading-relaxed">
                         {service.fullTitle}
                       </h3>
 
-                      <p className="text-lg md:text-lg md:text-justify text-muted-foreground leading-relaxed">
+                      <p className="text-lg md:text-lg text-justify text-muted-foreground leading-relaxed">
                         {service.description}
                       </p>
                     </div>

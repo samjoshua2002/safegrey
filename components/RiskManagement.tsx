@@ -192,7 +192,7 @@ export function RiskManagementServices() {
         "Gap Analysis & Control Mapping",
         "Policy, Process & Framework Support",
         "Practical, Sustainable Recommendations",
-        "Clear Path to Audit Readiness"
+        // "Clear Path to Audit Readiness"
       ],
       features: [
         "Assessment of current information security management practices",
@@ -211,8 +211,8 @@ export function RiskManagementServices() {
       description: "Protecting healthcare data requires strict adherence to the safeguards defined under HIPAA. This assessment reviews how sensitive health information is stored, accessed, and transmitted across your environment, identifying gaps that could lead to compliance violations or data exposure. The process evaluates administrative, technical, and physical controls, ensuring that each requirement is addressed with practical, enforceable measures. Organisations receive clear direction on strengthening privacy practices, reducing risk, and maintaining compliance with regulatory expectations.",
       highlights: [
         "Comprehensive HIPAA Requirement Review",
-        "Clear Identification of Control Gaps",
-        "Privacy & Data Handling Focus",
+        // "Clear Identification of Control Gaps",
+        // "Privacy & Data Handling Focus",
         "Practical Policy & Process Enhancements",
         "Strong Path Toward Compliance Assurance"
       ],
@@ -233,8 +233,8 @@ export function RiskManagementServices() {
       description: "GDPR places strict expectations on how personal data is collected, processed, and protected. This consulting service helps organisations understand their obligations and identify where current practices fall short of the regulation. The assessment covers data flows, consent mechanisms, security controls, and documentation requirements to ensure compliance is both achievable and sustainable. The guidance focuses on building privacy practices that reduce regulatory risk and strengthen customer trust.",
       highlights: [
         "End-to-End GDPR Readiness Support",
-        "Strong Focus on Data Protection & Privacy",
-        "Clear Insight Into Compliance Gaps",
+        // "Strong Focus on Data Protection & Privacy",
+        // "Clear Insight Into Compliance Gaps",
         "Practical Policy & Process Improvements",
         "Structured Path to Regulatory Alignment"
       ],
@@ -255,9 +255,9 @@ export function RiskManagementServices() {
       description: "Preparing for a SOC audit requires clarity on how your organisation manages controls related to security, availability, integrity, and confidentiality. This readiness service identifies gaps within current processes and technical safeguards, ensuring your environment aligns with Trust Services Criteria. The goal is to simplify audit preparation by highlighting what needs improvement and how to implement it effectively. Organisations gain confidence in their audit posture and a structured path to achieving a successful SOC 1 or SOC 2 report.",
       highlights: [
         "Comprehensive Control Gap Analysis",
-        "Trust Services Criteria Alignment",
+        // "Trust Services Criteria Alignment",
         "Practical Audit Preparation Support",
-        "Clear Documentation & Process Guidance",
+        // "Clear Documentation & Process Guidance",
         "Strong Foundation for Successful Certification"
       ],
       features: [
@@ -279,10 +279,10 @@ export function RiskManagementServices() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-left mb-20">
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent leading-relaxed">
             Risk Management
           </h2>
-          <p className="text-xl md:text-lg md:text-justify text-muted-foreground mx-auto leading-relaxed">
+          <p className="text-xl md:text-lg text-justify text-muted-foreground mx-auto leading-relaxed">
             Strong governance and compliance are essential for maintaining trust, meeting regulatory obligations, and ensuring long-term operational stability. Risk Management services help organisations understand where their controls stand, how well policies align with industry requirements, and which areas need improvement. These assessments evaluate people, processes, and technical safeguards to confirm whether the organisation is prepared to meet standards such as ISO, SOC, HIPAA, and GDPR. The insights support clearer decision-making, reduced compliance exposure, and a more structured approach to managing risk across the business.
           </p>
         </div>
@@ -298,7 +298,20 @@ export function RiskManagementServices() {
                   className="flex flex-col items-center gap-2 py-4 px-2 data-[state=active]:bg-background data-[state=active]:shadow-lg rounded-xl transition-all duration-300 hover:scale-105 group"
                 >
                   <Icon className="w-5 h-5 text-muted-foreground group-data-[state=active]:text-accent transition-colors" />
-                  <span className="text-xs md:text-sm font-medium text-center leading-tight">{service.title}</span>
+<span
+  className="
+    text-xs
+    md:text-sm
+    font-medium
+    text-center
+    leading-tight
+    break-words
+    whitespace-normal
+    max-w-full
+  "
+>
+  {service.title}
+</span>
                 </TabsTrigger>
               )
             })}
@@ -313,11 +326,11 @@ export function RiskManagementServices() {
 
                     {/* Header Section */}
                     <div className="space-y-4">
-                      <h3 className="text-4xl md:text-5xl font-bold leading-tight">
+                      <h3 className="text-3xl md:text-5xl font-bold leading-tight">
                         {service.fullTitle}
                       </h3>
 
-                      <p className="text-lg md:text-lg md:text-justify text-muted-foreground leading-relaxed">
+                      <p className="text-lg md:text-lg text-justify text-muted-foreground leading-relaxed">
                         {service.description}
                       </p>
                     </div>

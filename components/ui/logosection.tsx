@@ -146,7 +146,7 @@ export function LogoSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden py-32 px-4 sm:px-6 lg:px-8 bg-[var(--theme-dark-base)] text-[var(--theme-text-primary)]"
+      className="relative overflow-hidden py-12 lg:py-32 px-4 sm:px-6 lg:px-8 bg-[var(--theme-dark-base)] text-[var(--theme-text-primary)]"
     >
       {/* Dotted Matrix Background */}
       <div className="absolute inset-0 opacity-20">
@@ -208,7 +208,7 @@ export function LogoSection() {
         </motion.h2>
 
         <motion.p
-          className="max-w-3xl mx-auto mb-16 text-xl md:text-2xl text-[var(--theme-text-secondary)] leading-relaxed"
+          className="max-w-3xl mx-auto mb-16 text-lg lg:text-2xl text-[var(--theme-text-secondary)] leading-relaxed"
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.3 }}

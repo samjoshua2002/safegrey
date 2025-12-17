@@ -94,7 +94,7 @@ export function ServicesHero({ onServiceSelect }: ServicesHeroProps) {
           {/* Services Navigation Tabs */}
           <div className="w-full items-center mb-2">
             <Tabs defaultValue="security-assessment" className="w-full items-center">
-              <TabsList className="grid grid-cols-2 md:grid-cols-6  gap-3 p-2 bg-card/50 backdrop-blur-sm rounded-2xl h-auto border border-border/50 shadow-xl mb-12">
+              <TabsList className="grid grid-cols-2 md:grid-cols-6  gap-3 p-2 bg-card/50 backdrop-blur-sm rounded-2xl h-auto border border-border/50 shadow-xl mb-0 lg:mb-12">
                 {services.map((service) => {
                   const Icon = service.icon
                   return (
@@ -105,7 +105,14 @@ export function ServicesHero({ onServiceSelect }: ServicesHeroProps) {
                       onClick={() => onServiceSelect(service.id)}
                     >
                       <Icon className="w-5 h-5 text-muted-foreground group-data-[state=active]:text-accent transition-colors" />
-                      <span className="text-xs md:text-sm font-medium text-center leading-tight">{service.title}</span>
+                      <span className="text-xs
+    md:text-sm
+    font-medium
+    text-center
+    leading-tight
+    break-words
+    whitespace-normal
+    max-w-full">{service.title}</span>
                     </TabsTrigger>
                   )
                 })}

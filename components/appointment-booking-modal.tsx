@@ -269,7 +269,7 @@ export function AppointmentModal({ onClose }: BookingSchedulerProps) {
   }, []);
 
   return (
-    <div className="w-full h-full flex flex-col items-center justify-start pb-4">
+    <div className="w-full h-full flex flex-col items-center justify-start pb-4 mt-3">
       <AnimatePresence mode="wait">
         <motion.div
           key={step}

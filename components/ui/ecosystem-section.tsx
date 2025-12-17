@@ -59,7 +59,7 @@ export default function EcosystemSection() {
   return (
     <TooltipProvider delayDuration={80}>
       <div className="bg-[var(--theme-dark-base)]">
-        <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-20 pb-36 overflow-hidden ">
+        <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 lg:pt-20 lg:pb-36 overflow-hidden ">
           {/* Dotted background */}
           <div className="absolute inset-0 opacity-20 pointer-events-none">
             <div className="absolute inset-0 grid grid-cols-4 gap-24 transform -rotate-6 scale-150">
@@ -82,7 +82,7 @@ export default function EcosystemSection() {
           />
 
           {/* Existing Content */}
-          <div className="relative z-10 grid grid-cols-1 md:grid-cols-12 gap-6 md:gap-8 items-start mb-12 ">
+          <div className="relative z-10 grid grid-cols-1 md:grid-cols-12 gap-6 lg:gap-8 items-start mb-4 lg:mb-12 ">
             <div className="md:col-span-3">
               <div className="flex items-center gap-3">
                 <div className="w-3 h-3 bg-white mb-3" />
@@ -90,7 +90,7 @@ export default function EcosystemSection() {
                   <div className="text-xl text-muted-foreground font-medium">
                     Ecosystem
                   </div>
-                  <div className="text-2xl font-bold text-foreground">
+                  <div className=" text-xl lg:text-2xl font-bold text-foreground">
                     THE SAFEGREY{" "}
                     <span className="text-[#E5453D]">ECOSYSTEM</span>
                   </div>

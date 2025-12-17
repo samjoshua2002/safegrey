@@ -189,7 +189,7 @@ export function CloudSecurityAssessment() {
       highlights: [
         "Identity & Access Path Review",
         "Misconfiguration & Exposure Detection",
-        "Strong Visibility into Cloud Risks",
+        // "Strong Visibility into Cloud Risks",
         "Architecture & Control Evaluation",
         "Clear, Prioritised Remediation Steps"
       ],
@@ -212,7 +212,7 @@ export function CloudSecurityAssessment() {
       highlights: [
         "Image & Runtime Behaviour Analysis",
         "Misconfiguration & Hardening Review",
-        "Clear Attack Surface Mapping",
+        // "Clear Attack Surface Mapping",
         "Privilege & Access Evaluation",
         "Actionable, Practical Improvements"
       ],
@@ -237,7 +237,7 @@ export function CloudSecurityAssessment() {
         "RBAC & Access Path Evaluation",
         "Strong Focus on Misconfigurations",
         "Detailed Component-Level Insights",
-        "Clear, Prioritised Recommendations"
+        // "Clear, Prioritised Recommendations"
       ],
 
       features: [
@@ -260,10 +260,10 @@ export function CloudSecurityAssessment() {
 
       <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-left mb-20">
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent leading-relaxed">
             Cloud Security
           </h2>
-          <p className="text-xl md:text-lg md:text-justify text-muted-foreground mx-auto leading-relaxed">
+          <p className="text-xl md:text-lg text-justify text-muted-foreground mx-auto leading-relaxed">
             Cloud environments evolve quickly, and even small configuration gaps can create serious exposure. Cloud Security Assessments focus on understanding how identities, workloads, networks, and data are managed across your cloud platforms. The goal is to uncover weaknesses that arise from misconfigurations, overly permissive access, unmanaged resources, or insecure deployment practices. These reviews provide clarity on hidden risks, highlight improvement areas, and help organisations build stronger, more controlled cloud foundations without slowing operational agility.
           </p>
         </div>
@@ -279,7 +279,14 @@ export function CloudSecurityAssessment() {
                   className="flex flex-col items-center gap-2 py-4 px-2 data-[state=active]:bg-background data-[state=active]:shadow-lg rounded-xl transition-all duration-300 hover:scale-105 group"
                 >
                   <Icon className="w-5 h-5 text-muted-foreground group-data-[state=active]:text-accent transition-colors" />
-                  <span className="text-xs md:text-sm font-medium text-center leading-tight">{type.title}</span>
+                  <span className="text-xs
+    md:text-sm
+    font-medium
+    text-center
+    leading-tight
+    break-words
+    whitespace-normal
+    max-w-full">{type.title}</span>
                 </TabsTrigger>
               )
             })}
@@ -294,11 +301,11 @@ export function CloudSecurityAssessment() {
 
                     {/* Header Section */}
                     <div className="space-y-4">
-                      <h3 className="text-4xl md:text-5xl font-bold leading-tight">
+                      <h3 className="text-3xl md:text-5xl font-bold leading-tight">
                         {type.fullTitle}
                       </h3>
 
-                      <p className="text-lg md:text-lg md:text-justify text-muted-foreground leading-relaxed">
+                      <p className="text-lg md:text-lg text-justify text-muted-foreground leading-relaxed">
                         {type.description}
                       </p>
                     </div>
