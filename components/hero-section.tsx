@@ -81,23 +81,7 @@ export function HeroSection() {
         />
 
 <div
-  className="
-    max-w-7xl
-    mx-auto
-    pt-12
-    px-2
-    lg:px-12
-    w-full
-    grid
-    grid-cols-1
-    lg:grid-cols-2
-    gap-5
-    place-items-center
-    text-center
-    relative
-    z-10
-  "
->
+  className="max-w-7xl mx-auto pt-12 px-2 lg:px-12 w-full grid grid-cols-1 lg:grid-cols-2 gap-5 place-items-center text-center relative z-10">
           {/* Left Side - Text */}
           <div
             className={`relative z-10 max-w-xl text-left transition-all duration-1000 ${
