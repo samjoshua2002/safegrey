@@ -41,6 +41,7 @@ export function HeroSection() {
     <>
 <section
   className="
+  lg:min-h-screen
     relative
     h-auto
     flex
@@ -49,13 +50,10 @@ export function HeroSection() {
     overflow-hidden
     bg-[var(--theme-dark-base)]
     text-[var(--foreground)]
-    px-4
     py-12
-    sm:px-6
-    sm:py-16
-    md:px-10
-    md:py-20
-    lg:px-16
+    px-6
+    sm:py-12
+    md:py-16
     lg:py-24
   "
 >
@@ -81,14 +79,14 @@ export function HeroSection() {
         />
 
 <div
-  className="max-w-7xl mx-auto pt-12 px-2 lg:px-12 w-full grid grid-cols-1 lg:grid-cols-2 gap-5 place-items-center text-center relative z-10">
+  className="max-w-7xl mx-auto pt-12 lg:px-12 w-full grid grid-cols-1 lg:grid-cols-2 gap-5 lg:place-items-center lg:text-center relative z-10">
           {/* Left Side - Text */}
           <div
-            className={`relative z-10 max-w-xl text-left transition-all duration-1000 ${
+            className={`relative z-10 w-full text-left transition-all duration-1000 ${
               mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-10"
             }`}
           >
-            <h1 className="text-3xl md:pt-[70px] lg:pt-[50px] sm:text-4xl md:text-6xl font-bold mb-6 leading-tight text-foreground">
+            <h1 className="text-3xl md:pt-[0px] lg:pt-[50px] sm:text-4xl md:text-5xl font-bold mb-6 leading-tight text-foreground">
               <span
                 style={{ color: "var(--primary)" }}
                 className={cn(
@@ -111,10 +109,10 @@ export function HeroSection() {
             <p
               className={cn(
                 "text-lg sm:text-xl md:text-2xl mb-8 leading-relaxed text-[var(--muted-foreground)] transition-all duration-300",
-                isScanning && "text-[var(--foreground)] brightness-125"
+                isScanning && "text-[var(--foreground)]"
               )}
             >
-              Real-world attack simulations and end-to-end cybersecurity —
+              Real-world attack simulations and end-to-end cybersecurity -
               proactively protecting your digital assets from emerging threats
             </p>
 

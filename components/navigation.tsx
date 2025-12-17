@@ -329,7 +329,7 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
               </Link>
 
               {/* Desktop Navigation Items */}
-              <div className="hidden md:flex items-center space-x-1">
+              <div className="hidden lg:flex items-center space-x-1">
                 {navItems.map((item) => (
                   <div
                     key={item.key}
@@ -358,7 +358,7 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
               </div>
 
               {/* CTA Button */}
-              <div className="hidden md:flex items-center gap-4">
+              <div className="hidden lg:flex items-center gap-4">
                 <button
                   onClick={() => setSearchOpen(true)}
                   className="p-2 rounded-full hover:bg-[var(--theme-accent)]/10 text-[var(--theme-text-primary)] hover:text-[var(--theme-accent)] transition-colors"
@@ -382,7 +382,7 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
               </div>
 
               {/* Mobile Menu Button */}
-              <div className="md:hidden flex items-center gap-2">
+              <div className="lg:hidden flex items-center gap-2">
                 <button
                   onClick={() => setSearchOpen(true)}
                   className="p-2 rounded-full hover:bg-[var(--theme-accent)]/10 text-[var(--theme-text-primary)] hover:text-[var(--theme-accent)] transition-colors"
@@ -660,7 +660,7 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: "100%" }}
             transition={{ duration: 0.3 }}
-            className="md:hidden fixed inset-0 top-0 z-40 bg-[var(--theme-dark-base)] pt-20 overflow-y-auto"
+            className="lg:hidden fixed inset-0 top-0 z-40 bg-[var(--theme-dark-base)] pt-20 overflow-y-auto"
           >
             <div className="p-6 space-y-2">
               {navItems.map((item) => (
