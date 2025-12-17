@@ -49,7 +49,7 @@ export function TestimonialsSection() {
   const bottomFeatures = features.slice(3, 5);
 
   return (
-    <section className="relative overflow-hidden py-24 px-4 sm:px-6 lg:px-8 bg-[var(--theme-dark-base)] text-[var(--theme-text-primary)]">
+    <section className="relative overflow-hidden py-12 lg:py-24 px-4 sm:px-6 lg:px-8 bg-[var(--theme-dark-base)] text-[var(--theme-text-primary)]">
       {/* Dotted Matrix Background */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute inset-0 grid grid-cols-4 gap-24 transform -rotate-6 scale-150">

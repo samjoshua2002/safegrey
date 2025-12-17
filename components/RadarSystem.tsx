@@ -142,43 +142,51 @@ const waveRings = useMemo(() => [
   { size: 1.4, duration: '10s', opacity: 0.14, blur: 20, delay: '1s' },
   { size: 1.6, duration: '11s', opacity: 0.10, blur: 24, delay: '1.5s' },
   { size: 1.8, duration: '12s', opacity: 0.08, blur: 28, delay: '2s' },
-  { size: 2.0, duration: '13s', opacity: 0.05, blur: 32, delay: '2.5s' },
+
 ], []);
 
   return (
     <div
-      className="relative flex items-center justify-center w-full h-full min-h-screen overflow-hidden"
+      className="relative flex items-center justify-center w-full h-full min-h-screen overflow-hidden rounded-3xl"
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       {/* Background elements remain same... */}
       <div className="absolute inset-0 bg-transparent">
         <div className="absolute inset-0 opacity-10">
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-red-500/20 rounded-full blur-3xl animate-pulse-slow"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-red-600/15 rounded-full blur-3xl animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
+          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-red-500/20 rounded-full blur-xl animate-pulse-slow"></div>
+          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-red-600/15 rounded-full blur-xl animate-pulse-slow" style={{ animationDelay: '1s' }}></div>
         </div>
       </div>
 
       {/* Main Radar Container */}
-      <div className="relative flex items-center justify-center perspective-[1200px] z-10">
+      <div className="relative flex items-center justify-center perspective-[1200px] z-10 rounded-full" >
 
         {/* Wave Rings */}
         <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
           {waveRings.map((wave, index) => (
-  <div
-    key={index}
-    className="absolute rounded-full border border-red-400/40 gpu-accelerated"
-    style={{
-      width: `${radius * 2 * wave.size}px`,
-      height: `${radius * 2 * wave.size}px`,
-      opacity: wave.opacity,
-      filter: `blur(${wave.blur * 0.8}px)`,
-      animation: `smooth-pulse ${wave.duration} cubic-bezier(0.4, 0, 0.6, 1) infinite`,
-      animationDelay: wave.delay,
-      boxShadow: 'inset 0 0 40px rgba(239, 68, 68, 0.4), 0 0 80px rgba(239, 68, 68, 0.3)',
-      background: 'radial-gradient(circle, rgba(239, 68, 68, 0.15) 0%, rgba(185, 28, 28, 0.08) 50%, transparent 70%)',
-    }}
-  />
+ <div
+  key={index}
+  className="absolute rounded-full border border-red-400/40 gpu-accelerated"
+  style={{
+    width: `${radius * 2 * wave.size}px`,
+    height: `${radius * 2 * wave.size}px`,
+    opacity: wave.opacity,
+    filter: `blur(${wave.blur * 0.8}px)`,
+    animation: `smooth-pulse ${wave.duration} cubic-bezier(0.4, 0, 0.6, 1) infinite`,
+    animationDelay: wave.delay,
+    boxShadow: 'inset 0 0 25px rgba(239, 68, 68, 0.25), 0 0 50px rgba(239, 68, 68, 0.2)',
+    background:
+      'radial-gradient(circle, rgba(239, 68, 68, 0.12) 0%, rgba(185, 28, 28, 0.06) 40%, transparent 60%)',
+
+    /* 🔽 LEFT SIDE FADE */
+    maskImage:
+      'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.5) 25%, black 45%)',
+    WebkitMaskImage:
+      'linear-gradient(to right, transparent 0%, rgba(0,0,0,0.5) 25%, black 45%)',
+  }}
+/>
+
 ))}
 
           {/* Dynamic Grid Pattern - More Visible */}

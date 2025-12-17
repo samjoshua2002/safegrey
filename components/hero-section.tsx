@@ -39,7 +39,26 @@ export function HeroSection() {
 
   return (
     <>
-      <section className="relative h-[calc(100vh-80px)] md:min-h-screen flex items-center justify-center overflow-hidden bg-[var(--theme-dark-base)] text-[var(--foreground)]">
+<section
+  className="
+    relative
+    h-auto
+    flex
+    items-center
+    justify-center
+    overflow-hidden
+    bg-[var(--theme-dark-base)]
+    text-[var(--foreground)]
+    px-4
+    py-12
+    sm:px-6
+    sm:py-16
+    md:px-10
+    md:py-20
+    lg:px-16
+    lg:py-24
+  "
+>
         {/* Dotted Background */}
         <div className="absolute inset-0 opacity-20">
           <div className="absolute inset-0 grid grid-cols-4 gap-24 transform -rotate-6 scale-150">
@@ -61,7 +80,24 @@ export function HeroSection() {
           transition={{ duration: 8, repeat: Infinity, repeatType: "mirror" }}
         />
 
-        <div className="max-w-7xl mx-auto px-6 lg:px-12 w-full grid grid-cols-1 md:grid-cols-2 gap-5 items-center relative z-10">
+<div
+  className="
+    max-w-7xl
+    mx-auto
+    pt-12
+    px-6
+    lg:px-12
+    w-full
+    grid
+    grid-cols-1
+    lg:grid-cols-2
+    gap-5
+    place-items-center
+    text-center
+    relative
+    z-10
+  "
+>
           {/* Left Side - Text */}
           <div
             className={`relative z-10 max-w-xl text-left transition-all duration-1000 ${
@@ -131,9 +167,7 @@ export function HeroSection() {
               <div className="relative w-full h-full scale-125 md:scale-125 lg:scale-110">
                 {/* Edge fade / glow */}
                 <div
-                  className="absolute inset-0 rounded-full
-                
-                 blur-2xl"
+                  className="absolute inset-0 rounded-full blur-xl"
                 />
 
                 {/* Radar */}

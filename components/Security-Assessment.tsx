@@ -297,13 +297,13 @@ export function SecurityAssessment() {
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-primary/10 via-transparent to-transparent" />
 
       <div className="max-w-7xl mx-auto relative z-10">
-        <div className="text-left mb-20">
+        <div className="text-left lg:mb-20 mb-12">
 
 
-          <h2 className="text-5xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
+          <h2 className="text-4xl md:text-6xl lg:text-7xl font-bold mb-6 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent leading-relaxed">
             Security Assessment
           </h2>
-          <p className="text-xl md:text-lg md:text-justify text-muted-foreground mx-auto leading-relaxed">
+          <p className="text-xl md:text-lg text-justify text-muted-foreground mx-auto leading-relaxed">
             Modern organisations operate in environments where a single weakness can lead to significant business disruption. Security Assessments help expose blind spots across applications, networks, and identity systems before adversaries discover them. These evaluations focus on real-world attack behaviours, uncovering both technical flaws and misaligned security controls. The outcome is a clear view of the organisation's true risk posture and a practical direction for strengthening defences with confidence. SafeGrey brings a balanced approach that helps teams understand exposure, prioritise what matters, and build resilience without slowing operations.
           </p>
         </div>
@@ -319,7 +319,14 @@ export function SecurityAssessment() {
                   className="flex flex-col items-center gap-2 py-4 px-2 data-[state=active]:bg-background data-[state=active]:shadow-lg rounded-xl transition-all duration-300 hover:scale-105 group"
                 >
                   <Icon className="w-5 h-5 text-muted-foreground group-data-[state=active]:text-accent transition-colors" />
-                  <span className="text-xs md:text-sm font-medium text-center leading-tight">{type.title}</span>
+                  <span className="text-xs
+    md:text-sm
+    font-medium
+    text-center
+    leading-tight
+    break-words
+    whitespace-normal
+    max-w-full">{type.title}</span>
                 </TabsTrigger>
               )
             })}
@@ -335,11 +342,11 @@ export function SecurityAssessment() {
                     <div className="space-y-4">
 
 
-                      <h3 className="text-4xl md:text-5xl font-bold leading-tight">
+                      <h3 className="text-3xl md:text-5xl font-bold leading-tight">
                         {type.fullTitle}
                       </h3>
 
-                      <p className="text-lg md:text-lg md:text-justify text-muted-foreground leading-relaxed">
+                      <p className="text-lg md:text-lg text-justify text-muted-foreground leading-relaxed">
                         {type.description}
                       </p>
                     </div>
