@@ -188,13 +188,14 @@ const services = [
 // -------------------------------------------------------------------
 // Transparent glass-like colors
 const rowColors = [
-  "rgba(30, 30, 31, 0.25)", // Dark grey glass
-  "rgba(46, 46, 46, 0.2)", // Medium dark grey
-  "rgba(128, 128, 128, 0.15)", // Cool grey glass
-  "rgba(174, 32, 18, 0.25)", // Deep red glass
-  "rgba(140, 26, 15, 0.2)", // Dark red glass
-  "rgba(69, 6, 6, 0.15)", // Very dark red glass
+  "#1E1E1F",
+  "#2A2A2A",
+  "#333333",
+  "#4A1410",
+  "#5C1813",
+  "#2A0A0A",
 ];
+
 
 // -------------------------------------------------------------------
 // MAIN COMPONENT
@@ -249,127 +250,127 @@ export default function ServicesAccordion() {
       </div>
 
       {/* ---------------- ACCORDION CONTAINER ---------------- */}
-      <div className="relative w-full max-w-7xl mx-auto rounded-2xl overflow-hidden shadow-2xl border border-white/10 ">
-        {/* Default dark background - NO OVERLAY */}
+      <div className="relative w-full max-w-7xl mx-auto rounded-2xl overflow-hidden shadow-2xl border border-white/10">
+ {/* SHARED BACKGROUND IMAGE */}
+<div className="absolute inset-0">
+  <div
+    className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+    style={{ backgroundImage: "url('/a3.webp')" }}
+  />
+</div>
 
-        {/* Content wrapper */}
-        <div className="relative z-10">
-          {services.map((service, index) => {
-            const isOpen = activeKey === service.key;
-            const isHovered = hoverIndex === index;
 
-            // Show image **only** when hovered or opened
-            const showImage = isOpen || isHovered;
+  {/* Content wrapper */}
+  <div className="relative z-10">
+    {services.map((service, index) => {
+      const isOpen = activeKey === service.key;
+      const isHovered = hoverIndex === index;
+      const showImage = isOpen || isHovered;
 
-            return (
-              <div
-                key={service.key}
-                onMouseEnter={() => handleMouseEnter(index)}
-                onMouseLeave={handleMouseLeave}
-                className="border-b border-white/10 relative overflow-hidden"
-                style={{ zIndex: isOpen ? 20 : isHovered ? 10 : 1 }}
-              >
-                {/* Background */}
-                <div className="absolute inset-0">
-                  {showImage ? (
-                    <motion.div
-                      className="absolute inset-0 bg-cover bg-center bg-no-repeat"
-                      style={{ backgroundImage: "url('/a3.webp')" }}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.3 }}
-                    />
-                  ) : (
-                    <div
-                      className="absolute inset-0"
-                      style={{
-                        backgroundColor: rowColors[index % rowColors.length],
-                      }}
-                    />
-                  )}
-                </div>
+      return (
+       <div
+  key={service.key}
+  onMouseEnter={() => handleMouseEnter(index)}
+  onMouseLeave={handleMouseLeave}
+  className="relative overflow-hidden isolate"
+  style={{ zIndex: isOpen ? 20 : isHovered ? 10 : 1 }}
+>
 
-                {/* Row content */}
-                <div className="relative z-10">
-                  <button
-                    className="w-full flex items-center justify-between px-4 md:px-7 py-6 text-left hover:bg-white/5 transition-colors duration-200 cursor-pointer"
-                    onClick={() => handleAccordionToggle(service.key)}
-                  >
-                    <div className="flex items-center gap-4">
-                      <div
-                        className={`w-2 h-8 rounded-full transition-all duration-200 ${
-                          isOpen
-                            ? "bg-red-500 shadow-lg shadow-red-500/50"
-                            : isHovered
-                            ? "bg-red-500/80"
-                            : "bg-red-500/50"
-                        }`}
-                      />
-                      <span className="md:text-2xl text-lg font-semibold text-white tracking-wide">
-                        {service.title}
-                      </span>
-                    </div>
+{/* ROW BACKGROUND */}
+<div className="absolute inset-0 overflow-hidden">
+  {/* ROW COLOR MASK — hides image by default */}
+  <motion.div
+    className="absolute inset-0"
+    animate={{ opacity: showImage ? 0 : 1 }}
+    transition={{ duration: 0.25 }}
+    style={{
+      backgroundColor: rowColors[index % rowColors.length],
+    }}
+  />
+</div>
 
-                    <div className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors duration-200">
-                      <ChevronDown
-                        className={`text-white transition-transform duration-200 ${
-                          isOpen ? "rotate-180" : ""
-                        }`}
-                        size={24}
-                      />
-                    </div>
-                  </button>
 
-                  <AnimatePresence>
-                    {isOpen && (
+
+          {/* Row content */}
+          <div className="relative z-10">
+            <button
+              className="w-full flex items-center justify-between px-4 md:px-7 py-6 text-left hover:bg-white/5 transition-colors duration-200 cursor-pointer"
+              onClick={() => handleAccordionToggle(service.key)}
+            >
+              <div className="flex items-center gap-4">
+                <div
+                  className={`w-2 h-8 rounded-full transition-all duration-200 ${
+                    isOpen
+                      ? "bg-red-500 shadow-lg shadow-red-500/50"
+                      : isHovered
+                      ? "bg-red-500/80"
+                      : "bg-red-500/50"
+                  }`}
+                />
+                <span className="md:text-2xl text-lg font-semibold text-white tracking-wide">
+                  {service.title}
+                </span>
+              </div>
+
+              <div className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors duration-200">
+                <ChevronDown
+                  className={`text-white transition-transform duration-200 ${
+                    isOpen ? "rotate-180" : ""
+                  }`}
+                  size={24}
+                />
+              </div>
+            </button>
+
+            <AnimatePresence>
+              {isOpen && (
+                <motion.div
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: "auto", opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+                  className="px-4 md:px-7 pb-7 overflow-hidden"
+                >
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-2">
+                    {service.sections.map((section, i) => (
                       <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: "auto", opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-                        className="px-4 md:px-7 pb-7 overflow-hidden"
+                        key={i}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                          delay: i * 0.04,
+                          duration: 0.2,
+                          ease: [0.4, 0, 0.2, 1],
+                        }}
+                        className="p-5 bg-gradient-to-br from-white/15 to-white/5 border border-white/20 rounded-xl backdrop-blur-sm hover:bg-white/15 transition-all duration-200 group"
                       >
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mt-2">
-                          {service.sections.map((section, i) => (
-                            <motion.div
-                              key={i}
-                              initial={{ opacity: 0, y: 10 }}
-                              animate={{ opacity: 1, y: 0 }}
-                              transition={{
-                                delay: i * 0.04,
-                                duration: 0.2,
-                                ease: [0.4, 0, 0.2, 1],
-                              }}
-                              className="p-5 bg-gradient-to-br from-white/15 to-white/5 border border-white/20 rounded-xl backdrop-blur-sm hover:bg-white/15 transition-all duration-200 group"
-                            >
-                              <div className="flex gap-4">
-                                <div className="w-12 h-12 rounded-lg bg-red-600 flex items-center justify-center shadow group-hover:bg-red-500 group-hover:shadow-lg transition-all duration-200">
-                                  <section.icon className="text-white w-6 h-6" />
-                                </div>
+                        <div className="flex gap-4">
+                          <div className="w-12 h-12 rounded-lg bg-red-600 flex items-center justify-center shadow group-hover:bg-red-500 group-hover:shadow-lg transition-all duration-200">
+                            <section.icon className="text-white w-6 h-6" />
+                          </div>
 
-                                <div className="flex-1">
-                                  <h4 className="text-white text-xl font-semibold mb-2">
-                                    {section.subTitle}
-                                  </h4>
-
-                                  <p className="text-white/90 text-lg leading-relaxed">
-                                    {section.description}
-                                  </p>
-                                </div>
-                              </div>
-                            </motion.div>
-                          ))}
+                          <div className="flex-1">
+                            <h4 className="text-white text-xl font-semibold mb-2">
+                              {section.subTitle}
+                            </h4>
+                            <p className="text-white/90 text-lg leading-relaxed">
+                              {section.description}
+                            </p>
+                          </div>
                         </div>
                       </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              </div>
-            );
-          })}
+                    ))}
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
         </div>
-      </div>
+      );
+    })}
+  </div>
+</div>
+
     </section>
   );
 }
