@@ -85,7 +85,7 @@ export function HeroSection() {
     max-w-7xl
     mx-auto
     pt-12
-    px-6
+    px-2
     lg:px-12
     w-full
     grid
