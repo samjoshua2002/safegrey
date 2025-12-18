@@ -31,7 +31,7 @@ import {
     ChartTooltip,
     ChartTooltipContent,
 } from "@/components/ui/chart"
-import { Area, AreaChart, CartesianGrid, XAxis, AreaProps } from "recharts"
+import { Area, AreaChart, CartesianGrid, XAxis, Tooltip, RadarChart, Radar, PolarGrid, PolarAngleAxis, PolarRadiusAxis } from "recharts"
 import { format, subDays, startOfDay, isSameDay } from "date-fns"
 
 // Types based on the models
@@ -83,12 +83,16 @@ interface IDownload {
 
 const chartConfig = {
     bookings: {
-        label: "Bookings",
-        color: "hsl(var(--chart-1))",
+        label: "Mission Activity",
+        color: "#AE2012",
     },
     messages: {
-        label: "Messages",
-        color: "hsl(var(--chart-2))",
+        label: "Intelligence Telemetry",
+        color: "#404040",
+    },
+    services: {
+        label: "Capabilities Interest",
+        color: "#cc8400",
     },
 } satisfies ChartConfig
 
@@ -137,7 +141,7 @@ export default function DashboardPage() {
 
                 // Calculate Stats
                 const unread = messagesData.filter((m: IMessage) => m.status === 'New').length
-                const uniqueServices = new Set(downloadsData.map((d: IDownload) => d.serviceCategory)).size
+                const uniqueServices = new Set(downloadsData.map((d: IDownload) => d.serviceType)).size
 
                 setStats({
                     totalBookings: bookingsData.length,
@@ -152,7 +156,13 @@ export default function DashboardPage() {
                     const dayLabel = format(date, "EEE")
                     const bookingsCount = bookingsData.filter((b: IBooking) => isSameDay(new Date(b.createdAt), date)).length
                     const messagesCount = messagesData.filter((m: IMessage) => isSameDay(new Date(m.submittedAt), date)).length
-                    return { date: dayLabel, bookings: bookingsCount, messages: messagesCount }
+                    const downloadsCount = downloadsData.filter((d: IDownload) => isSameDay(new Date(d.downloadedAt), date)).length
+                    return {
+                        date: dayLabel,
+                        bookings: bookingsCount,
+                        messages: messagesCount,
+                        services: downloadsCount
+                    }
                 })
                 setChartData(last7Days)
 
@@ -246,49 +256,86 @@ export default function DashboardPage() {
                                     Bookings and messages received over the last 7 days.
                                 </CardDescription>
                             </CardHeader>
-                            <CardContent className="pl-2">
-                                <ChartContainer config={chartConfig} className="h-[300px] w-full">
-                                    <AreaChart data={chartData}>
+                            <CardContent className="h-[350px]  w-full mt-4 relative overflow-hidden">
+                                <div className="absolute inset-0 pointer-events-none opacity-20"
+                                    style={{
+                                        backgroundImage: `radial-gradient(circle at 50% 10%, rgba(174,32,18,0.15) 0%, transparent 70%)`,
+                                    }}
+                                />
+                                <div className="absolute inset-0 pointer-events-none border-radius: 16px; opacity-80" />
+
+                                <ChartContainer config={chartConfig} className="h-full w-full border-radius: 16px; relative z-10 flex items-center justify-center">
+                                    <RadarChart data={chartData} margin={{ top: 0, right: 0, left: 0, bottom: 0 }} outerRadius="90%">
                                         <defs>
-                                            <linearGradient id="fillBookings" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor="#AE2012" stopOpacity={0.8} />
-                                                <stop offset="95%" stopColor="#AE2012" stopOpacity={0.1} />
-                                            </linearGradient>
-                                            <linearGradient id="fillMessages" x1="0" y1="0" x2="0" y2="1">
-                                                <stop offset="5%" stopColor="#262626" stopOpacity={0.8} />
-                                                <stop offset="95%" stopColor="#262626" stopOpacity={0.1} />
-                                            </linearGradient>
+                                            <filter id="radarShadow" height="200%">
+                                                <feGaussianBlur stdDeviation="3" result="blur" />
+                                                <feOffset dx="0" dy="0" result="offsetBlur" />
+                                                <feMerge>
+                                                    <feMergeNode />
+                                                    <feMergeNode in="SourceGraphic" />
+                                                </feMerge>
+                                            </filter>
                                         </defs>
-                                        <CartesianGrid vertical={false} strokeDasharray="3 3" stroke="rgba(255,255,255,0.05)" />
-                                        <XAxis
+
+                                        <PolarGrid
+                                            stroke="rgba(233, 202, 202, 0.14)"
+                                            radialLines={true}
+                                        />
+
+                                        <PolarAngleAxis
                                             dataKey="date"
-                                            tickLine={false}
-                                            axisLine={false}
-                                            tickMargin={8}
-                                            tickFormatter={(value) => value}
-                                            stroke="var(--muted-foreground)"
+                                            tick={{ fill: "rgba(255,255,255,0.3)", fontSize: 10, fontWeight: "bold" }}
                                         />
-                                        <ChartTooltip
-                                            cursor={false}
-                                            content={<ChartTooltipContent indicator="dot" />}
+
+                                        <Tooltip
+                                            content={({ active, payload }) => {
+                                                if (active && payload && payload.length) {
+                                                    return (
+                                                        <div className="bg-[#0f0f10] border border-white/5 p-3 rounded-lg shadow-2xl backdrop-blur-xl border-l-2 border-l-[#AE2012]">
+                                                            <div className="flex flex-col gap-2">
+                                                                <p className="text-[9px] font-black uppercase tracking-widest text-[#AE2012]">Sector Analysis</p>
+                                                                {payload.map((entry: any, index: number) => (
+                                                                    <div key={index} className="flex items-center justify-between gap-6">
+                                                                        <span className="text-[10px] font-bold text-white/50 uppercase">{entry.name}</span>
+                                                                        <span className="text-sm font-black text-white">{entry.value}</span>
+                                                                    </div>
+                                                                ))}
+                                                            </div>
+                                                        </div>
+                                                    );
+                                                }
+                                                return null;
+                                            }}
                                         />
-                                        <Area
+
+                                        <Radar
+                                            name="Intelligence Telemetry"
                                             dataKey="messages"
-                                            type="natural"
-                                            fill="url(#fillMessages)"
-                                            fillOpacity={0.4}
                                             stroke="#404040"
-                                            stackId="a"
+                                            fill="#404040"
+                                            fillOpacity={0.2}
+                                            strokeWidth={1}
                                         />
-                                        <Area
+
+                                        <Radar
+                                            name="Capabilities Interest"
+                                            dataKey="services"
+                                            stroke="#cc8400"
+                                            fill="#cc8400"
+                                            fillOpacity={0.3}
+                                            strokeWidth={2}
+                                        />
+
+                                        <Radar
+                                            name="Mission Activity"
                                             dataKey="bookings"
-                                            type="natural"
-                                            fill="url(#fillBookings)"
-                                            fillOpacity={0.4}
                                             stroke="#AE2012"
-                                            stackId="a"
+                                            fill="#AE2012"
+                                            fillOpacity={0.5}
+                                            strokeWidth={3}
+                                            filter="url(#radarShadow)"
                                         />
-                                    </AreaChart>
+                                    </RadarChart>
                                 </ChartContainer>
                             </CardContent>
                         </Card>
@@ -449,8 +496,8 @@ export default function DashboardPage() {
                                                 <Shield className="h-6 w-6" />
                                             </div>
                                             <div>
-                                                <h3 className="font-semibold text-[var(--foreground)]">{download.serviceCategory}</h3>
-                                                <p className="text-xs text-[var(--muted-foreground)]">{download.serviceType}</p>
+                                                <h3 className="font-semibold text-[var(--foreground)]">{download.serviceType}</h3>
+                                                <p className="text-xs text-[var(--muted-foreground)]">{download.serviceCategory}</p>
                                             </div>
                                         </div>
 
