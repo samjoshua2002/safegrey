@@ -58,7 +58,7 @@ export default function DashboardLayout({
     ]
 
     return (
-        <div className="min-h-screen bg-[var(--theme-dark-base)] flex">
+        <div className="h-screen bg-[var(--theme-dark-base)] flex overflow-hidden">
             {/* Mobile Sidebar Toggle */}
             <Button
                 variant="ghost"
@@ -72,18 +72,17 @@ export default function DashboardLayout({
             {/* Sidebar */}
             <aside
                 className={cn(
-                    "fixed inset-y-0 left-0 z-40 w-64 bg-[var(--theme-dark-secondary)]/80 backdrop-blur-md border-r border-[var(--theme-border)] transform transition-transform duration-200 ease-in-out md:translate-x-0 md:static md:inset-auto md:flex md:flex-col",
+                    "fixed inset-y-0 left-0 z-40 w-64 bg-[var(--theme-dark-secondary)] border-r border-[var(--theme-border)] transform transition-transform duration-200 ease-in-out md:translate-x-0 flex flex-col",
                     isSidebarOpen ? "translate-x-0" : "-translate-x-full"
                 )}
             >
-                <div className="p-6 border-b border-[var(--theme-border)]">
-                    <Link href="/dashboard" className="flex items-center gap-2 font-bold text-xl text-[var(--foreground)]">
-                        <LayoutDashboard className="h-6 w-6 text-[var(--theme-accent)]" />
-                        <span>Admin Panel</span>
+                <div className="p-6">
+                    <Link href="/dashboard" className="flex items-center gap-3">
+                        <img src="/logo.png" alt="Logo" className="h-12 w-auto object-contain" />
                     </Link>
                 </div>
 
-                <nav className="flex-1 p-4 space-y-2">
+                <nav className="flex-1 p-4 space-y-2 overflow-y-auto custom-scrollbar">
                     {navItems.map((item) => {
                         const Icon = item.icon
                         const isActive = pathname === item.href
@@ -106,7 +105,7 @@ export default function DashboardLayout({
                     })}
                 </nav>
 
-                <div className="p-4 border-t border-[var(--theme-border)]">
+                <div className="p-4 border-t border-[var(--theme-border)] mt-auto">
                     <Button
                         variant="ghost"
                         className="w-full justify-start gap-3 text-[var(--muted-foreground)] hover:text-red-500 hover:bg-red-500/10 transition-colors"
@@ -118,8 +117,11 @@ export default function DashboardLayout({
                 </div>
             </aside>
 
+            {/* Spacer for Desktop */}
+            <div className="hidden md:block w-64 shrink-0" />
+
             {/* Main Content */}
-            <main className="flex-1 p-8 md:p-12 overflow-y-auto pt-16 md:pt-12 bg-[var(--theme-dark-base)]">
+            <main className="flex-1 p-8 md:p-12 overflow-y-auto pt-16 md:pt-12 bg-[var(--theme-dark-base)] h-screen">
                 {children}
             </main>
         </div>

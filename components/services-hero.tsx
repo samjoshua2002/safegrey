@@ -21,51 +21,51 @@ export function ServicesHero({ onServiceSelect }: ServicesHeroProps) {
     {
       id: "security-assessment",
       title: "Security Assessments",
-     
+
       icon: Shield,
-      
+
     },
     {
       id: "posture-assessment",
       title: "Security Posture",
-     
+
       icon: Target,
-      
+
     },
     {
       id: "cloud-security",
       title: "Cloud Security",
-     
+
       icon: CloudCog,
-      
+
     },
     {
       id: "manage-security",
       title: "Managed Security",
-     
+
       icon: ShieldAlert,
-      
+
     },
-     {
+    {
       id: "risk-management",
       title: "Risk Management",
-     
+
       icon: GrRisk,
-      
+
     },
-     {
+    {
       id: "security-enablement",
       title: "Security Enablement",
-     
+
       icon: Lock,
-      
+
     }
-    
+
   ]
 
   return (
     <section className="relative flex items-center justify-center overflow-hidden pt-16">
-     
+
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mt-10 w-full">
         <div
@@ -73,18 +73,18 @@ export function ServicesHero({ onServiceSelect }: ServicesHeroProps) {
         >
           {/* Header Section */}
           <div className="text-center mb-2">
-           
 
-   
+
+
             <h1 className="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-            
-              
+
+
               <span className="text-white">Cybersecurity Services</span>
-         
-             
+
+
             </h1>
 
-         
+
             <p className="text-xl md:text-2xl text-muted-foreground mb-8 max-w-3xl mx-auto leading-relaxed">
               From proactive threat hunting to rapid incident response, we provide comprehensive cybersecurity solutions
               tailored to your business needs.
@@ -118,11 +118,11 @@ export function ServicesHero({ onServiceSelect }: ServicesHeroProps) {
                 })}
               </TabsList>
 
-           
+
             </Tabs>
           </div>
 
-         
+
         </div>
       </div>
     </section>

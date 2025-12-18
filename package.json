@@ -107,8 +107,5 @@
     "tailwindcss": "^4.1.9",
     "tw-animate-css": "1.3.3",
     "typescript": "^5"
-  },
-  "optionalDependencies": {
-    "@next/swc-darwin-arm64": "^16.0.8"
   }
 }

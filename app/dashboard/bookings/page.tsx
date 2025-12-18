@@ -1,11 +1,13 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 import { Calendar, Video, Clock, Globe, Mail, User } from "lucide-react";
 import Link from "next/link";
+import { Label } from "@/components/ui/label";
+import { Button } from "@/components/ui/button";
 import {
     Table,
     TableBody,
@@ -14,6 +16,13 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+} from "@/components/ui/dialog";
 
 interface Booking {
     _id: string;
@@ -31,6 +40,7 @@ interface Booking {
 export default function BookingsPage() {
     const [bookings, setBookings] = useState<Booking[]>([]);
     const [loading, setLoading] = useState(true);
+    const [selectedBooking, setSelectedBooking] = useState<Booking | null>(null);
 
     useEffect(() => {
         fetchBookings();
@@ -78,7 +88,7 @@ export default function BookingsPage() {
                             <TableHead className="text-[var(--muted-foreground)]">Topic</TableHead>
                             <TableHead className="text-[var(--muted-foreground)]">Date & Time</TableHead>
                             <TableHead className="text-[var(--muted-foreground)]">Meeting</TableHead>
-                            <TableHead className="text-[var(--muted-foreground)]">Details</TableHead>
+                            <TableHead className="text-right text-[var(--muted-foreground)]">Action</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -90,7 +100,11 @@ export default function BookingsPage() {
                             </TableRow>
                         ) : (
                             bookings.map((booking) => (
-                                <TableRow key={booking._id} className="border-[var(--theme-border)] hover:bg-[var(--theme-dark-base)]/50 transition-colors">
+                                <TableRow
+                                    key={booking._id}
+                                    className="border-[var(--theme-border)] hover:bg-[var(--theme-dark-base)]/50 transition-colors cursor-pointer"
+                                    onClick={() => setSelectedBooking(booking)}
+                                >
                                     <TableCell>
                                         <div className="flex flex-col">
                                             <span className="font-medium text-[var(--foreground)] flex items-center gap-2">
@@ -116,30 +130,16 @@ export default function BookingsPage() {
                                                 <Clock className="w-3 h-3" />
                                                 {booking.time}
                                             </span>
-                                            <span className="flex items-center gap-1.5 text-xs opacity-70">
-                                                <Globe className="w-3 h-3" />
-                                                {booking.timezone}
-                                            </span>
                                         </div>
                                     </TableCell>
                                     <TableCell>
-                                        <Link
-                                            href={booking.meetingLink}
-                                            target="_blank"
-                                            className="inline-flex items-center gap-2 text-sm text-[var(--theme-accent)] hover:underline"
-                                        >
+                                        <div className="flex items-center gap-2 text-sm text-[var(--theme-accent)]">
                                             <Video className="w-4 h-4" />
                                             Join Meet
-                                        </Link>
+                                        </div>
                                     </TableCell>
-                                    <TableCell>
-                                        {booking.notes ? (
-                                            <div className="max-w-[200px] truncate text-sm text-[var(--muted-foreground)]" title={booking.notes}>
-                                                {booking.notes}
-                                            </div>
-                                        ) : (
-                                            <span className="text-sm text-[var(--muted-foreground)]/50 italic">None</span>
-                                        )}
+                                    <TableCell className="text-right">
+                                        <Button variant="ghost" size="sm" className="text-xs">View Details</Button>
                                     </TableCell>
                                 </TableRow>
                             ))
@@ -147,6 +147,82 @@ export default function BookingsPage() {
                     </TableBody>
                 </Table>
             </div>
+
+            {/* Detailed View Dialog */}
+            <Dialog open={!!selectedBooking} onOpenChange={(open) => !open && setSelectedBooking(null)}>
+                <DialogContent className="sm:max-w-[500px] bg-[var(--theme-dark-secondary)] border-[var(--theme-border)] text-[var(--foreground)]">
+                    <DialogHeader>
+                        <DialogTitle className="flex items-center gap-2">
+                            <Calendar className="h-5 w-5 text-[var(--theme-accent)]" />
+                            Booking Details
+                        </DialogTitle>
+                        <DialogDescription className="text-[var(--muted-foreground)]">
+                            Full information for scheduled assessment
+                        </DialogDescription>
+                    </DialogHeader>
+                    {selectedBooking && (
+                        <div className="space-y-6 pt-4">
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-1">
+                                    <Label className="text-xs text-[var(--muted-foreground)]">Requestor</Label>
+                                    <div className="text-sm font-medium">{selectedBooking.name}</div>
+                                </div>
+                                <div className="space-y-1">
+                                    <Label className="text-xs text-[var(--muted-foreground)]">Topic</Label>
+                                    <div>
+                                        <Badge className="bg-[var(--theme-accent)] text-white">
+                                            {selectedBooking.topic}
+                                        </Badge>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="space-y-1">
+                                <Label className="text-xs text-[var(--muted-foreground)]">Email Address</Label>
+                                <div className="flex items-center gap-2 text-sm">
+                                    <Mail className="h-3 w-3 text-[var(--theme-accent)]" />
+                                    {selectedBooking.email}
+                                </div>
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div className="space-y-1">
+                                    <Label className="text-xs text-[var(--muted-foreground)]">Date</Label>
+                                    <div className="flex items-center gap-2 text-sm">
+                                        <Calendar className="h-3 w-3 text-[var(--theme-accent)]" />
+                                        {format(new Date(selectedBooking.date), "PPP")}
+                                    </div>
+                                </div>
+                                <div className="space-y-1">
+                                    <Label className="text-xs text-[var(--muted-foreground)]">Time</Label>
+                                    <div className="flex items-center gap-2 text-sm text-[var(--theme-accent)] font-mono">
+                                        <Clock className="h-3 w-3" />
+                                        {selectedBooking.time} ({selectedBooking.timezone})
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div className="space-y-2">
+                                <Label className="text-xs text-[var(--muted-foreground)]">Notes / Background</Label>
+                                <div className="p-4 rounded-lg bg-[var(--theme-dark-base)]/50 border border-[var(--theme-border)] text-sm whitespace-pre-wrap">
+                                    {selectedBooking.notes || "No additional notes provided."}
+                                </div>
+                            </div>
+
+                            <div className="flex justify-end gap-3 pt-4 border-t border-[var(--theme-border)]">
+                                <Button variant="outline" onClick={() => setSelectedBooking(null)} className="h-9 border-[var(--theme-border)]">
+                                    Close
+                                </Button>
+                                <Button asChild className="h-9 bg-[var(--theme-accent)] hover:bg-[var(--theme-accent)]/90 text-white">
+                                    <Link href={selectedBooking.meetingLink} target="_blank">
+                                        <Video className="w-4 h-4 mr-2" /> Join Meeting
+                                    </Link>
+                                </Button>
+                            </div>
+                        </div>
+                    )}
+                </DialogContent>
+            </Dialog>
         </div>
     );
 }
