@@ -164,18 +164,26 @@ export default function RootLayout({
   };
 
   return (
-    <html lang="en" className="dark">
-      <body className={`${satoshi.variable} antialiased`}>
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-        />
-        <CursorGlow />
-        <CookieConsent />
-        <Suspense fallback={null}>{children}</Suspense>
-        <Toaster />
-        <Analytics />
-      </body>
-    </html>
+   <html lang="en" className="dark">
+  <body className={`${satoshi.variable} antialiased`}>
+    <script
+      type="application/ld+json"
+      dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+    />
+
+    {/* APP CONTENT (will blur & lock) */}
+    <div id="app-root">
+      <CursorGlow />
+      <CookieConsent />
+      <Suspense fallback={null}>{children}</Suspense>
+      <Toaster />
+      <Analytics />
+    </div>
+
+    {/* MODAL PORTAL TARGET */}
+    <div id="modal-root" />
+  </body>
+</html>
+
   );
 }

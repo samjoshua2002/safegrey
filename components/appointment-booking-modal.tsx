@@ -680,7 +680,7 @@ export function AppointmentModal({ onClose }: BookingSchedulerProps) {
                             Available times for <span className="text-[var(--theme-accent)]">{selectedDate.toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
                           </div>
 
-                          <div className="space-y-2 flex-1 overflow-y-auto pr-1 max-h-[300px] custom-scrollbar">
+                          <div className="space-y-2 flex-1 overflow-y-auto max-h-[300px] custom-scrollbar px-2 sm:px-3 md:px-4 lg:px-1">
                             {TIME_SLOTS.map((time, index) => (
                               <motion.button
                                 key={time}

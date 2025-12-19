@@ -1,7 +1,7 @@
-// components/appointment-modal-wrapper.tsx
 "use client"
 
-import { useState, useEffect } from "react"
+import { useEffect } from "react"
+import { createPortal } from "react-dom"
 import { X } from "lucide-react"
 import { AppointmentModal } from "./appointment-booking-modal"
 
@@ -10,60 +10,92 @@ interface ModalWrapperProps {
   onClose: () => void
 }
 
-export function AppointmentModalWrapper({ isOpen, onClose }: ModalWrapperProps) {
+export function AppointmentModalWrapper({
+  isOpen,
+  onClose,
+}: ModalWrapperProps) {
+  /* ============================
+     BODY SCROLL LOCK (NO JUMP)
+  ============================ */
   useEffect(() => {
+    if (!isOpen) return
+
+    const scrollY = window.scrollY
+
+    document.body.style.position = "fixed"
+    document.body.style.top = `-${scrollY}px`
+    document.body.style.left = "0"
+    document.body.style.right = "0"
+    document.body.style.width = "100%"
+
+    return () => {
+      document.body.style.position = ""
+      document.body.style.top = ""
+      document.body.style.left = ""
+      document.body.style.right = ""
+      document.body.style.width = ""
+
+      window.scrollTo(0, scrollY)
+    }
+  }, [isOpen])
+
+  /* ============================
+     BLUR + DISABLE APP ROOT
+  ============================ */
+  useEffect(() => {
+    const appRoot = document.getElementById("app-root")
+    if (!appRoot) return
+
     if (isOpen) {
-      document.body.style.overflow = 'hidden'
-      // Add a class to body to prevent scrolling
-      document.body.classList.add('modal-open')
+      appRoot.classList.add("modal-active")
     } else {
-      document.body.style.overflow = 'unset'
-      document.body.classList.remove('modal-open')
+      appRoot.classList.remove("modal-active")
     }
 
     return () => {
-      document.body.style.overflow = 'unset'
-      document.body.classList.remove('modal-open')
+      appRoot.classList.remove("modal-active")
     }
   }, [isOpen])
 
   if (!isOpen) return null
 
-  return (
-    <div className="fixed inset-0 z-[9999] bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+  /* ============================
+     PORTAL RENDER
+  ============================ */
+  return createPortal(
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center">
+      {/* Backdrop */}
       <div
-        className="fixed inset-0"
+        className="absolute inset-0 bg-black/70 backdrop-blur-md"
         onClick={onClose}
-        aria-hidden="true"
       />
 
-      {/* Modal container - Reduced height, no outer overflow */}
+      {/* Modal */}
       <div
-        className="relative w-full max-w-6xl h-auto max-h-[85vh] bg-[var(--theme-dark-base)] border border-[var(--theme-border)]/30 rounded-2xl shadow-2xl overflow-hidden flex flex-col"
+        className="relative w-full max-w-6xl max-h-[85vh] bg-[var(--theme-dark-base)] border border-[var(--theme-border)]/30 rounded-2xl shadow-2xl flex flex-col md:mx-4"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Close button */}
+        {/* Close */}
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-50 p-2 rounded-full bg-black/40 hover:bg-black/60 text-white transition-colors backdrop-blur-md border border-white/10"
-          aria-label="Close modal"
+          className="absolute top-4 right-4 z-50 p-2 rounded-full bg-black/40 hover:bg-[var(--primary)]/60 text-white cursor-pointer"
         >
           <X className="h-4 w-4" />
         </button>
 
-        {/* Header - Compact */}
-        <div className="p-6 bg-gradient-to-r   border-b border-[var(--theme-border)]/30 shrink-0 relative z-10 text-left">
-          <h2 className="text-2xl font-bold bg-clip-text text-white">
+        {/* Header */}
+        <div className="p-6 border-b border-[var(--theme-border)]/30 shrink-0">
+          <h2 className="lg:text-2xl text-xl font-bold text-white">
             Schedule Your Free Security Assessment
           </h2>
-         
         </div>
 
-        {/* Main content - Scrollable only inside */}
-        <div className="flex-1 overflow-y-auto custom-scrollbar bg-[var(--theme-dark-base)]">
+        {/* Scrollable Content */}
+        <div className="flex-1 overflow-y-auto custom-scrollbar">
           <AppointmentModal onClose={onClose} />
         </div>
       </div>
-    </div>
+    </div>,
+    document.getElementById("modal-root")!
   )
 }

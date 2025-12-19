@@ -394,3 +394,12 @@ body.modal-open {
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
+
+.modal-active {
+  filter: blur(6px);
+  pointer-events: none;
+}
+
+.modal-active * {
+  pointer-events: none;
+}
