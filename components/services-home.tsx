@@ -344,7 +344,8 @@ export default function ServicesAccordion() {
                         }}
                         className="p-5 bg-gradient-to-br from-white/15 to-white/5 border border-white/20 rounded-xl backdrop-blur-sm hover:bg-white/15 transition-all duration-200 group"
                       >
-                        <div className="flex gap-4">
+                       <div className="flex flex-col lg:flex-row gap-4 w-full">
+
                           <div className="w-12 h-12 rounded-lg bg-red-600 flex items-center justify-center shadow group-hover:bg-red-500 group-hover:shadow-lg transition-all duration-200">
                             <section.icon className="text-white w-6 h-6" />
                           </div>
