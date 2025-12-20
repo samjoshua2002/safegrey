@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
                             <p>Your account has been authorized. To finalize your access, please click the link below and use your One Time Password (OTP) to set your secure permanent password.</p>
                             
                             <div style="margin: 30px 0; text-align: center;">
-                                <a href="http://localhost:3000/dashboard/login" style="background-color: #AE2012; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">Login to Setup Account</a>
+                                <a href="${process.env.NEXT_PUBLIC_APP_URL || 'https://www.safegrey.com'}/dashboard/login" style="background-color: #AE2012; color: white; padding: 12px 24px; text-decoration: none; border-radius: 6px; font-weight: bold;">Login to Setup Account</a>
                             </div>
 
                             <p style="margin-bottom: 5px;">Your One Time Password:</p>
