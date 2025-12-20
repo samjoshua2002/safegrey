@@ -3,11 +3,13 @@
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { format } from "date-fns"
-import { Loader2, CheckCircle2, XCircle, ShieldAlert, Mail } from "lucide-react"
+import { Loader2, CheckCircle2, XCircle, ShieldAlert, Mail, UserPlus, User } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
 import {
     Table,
     TableBody,
@@ -16,6 +18,14 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table"
+import {
+    Dialog,
+    DialogContent,
+    DialogHeader,
+    DialogTitle,
+    DialogDescription,
+    DialogFooter,
+} from "@/components/ui/dialog"
 import { toast } from "sonner"
 
 interface IUser {
@@ -34,6 +44,11 @@ export default function UserAuthorizationPage() {
     const [loading, setLoading] = useState(true)
     const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set())
     const [processing, setProcessing] = useState(false)
+
+    // Manual Add User State
+    const [isAddUserOpen, setIsAddUserOpen] = useState(false)
+    const [newUser, setNewUser] = useState({ name: "", email: "" })
+    const [isAddingUser, setIsAddingUser] = useState(false)
 
     async function fetchUsers() {
         try {
@@ -99,6 +114,36 @@ export default function UserAuthorizationPage() {
         }
     }
 
+    const handleAddUser = async (e: React.FormEvent) => {
+        e.preventDefault()
+        if (!newUser.name || !newUser.email) return
+
+        setIsAddingUser(true)
+        try {
+            const res = await fetch("/api/dashboard/add-user", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(newUser)
+            })
+
+            const data = await res.json()
+
+            if (!res.ok) {
+                throw new Error(data.error || "Failed to add user")
+            }
+
+            toast.success("User added and authorized successfully!")
+            setIsAddUserOpen(false)
+            setNewUser({ name: "", email: "" })
+            fetchUsers() // Refresh list
+        } catch (error) {
+            console.error("Add user error:", error)
+            toast.error(error instanceof Error ? error.message : "Failed to add user")
+        } finally {
+            setIsAddingUser(false)
+        }
+    }
+
     if (loading) {
         return (
             <div className="flex h-[80vh] w-full items-center justify-center">
@@ -109,11 +154,19 @@ export default function UserAuthorizationPage() {
 
     return (
         <div className="flex min-h-screen flex-col space-y-6 lg:p-4">
-            <div className="flex flex-col space-y-2">
-                <h1 className="text-3xl font-bold tracking-tight text-[var(--foreground)]">User Authorization</h1>
-                <p className="text-[var(--muted-foreground)]">
-                    Approve or reject user account requests. Approved users will receive an OTP to set their password.
-                </p>
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                <div className="space-y-2">
+                    <h1 className="text-3xl font-bold tracking-tight text-[var(--foreground)]">User Authorization</h1>
+                    <p className="text-[var(--muted-foreground)]">
+                        Approve requests or manually add new users.
+                    </p>
+                </div>
+                <Button
+                    onClick={() => setIsAddUserOpen(true)}
+                    className="bg-[var(--theme-accent)] hover:bg-[var(--theme-accent)]/90 text-white"
+                >
+                    <UserPlus className="mr-2 h-4 w-4" /> Add Manual User
+                </Button>
             </div>
 
             <Card className="bg-[var(--theme-dark-secondary)]/30 border-[var(--theme-border)]">
@@ -208,6 +261,76 @@ export default function UserAuthorizationPage() {
                     </Table>
                 </CardContent>
             </Card>
+
+            {/* Manual User Dialog */}
+            <Dialog open={isAddUserOpen} onOpenChange={setIsAddUserOpen}>
+                <DialogContent className="bg-[var(--theme-dark-secondary)] border-[var(--theme-border)] text-[var(--foreground)] sm:max-w-[425px]">
+                    <DialogHeader>
+                        <DialogTitle>Add New User</DialogTitle>
+                        <DialogDescription className="text-[var(--muted-foreground)]">
+                            Create a new user manually. They will be automatically approved and sent an OTP.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <form onSubmit={handleAddUser} className="space-y-4 pt-4">
+                        <div className="space-y-2">
+                            <Label htmlFor="name">Full Name</Label>
+                            <div className="relative">
+                                <User className="absolute left-3 top-2.5 h-4 w-4 text-[var(--muted-foreground)]" />
+                                <Input
+                                    id="name"
+                                    placeholder="John Doe"
+                                    className="pl-9 bg-[var(--theme-dark-base)]/50 border-[var(--theme-border)]"
+                                    value={newUser.name}
+                                    onChange={(e) => setNewUser({ ...newUser, name: e.target.value })}
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <div className="space-y-2">
+                            <Label htmlFor="email">Email Address</Label>
+                            <div className="relative">
+                                <Mail className="absolute left-3 top-2.5 h-4 w-4 text-[var(--muted-foreground)]" />
+                                <Input
+                                    id="email"
+                                    type="email"
+                                    placeholder="john@example.com"
+                                    className="pl-9 bg-[var(--theme-dark-base)]/50 border-[var(--theme-border)]"
+                                    value={newUser.email}
+                                    onChange={(e) => setNewUser({ ...newUser, email: e.target.value })}
+                                    required
+                                />
+                            </div>
+                        </div>
+                        <DialogFooter className="pt-4">
+                            <Button
+                                type="button"
+                                variant="ghost"
+                                onClick={() => setIsAddUserOpen(false)}
+                                className="hover:bg-[var(--theme-dark-base)]"
+                            >
+                                Cancel
+                            </Button>
+                            <Button
+                                type="submit"
+                                disabled={isAddingUser}
+                                className="bg-[var(--theme-accent)] hover:bg-[var(--theme-accent)]/90 text-white"
+                            >
+                                {isAddingUser ? (
+                                    <>
+                                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                        Adding...
+                                    </>
+                                ) : (
+                                    <>
+                                        <UserPlus className="mr-2 h-4 w-4" />
+                                        Add User
+                                    </>
+                                )}
+                            </Button>
+                        </DialogFooter>
+                    </form>
+                </DialogContent>
+            </Dialog>
         </div>
     )
 }
