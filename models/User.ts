@@ -8,6 +8,10 @@ export interface IUser extends Document {
     phone?: string;
     company?: string;
     designation?: string;
+    password?: string;
+    status: 'pending' | 'approved' | 'rejected';
+    otp?: string;
+    otpExpires?: Date;
     createdAt: Date;
     updatedAt: Date;
 }
@@ -26,6 +30,14 @@ const UserSchema: Schema = new Schema({
     phone: { type: String, trim: true },
     company: { type: String, trim: true },
     designation: { type: String, trim: true },
+    password: { type: String, select: false },
+    status: {
+        type: String,
+        enum: ['pending', 'approved', 'rejected'],
+        default: 'pending'
+    },
+    otp: { type: String, select: false },
+    otpExpires: { type: Date, select: false },
 }, {
     timestamps: true,
 });

@@ -1,22 +1,46 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Lock, Mail, AlertCircle, ArrowRight } from "lucide-react"
+import { Lock, Mail, AlertCircle, ArrowRight, ShieldCheck, KeyRound, RefreshCw } from "lucide-react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 
 export default function LoginPage() {
+    const [activeTab, setActiveTab] = useState("login")
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
+
+    // Setup State
+    const [setupEmail, setSetupEmail] = useState("")
+    const [otp, setOtp] = useState("")
+    const [newPassword, setNewPassword] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
+    const [captchaInput, setCaptchaInput] = useState("")
+    const [captchaChallenge, setCaptchaChallenge] = useState({ num1: 0, num2: 0 })
+
     const [error, setError] = useState("")
+    const [successMessage, setSuccessMessage] = useState("")
     const [isLoading, setIsLoading] = useState(false)
     const router = useRouter()
 
-    const handleSubmit = async (e: React.FormEvent) => {
+    useEffect(() => {
+        generateCaptcha()
+    }, [])
+
+    const generateCaptcha = () => {
+        setCaptchaChallenge({
+            num1: Math.floor(Math.random() * 10),
+            num2: Math.floor(Math.random() * 10)
+        })
+        setCaptchaInput("")
+    }
+
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault()
         setIsLoading(true)
         setError("")
@@ -42,78 +66,255 @@ export default function LoginPage() {
         }
     }
 
+    const handleSetup = async (e: React.FormEvent) => {
+        e.preventDefault()
+        setError("")
+        setSuccessMessage("")
+
+        // Basic Validation
+        if (newPassword !== confirmPassword) {
+            setError("Passwords do not match")
+            return
+        }
+
+        if (newPassword.length < 6) {
+            setError("Password must be at least 6 characters")
+            return
+        }
+
+        const sum = captchaChallenge.num1 + captchaChallenge.num2
+        if (parseInt(captchaInput) !== sum) {
+            setError("Incorrect captcha verification")
+            generateCaptcha() // Reset captcha on failure
+            return
+        }
+
+        setIsLoading(true)
+
+        try {
+            const res = await fetch("/api/auth/complete-setup", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    email: setupEmail,
+                    otp,
+                    newPassword
+                }),
+            })
+
+            const data = await res.json()
+
+            if (res.ok) {
+                setSuccessMessage("Account setup successful! Redirecting to dashboard...")
+                // Wait briefly for user to see success message, then redirect
+                setTimeout(() => {
+                    router.push("/dashboard")
+                    router.refresh()
+                }, 1500)
+            } else {
+                setError(data.error || "Setup failed")
+            }
+        } catch (err) {
+            setError("Something went wrong. Please try again.")
+        } finally {
+            setIsLoading(false)
+        }
+    }
+
     return (
-        <div className="min-h-screen flex items-center justify-center bg-[var(--theme-dark-base)] p-4 relative overflow-hidden">
-            {/* Background Gradients */}
-            <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-[var(--theme-accent)]/5 blur-[120px]" />
-            <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-[var(--theme-accent)]/5 blur-[120px]" />
+        <div className="min-h-screen w-full flex bg-black text-[var(--foreground)] overflow-hidden">
 
-            <Card className="w-full max-w-md border border-[var(--theme-border)] bg-[var(--theme-dark-secondary)]/50 backdrop-blur-xl shadow-2xl relative z-10">
-                <CardHeader className="space-y-2 text-center pb-8">
-                    <div className="mx-auto w-12 h-12 rounded-full bg-[var(--theme-accent)]/10 flex items-center justify-center mb-4 border border-[var(--theme-accent)]/20 shadow-[0_0_15px_rgba(174,32,18,0.3)]">
-                        <Lock className="h-6 w-6 text-[var(--theme-accent)]" />
-                    </div>
-                    <CardTitle className="text-3xl font-bold text-[var(--foreground)] tracking-tight">Admin Portal</CardTitle>
-                    <CardDescription className="text-[var(--muted-foreground)] text-base">
-                        Secure access for authorized personnel only
-                    </CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <form onSubmit={handleSubmit} className="space-y-6">
-                        <div className="space-y-2">
-                            <Label htmlFor="email" className="text-[var(--foreground)] font-medium">Email Address</Label>
-                            <div className="relative group">
-                                <Mail className="absolute left-3 top-3 h-4 w-4 text-[var(--muted-foreground)] group-focus-within:text-[var(--theme-accent)] transition-colors" />
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    placeholder="admin@safegrey.com"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className="pl-10 h-11 bg-[var(--theme-dark-base)]/50 border-[var(--theme-border)] text-[var(--foreground)] focus:border-[var(--theme-accent)] focus:ring-[var(--theme-accent)]/20 transition-all"
-                                    required
-                                />
-                            </div>
+            {/* Left Side - Image */}
+            <div className="hidden lg:flex w-1/2 relative bg-black items-center justify-center overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
+                <div className="absolute inset-0 bg-gradient-to-r from-black/20 to-transparent z-10" />
+                <img
+                    src="/sssss.png"
+                    alt="SafeGrey Security"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 hover:scale-105"
+                />
+
+
+            </div>
+
+            {/* Right Side - Form */}
+            <div className="w-full lg:w-1/2 flex items-center justify-center p-4 sm:p-8 relative">
+                {/* Decorative background elements for form side */}
+                <div className="absolute top-[-10%] right-[-10%] w-[30%] h-[30%] rounded-full bg-[var(--theme-accent)]/5 blur-[100px]" />
+                <div className="absolute bottom-[-10%] left-[-10%] w-[30%] h-[30%] rounded-full bg-[var(--theme-accent)]/5 blur-[100px]" />
+
+                <Card className="w-full max-w-md border-0 sm:border border-[var(--theme-border)] bg-transparent sm:bg-[var(--theme-dark-secondary)]/30 sm:backdrop-blur-xl shadow-none sm:shadow-2xl relative z-10">
+                    <CardHeader className="space-y-2 text-center pb-6">
+                        <div className="lg:hidden mx-auto w-12 h-12 rounded-full bg-[var(--theme-accent)]/10 flex items-center justify-center  border border-[var(--theme-accent)]/20 shadow-[0_0_15px_rgba(174,32,18,0.3)]">
+                            <Lock className="h-6 w-6 text-[var(--theme-accent)]" />
                         </div>
-                        <div className="space-y-2">
-                            <Label htmlFor="password" className="text-[var(--foreground)] font-medium">Password</Label>
-                            <div className="relative group">
-                                <Lock className="absolute left-3 top-3 h-4 w-4 text-[var(--muted-foreground)] group-focus-within:text-[var(--theme-accent)] transition-colors" />
-                                <Input
-                                    id="password"
-                                    type="password"
-                                    placeholder="••••••••"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    className="pl-10 h-11 bg-[var(--theme-dark-base)]/50 border-[var(--theme-border)] text-[var(--foreground)] focus:border-[var(--theme-accent)] focus:ring-[var(--theme-accent)]/20 transition-all"
-                                    required
-                                />
-                            </div>
-                        </div>
+                        <CardTitle className="text-3xl font-bold tracking-tight">SafeGrey Login</CardTitle>
 
-                        {error && (
-                            <Alert variant="destructive" className="bg-red-900/20 border-red-900/50 text-red-200 animate-in slide-in-from-top-2">
-                                <AlertCircle className="h-4 w-4" />
-                                <AlertDescription>{error}</AlertDescription>
-                            </Alert>
-                        )}
+                    </CardHeader>
+                    <CardContent>
+                        <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+                            <TabsList className="grid w-full grid-cols-2 mb-6 bg-[var(--theme-dark-base)]/50">
+                                <TabsTrigger value="login">Login</TabsTrigger>
+                                <TabsTrigger value="setup">Account Setup</TabsTrigger>
+                            </TabsList>
 
-                        <Button
-                            type="submit"
-                            className="w-full h-11 bg-[var(--primary)] text-[var(--foreground)] hover:bg-[var(--primary)]/90 glow-accent transition-all duration-300 group"
-                            disabled={isLoading}
-                        >
-                            {isLoading ? (
-                                "Authenticating..."
-                            ) : (
-                                <span className="flex items-center justify-center gap-2">
-                                    Access Dashboard <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-                                </span>
-                            )}
-                        </Button>
-                    </form>
-                </CardContent>
-            </Card>
+                            <TabsContent value="login">
+                                <form onSubmit={handleLogin} className="space-y-6 animate-in slide-in-from-left-4 duration-300">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="email" className="font-medium">Email Address</Label>
+                                        <div className="relative group">
+                                            <Mail className="absolute left-3 top-3 h-4 w-4 text-[var(--muted-foreground)] group-focus-within:text-[var(--theme-accent)] transition-colors" />
+                                            <Input
+                                                id="email"
+                                                type="email"
+                                                placeholder="admin@safegrey.com"
+                                                value={email}
+                                                onChange={(e) => setEmail(e.target.value)}
+                                                className="pl-10 h-11 bg-[var(--theme-dark-base)]/50 border-[var(--theme-border)] focus:border-[var(--theme-accent)] transition-all"
+                                                required
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="password" className="font-medium">Password</Label>
+                                        <div className="relative group">
+                                            <Lock className="absolute left-3 top-3 h-4 w-4 text-[var(--muted-foreground)] group-focus-within:text-[var(--theme-accent)] transition-colors" />
+                                            <Input
+                                                id="password"
+                                                type="password"
+                                                placeholder="••••••••"
+                                                value={password}
+                                                onChange={(e) => setPassword(e.target.value)}
+                                                className="pl-10 h-11 bg-[var(--theme-dark-base)]/50 border-[var(--theme-border)] focus:border-[var(--theme-accent)] transition-all"
+                                                required
+                                            />
+                                        </div>
+                                    </div>
+
+                                    {error && activeTab === 'login' && (
+                                        <Alert variant="destructive" className="bg-red-900/20 border-red-900/50 text-red-200">
+                                            <AlertCircle className="h-4 w-4" />
+                                            <AlertDescription>{error}</AlertDescription>
+                                        </Alert>
+                                    )}
+
+                                    <Button
+                                        type="submit"
+                                        className="w-full h-11 bg-[var(--primary)] text-[var(--foreground)] hover:bg-[var(--primary)]/90 glow-accent transition-all duration-300 group"
+                                        disabled={isLoading}
+                                    >
+                                        {isLoading ? (
+                                            "Authenticating..."
+                                        ) : (
+                                            <span className="flex items-center justify-center gap-2">
+                                                Access Dashboard <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                                            </span>
+                                        )}
+                                    </Button>
+                                </form>
+                            </TabsContent>
+
+                            <TabsContent value="setup">
+                                <form onSubmit={handleSetup} className="space-y-4 animate-in slide-in-from-right-4 duration-300">
+                                    <div className="space-y-2">
+                                        <Label htmlFor="setup-email" className="font-medium">Email Address</Label>
+                                        <Input
+                                            id="setup-email"
+                                            type="email"
+                                            placeholder="admin@safegrey.com"
+                                            value={setupEmail}
+                                            onChange={(e) => setSetupEmail(e.target.value)}
+                                            className="h-10 bg-[var(--theme-dark-base)]/50 border-[var(--theme-border)]"
+                                            required
+                                        />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Label htmlFor="otp" className="font-medium">One Time Password (from Email)</Label>
+                                        <div className="relative">
+                                            <KeyRound className="absolute left-3 top-3 h-4 w-4 text-[var(--muted-foreground)]" />
+                                            <Input
+                                                id="otp"
+                                                type="text"
+                                                placeholder="123456"
+                                                value={otp}
+                                                onChange={(e) => setOtp(e.target.value)}
+                                                className="pl-10 h-10 bg-[var(--theme-dark-base)]/50 border-[var(--theme-border)] font-mono tracking-widest uppercase"
+                                                required
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4">
+                                        <div className="space-y-2">
+                                            <Label htmlFor="new-password" className="font-medium">New Password</Label>
+                                            <Input
+                                                id="new-password"
+                                                type="password"
+                                                value={newPassword}
+                                                onChange={(e) => setNewPassword(e.target.value)}
+                                                className="h-10 bg-[var(--theme-dark-base)]/50 border-[var(--theme-border)]"
+                                                required
+                                            />
+                                        </div>
+                                        <div className="space-y-2">
+                                            <Label htmlFor="confirm-password" className="font-medium">Confirm</Label>
+                                            <Input
+                                                id="confirm-password"
+                                                type="password"
+                                                value={confirmPassword}
+                                                onChange={(e) => setConfirmPassword(e.target.value)}
+                                                className="h-10 bg-[var(--theme-dark-base)]/50 border-[var(--theme-border)]"
+                                                required
+                                            />
+                                        </div>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <Label className="font-medium">Verification</Label>
+                                        <div className="flex gap-4">
+                                            <div className="flex items-center justify-center bg-[var(--theme-dark-base)]/80 border border-[var(--theme-border)] rounded-md px-4 min-w-[140px] select-none font-mono text-lg">
+                                                {captchaChallenge.num1} + {captchaChallenge.num2} = ?
+                                            </div>
+                                            <Input
+                                                type="number"
+                                                placeholder="Answer"
+                                                value={captchaInput}
+                                                onChange={(e) => setCaptchaInput(e.target.value)}
+                                                className="h-11 bg-[var(--theme-dark-base)]/50 border-[var(--theme-border)]"
+                                                required
+                                            />
+                                            <Button type="button" variant="ghost" size="icon" onClick={generateCaptcha}>
+                                                <RefreshCw className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    </div>
+
+                                    {error && activeTab === 'setup' && (
+                                        <Alert variant="destructive" className="bg-red-900/20 border-red-900/50 text-red-200">
+                                            <AlertCircle className="h-4 w-4" />
+                                            <AlertDescription>{error}</AlertDescription>
+                                        </Alert>
+                                    )}
+
+                                    {successMessage && (
+                                        <Alert className="bg-green-900/20 border-green-900/50 text-green-200">
+                                            <ShieldCheck className="h-4 w-4" />
+                                            <AlertDescription>{successMessage}</AlertDescription>
+                                        </Alert>
+                                    )}
+
+                                    <Button
+                                        type="submit"
+                                        className="w-full h-11 bg-[var(--theme-accent)] text-white hover:bg-[var(--theme-accent)]/90 transition-all duration-300"
+                                        disabled={isLoading}
+                                    >
+                                        {isLoading ? "Verifying..." : "Initialize Account"}
+                                    </Button>
+                                </form>
+                            </TabsContent>
+                        </Tabs>
+                    </CardContent>
+                </Card>
+            </div>
         </div>
     )
 }

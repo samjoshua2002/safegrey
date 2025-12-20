@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { usePathname, useRouter } from "next/navigation"
 import { LayoutDashboard, PlusCircle, MessageSquare, LogOut, Menu, X, Calendar } from "lucide-react"
@@ -15,6 +15,19 @@ export default function DashboardLayout({
     const pathname = usePathname()
     const router = useRouter()
     const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+    const [role, setRole] = useState<string | null>(null)
+
+    useEffect(() => {
+        // Fetch User Role
+        fetch("/api/auth/me")
+            .then(res => res.json())
+            .then(data => {
+                if (data.authenticated) {
+                    setRole(data.role)
+                }
+            })
+            .catch(err => console.error("Auth check failed", err))
+    }, [pathname])
 
     // Hide sidebar on login page
     if (pathname === "/dashboard/login") {
@@ -34,7 +47,6 @@ export default function DashboardLayout({
     }
 
     const navItems = [
-
         {
             title: "Service",
             href: "/dashboard/service",
@@ -50,11 +62,12 @@ export default function DashboardLayout({
             href: "/dashboard/contact",
             icon: MessageSquare,
         },
-        {
-            title: "Upcoming Features",
+        // Only show for Superadmin
+        ...(role === 'superadmin' ? [{
+            title: "Authentication",
             href: "/dashboard/create-service",
             icon: PlusCircle,
-        }
+        }] : [])
     ]
 
     return (
