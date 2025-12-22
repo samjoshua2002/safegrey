@@ -51,10 +51,12 @@ export function HeroSection() {
     bg-[var(--theme-dark-base)]
     text-[var(--foreground)]
     py-12
-    px-6
+    md:px-6
+    sm:px-6
     sm:py-12
     md:py-16
     lg:py-24
+    
   "
 >
         {/* Dotted Background */}
@@ -79,7 +81,7 @@ export function HeroSection() {
         />
 
 <div
-  className="max-w-7xl mx-auto pt-12 lg:px-12 w-full grid grid-cols-1 lg:grid-cols-2 gap-5 lg:place-items-center lg:text-center relative z-10">
+  className="max-w-7xl mx-auto pt-12 lg:pt-0 px-4 md:px-0 lg:px-0 w-full grid grid-cols-1 lg:grid-cols-2 gap-12 lg:place-items-center lg:text-center relative z-10">
           {/* Left Side - Text */}
           <div
             className={`relative z-10 w-full text-left transition-all duration-1000 ${
@@ -108,12 +110,14 @@ export function HeroSection() {
 
             <p
               className={cn(
-                "text-lg sm:text-xl md:text-2xl mb-8 leading-relaxed text-[var(--muted-foreground)] transition-all duration-300",
-                isScanning && "text-[var(--foreground)]"
+                "text-lg sm:text-xl md:text-2xl mb-8 leading-relaxed text-[var(--muted-foreground)] transition-all duration-300"
               )}
             >
-              Real-world attack simulations and end-to-end cybersecurity -
-              proactively protecting your digital assets from emerging threats
+             Real-world attack simulations and end-to-end cybersecurity –
+proactively protecting your digital
+<span className="hidden lg:inline"><br /></span>
+assets from emerging threats
+
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 ">

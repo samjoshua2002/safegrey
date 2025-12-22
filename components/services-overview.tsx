@@ -47,7 +47,7 @@ export function ServicesOverview() {
   ];
 
   return (
-    <section className="relative py-12 lg:py-24 px-6 lg:px-12 text-[var(--foreground)] overflow-hidden bg-[var(--theme-dark-base)]">
+    <section className="relative py-12 lg:py-24 px-4 md:px-6 lg:px-12 text-[var(--foreground)] overflow-hidden bg-[var(--theme-dark-base)]">
       {/* Dotted Background */}
       <div className="absolute inset-0 opacity-20">
         <div className="absolute inset-0 grid grid-cols-4 gap-24 transform -rotate-6 scale-150">
