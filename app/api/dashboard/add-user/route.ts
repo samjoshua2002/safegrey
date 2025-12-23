@@ -33,7 +33,18 @@ export async function POST(request: NextRequest) {
             otpExpires,
         });
 
-        // Send Email
+        // Return success immediately
+        const response = NextResponse.json({
+            message: 'User created and authorization email sent',
+            user: {
+                _id: newUser._id,
+                name: newUser.name,
+                email: newUser.email,
+                status: newUser.status
+            }
+        });
+
+        // Send email asynchronously (fire-and-forget)
         console.log(`Attempting to send email to: ${email}`);
         console.log(`EMAIL_USER present: ${!!process.env.EMAIL_USER}`);
         console.log(`EMAIL_PASS present: ${!!process.env.EMAIL_PASS}`);
@@ -71,23 +82,16 @@ export async function POST(request: NextRequest) {
             `,
         };
 
-        try {
-            const info = await transporter.sendMail(mailOptions);
-            console.log('Email sent successfully:', info.messageId);
-        } catch (mailError) {
-            console.error('Nodemailer error:', mailError);
-            // Don't fail the whole request, but log it
-        }
+        // Send email without blocking (background task)
+        transporter.sendMail(mailOptions)
+            .then((info) => {
+                console.log('Email sent successfully:', info.messageId);
+            })
+            .catch((mailError) => {
+                console.error('Nodemailer error:', mailError);
+            });
 
-        return NextResponse.json({
-            message: 'User created and authorization email sent',
-            user: {
-                _id: newUser._id,
-                name: newUser.name,
-                email: newUser.email,
-                status: newUser.status
-            }
-        });
+        return response;
 
     } catch (error) {
         console.error('Error adding user:', error);

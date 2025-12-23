@@ -9,6 +9,7 @@ export interface IBooking extends Document {
     time: string;
     timezone: string;
     meetingLink: string;
+    user?: mongoose.Types.ObjectId;
     createdAt: Date;
 }
 
@@ -21,6 +22,7 @@ const BookingSchema: Schema = new Schema({
     time: { type: String, required: true },
     timezone: { type: String, required: true },
     meetingLink: { type: String, required: true },
+    user: { type: Schema.Types.ObjectId, ref: 'User' },
     createdAt: { type: Date, default: Date.now },
 });
 

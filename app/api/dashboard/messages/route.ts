@@ -20,7 +20,10 @@ export async function GET() {
             .populate('userId', 'name email company')
             .sort({ submittedAt: -1 });
 
-        return NextResponse.json(messages);
+        // Filter out any messages where userId population failed
+        const validMessages = messages.filter(msg => msg.userId && typeof msg.userId === 'object');
+
+        return NextResponse.json(validMessages);
     } catch (error) {
         console.error('Error fetching messages:', error);
         return NextResponse.json(

@@ -2,30 +2,31 @@ import { NextRequest, NextResponse } from 'next/server';
 import nodemailer from 'nodemailer';
 import connectDB from '@/lib/db';
 import Booking from '@/models/Booking';
+import User from '@/models/User';
 import { z } from 'zod';
 import { createGoogleMeetEvent } from '@/lib/google-calendar';
 
 // Zod schema for validation
 const bookingSchema = z.object({
-    name: z.string().min(1, "Name is required"),
-    email: z.string().email("Invalid email format"),
-    topic: z.string().min(1, "Topic is required"),
-    notes: z.string().optional(),
-    date: z.string().min(1, "Date is required"), // Expecting ISO string or similar
-    time: z.string().min(1, "Time is required"),
-    timezone: z.string().min(1, "Timezone is required"),
+  name: z.string().min(1, "Name is required"),
+  email: z.string().email("Invalid email format"),
+  topic: z.string().min(1, "Topic is required"),
+  notes: z.string().optional(),
+  date: z.string().min(1, "Date is required"), // Expecting ISO string or similar
+  time: z.string().min(1, "Time is required"),
+  timezone: z.string().min(1, "Timezone is required"),
 });
 
 function getMockMeetingLink() {
-    // Generate a format like abc-defg-hij
-    const chars = 'abcdefghijklmnopqrstuvwxyz';
-    const segment = (length: number) =>
-        Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
-    return `https://meet.google.com/${segment(3)}-${segment(4)}-${segment(3)}`;
+  // Generate a format like abc-defg-hij
+  const chars = 'abcdefghijklmnopqrstuvwxyz';
+  const segment = (length: number) =>
+    Array.from({ length }, () => chars[Math.floor(Math.random() * chars.length)]).join('');
+  return `https://meet.google.com/${segment(3)}-${segment(4)}-${segment(3)}`;
 }
 
 function getEmailTemplate(name: string, topic: string, date: string, time: string, timezone: string, meetingLink: string, isMock: boolean): string {
-    return `
+  return `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -144,117 +145,131 @@ function getEmailTemplate(name: string, topic: string, date: string, time: strin
 }
 
 export async function POST(request: NextRequest) {
-    try {
-        const body = await request.json();
+  try {
+    const body = await request.json();
 
-        // Validate with Zod
-        const result = bookingSchema.safeParse(body);
-        if (!result.success) {
-            return NextResponse.json(
-                { error: 'Validation failed', details: result.error.flatten() },
-                { status: 400 }
-            );
-        }
-
-        const { name, email, topic, notes, date, time, timezone } = result.data;
-
-        // Generate meeting link (Real or Mock)
-        let meetingLink = "";
-        let isMock = false;
-
-        try {
-            // Attempt to create real Google Calendar Event
-            // Date string validation - ensure valid ISO or date object
-            const bookingDate = new Date(date);
-            // Assuming time is "HH:mm" or similar, we might need to combine date+time for precision, 
-            // but the helper takes an ISO string. Let's construct a proper ISO string if needed.
-            // The modal sends `date` as ISO string (e.g., "2023-10-27T00:00:00.000Z") and `time` as "10:00am".
-            // We need to parse this effectively.
-
-            // Helper function to combine date and time string into a Date object
-            const combineDateTime = (dateStr: string, timeStr: string) => {
-                const d = new Date(dateStr);
-                const [time, period] = timeStr.split(/(?=[ap]m)/i);
-                let [hours, minutes] = time.split(':').map(Number);
-
-                if (period.toLowerCase() === 'pm' && hours !== 12) hours += 12;
-                if (period.toLowerCase() === 'am' && hours === 12) hours = 0;
-
-                d.setHours(hours, minutes, 0, 0);
-                return d;
-            };
-
-            const eventStart = combineDateTime(date, time);
-
-            meetingLink = await createGoogleMeetEvent(name, email, topic, eventStart.toISOString(), timezone);
-        } catch (calendarError) {
-            console.warn("Google Calendar API failed, falling back to mock link:", calendarError);
-            meetingLink = getMockMeetingLink();
-            isMock = true;
-        }
-
-        // Connect to DB and Save
-        try {
-            await connectDB();
-            // Format date properly from string if needed, or pass as is if schema handles it
-            // Mongoose casts string to date automatically if valid format
-            await Booking.create({
-                name,
-                email,
-                topic,
-                notes,
-                date: new Date(date), // Ensure it's a Date object
-                time,
-                timezone,
-                meetingLink,
-            });
-        } catch (dbError) {
-            console.error('Error saving booking to database:', dbError);
-            return NextResponse.json(
-                { error: 'Failed to save booking' },
-                { status: 500 }
-            );
-        }
-
-        // Send Email
-        try {
-            const transporter = nodemailer.createTransport({
-                service: 'gmail',
-                auth: {
-                    user: process.env.EMAIL_USER,
-                    pass: process.env.EMAIL_PASS,
-                },
-            });
-
-            const mailOptions = {
-                from: {
-                    name: 'SafeGrey Security',
-                    address: process.env.EMAIL_USER!,
-                },
-                to: email,
-                subject: `Appointment Confirmed: ${topic} - SafeGrey`,
-                html: getEmailTemplate(name, topic, date, time, timezone, meetingLink, isMock),
-            };
-
-            await transporter.sendMail(mailOptions);
-
-        } catch (emailError) {
-            console.error('Error sending booking email:', emailError);
-            // We still return success for the booking itself, but maybe warn? 
-            // Or fail? Usually better to fail distinctively or just log.
-            // Since booking is saved, we return success but log error.
-        }
-
-        return NextResponse.json(
-            { message: 'Appointment booked successfully', meetingLink },
-            { status: 200 }
-        );
-
-    } catch (error) {
-        console.error('Error processing booking:', error);
-        return NextResponse.json(
-            { error: 'Internal server error' },
-            { status: 500 }
-        );
+    // Validate with Zod
+    const result = bookingSchema.safeParse(body);
+    if (!result.success) {
+      return NextResponse.json(
+        { error: 'Validation failed', details: result.error.flatten() },
+        { status: 400 }
+      );
     }
+
+    const { name, email, topic, notes, date, time, timezone } = result.data;
+
+    // Generate meeting link (Real or Mock)
+    let meetingLink = "";
+    let isMock = false;
+
+    try {
+      // Attempt to create real Google Calendar Event
+      // Date string validation - ensure valid ISO or date object
+      const bookingDate = new Date(date);
+      // Assuming time is "HH:mm" or similar, we might need to combine date+time for precision, 
+      // but the helper takes an ISO string. Let's construct a proper ISO string if needed.
+      // The modal sends `date` as ISO string (e.g., "2023-10-27T00:00:00.000Z") and `time` as "10:00am".
+      // We need to parse this effectively.
+
+      // Helper function to combine date and time string into a Date object
+      const combineDateTime = (dateStr: string, timeStr: string) => {
+        const d = new Date(dateStr);
+        const [time, period] = timeStr.split(/(?=[ap]m)/i);
+        let [hours, minutes] = time.split(':').map(Number);
+
+        if (period.toLowerCase() === 'pm' && hours !== 12) hours += 12;
+        if (period.toLowerCase() === 'am' && hours === 12) hours = 0;
+
+        d.setHours(hours, minutes, 0, 0);
+        return d;
+      };
+
+      const eventStart = combineDateTime(date, time);
+
+      meetingLink = await createGoogleMeetEvent(name, email, topic, eventStart.toISOString(), timezone);
+    } catch (calendarError) {
+      console.warn("Google Calendar API failed, falling back to mock link:", calendarError);
+      meetingLink = getMockMeetingLink();
+      isMock = true;
+    }
+
+    // Connect to DB and Save
+    try {
+      await connectDB();
+
+      // Find or create user
+      let user = await User.findOne({ email: email.toLowerCase() });
+
+      if (!user) {
+        // Create new user with pending status
+        user = await User.create({
+          name,
+          email: email.toLowerCase(),
+          status: 'pending',
+        });
+        console.log(`Created new user for booking: ${email}`);
+      }
+
+      // Create booking linked to user
+      await Booking.create({
+        name,
+        email,
+        topic,
+        notes,
+        date: new Date(date), // Ensure it's a Date object
+        time,
+        timezone,
+        meetingLink,
+        user: user._id, // Link to user
+      });
+    } catch (dbError) {
+      console.error('Error saving booking to database:', dbError);
+      return NextResponse.json(
+        { error: 'Failed to save booking' },
+        { status: 500 }
+      );
+    }
+
+    // Send Email
+    try {
+      const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS,
+        },
+      });
+
+      const mailOptions = {
+        from: {
+          name: 'SafeGrey Security',
+          address: process.env.EMAIL_USER!,
+        },
+        to: email,
+        subject: `Appointment Confirmed: ${topic} - SafeGrey`,
+        html: getEmailTemplate(name, topic, date, time, timezone, meetingLink, isMock),
+      };
+
+      await transporter.sendMail(mailOptions);
+
+    } catch (emailError) {
+      console.error('Error sending booking email:', emailError);
+      // We still return success for the booking itself, but maybe warn? 
+      // Or fail? Usually better to fail distinctively or just log.
+      // Since booking is saved, we return success but log error.
+    }
+
+    return NextResponse.json(
+      { message: 'Appointment booked successfully', meetingLink },
+      { status: 200 }
+    );
+
+  } catch (error) {
+    console.error('Error processing booking:', error);
+    return NextResponse.json(
+      { error: 'Internal server error' },
+      { status: 500 }
+    );
+  }
 }

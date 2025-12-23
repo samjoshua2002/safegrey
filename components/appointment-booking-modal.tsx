@@ -95,6 +95,7 @@ export function AppointmentModal({ onClose }: BookingSchedulerProps) {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [bookedSlots, setBookedSlots] = useState<string[]>([]);
 
   const getDaysInMonth = useCallback((date: Date) => {
     const year = date.getFullYear();
@@ -124,7 +125,7 @@ export function AppointmentModal({ onClose }: BookingSchedulerProps) {
     return isToday || (dateMidnight > todayMidnight && dayOfWeek !== 0 && dayOfWeek !== 6)
   }, [currentMonth])
 
-  const handleDateSelect = useCallback((day: number) => {
+  const handleDateSelect = useCallback(async (day: number) => {
     if (isAnimating) return
 
     if (!isDateSelectable(day)) return
@@ -132,6 +133,18 @@ export function AppointmentModal({ onClose }: BookingSchedulerProps) {
     setIsAnimating(true)
     const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), day)
     setSelectedDate(date)
+
+    // Fetch booked slots for the selected date
+    try {
+      const response = await fetch(`/api/booked-slots?date=${date.toISOString()}`);
+      if (response.ok) {
+        const data = await response.json();
+        setBookedSlots(data.bookedSlots || []);
+      }
+    } catch (error) {
+      console.error('Error fetching booked slots:', error);
+      setBookedSlots([]);
+    }
 
     setTimeout(() => {
       setStep("select-time")
@@ -258,6 +271,41 @@ export function AppointmentModal({ onClose }: BookingSchedulerProps) {
   }, [currentMonth, isAnimating]);
 
   const [glowingIndex, setGlowingIndex] = useState<number | null>(null);
+
+  // Helper function to check if a time slot is in the past
+  const isTimePast = useCallback((timeSlot: string) => {
+    if (!selectedDate) return false;
+
+    const now = new Date();
+    const selectedDateMidnight = new Date(selectedDate);
+    selectedDateMidnight.setHours(0, 0, 0, 0);
+    const todayMidnight = new Date(now);
+    todayMidnight.setHours(0, 0, 0, 0);
+
+    // If selected date is in the future, no times are past
+    if (selectedDateMidnight > todayMidnight) return false;
+
+    // If selected date is in the past, all times are past
+    if (selectedDateMidnight < todayMidnight) return true;
+
+    // If selected date is today, check the time
+    const [time, period] = timeSlot.split(/(?=[ap]m)/i);
+    const [hours, minutes] = time.split(':').map(Number);
+    let hour24 = hours;
+
+    if (period.toLowerCase() === 'pm' && hours !== 12) hour24 += 12;
+    if (period.toLowerCase() === 'am' && hours === 12) hour24 = 0;
+
+    const slotTime = new Date(selectedDate);
+    slotTime.setHours(hour24, minutes, 0, 0);
+
+    return slotTime < now;
+  }, [selectedDate]);
+
+  // Helper function to check if a time slot is available
+  const isTimeAvailable = useCallback((timeSlot: string) => {
+    return !bookedSlots.includes(timeSlot) && !isTimePast(timeSlot);
+  }, [bookedSlots, isTimePast]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -681,34 +729,51 @@ export function AppointmentModal({ onClose }: BookingSchedulerProps) {
                           </div>
 
                           <div className="space-y-2 flex-1 overflow-y-auto max-h-[300px] custom-scrollbar px-2 sm:px-3 md:px-4 lg:px-1">
-                            {TIME_SLOTS.map((time, index) => (
-                              <motion.button
-                                key={time}
-                                onClick={() => handleTimeSelect(time)}
-                                whileHover={{ scale: 1.02 }}
-                                whileTap={{ scale: 0.98 }}
-                                className={cn(
-                                  "relative w-full py-2.5 px-4 rounded-lg text-sm font-medium transition-all duration-200 border flex items-center justify-between group",
-                                  selectedTime === time
-                                    ? "border-[var(--theme-accent)] bg-gradient-to-r from-[var(--primary)]/20 to-[var(--theme-accent)]/20 text-[var(--foreground)]"
-                                    : "border-[var(--theme-border)]/30 hover:border-[var(--theme-accent)]/30 text-[var(--foreground)] hover:bg-[var(--theme-dark-base)]/30"
-                                )}
-                              >
-                                {glowingIndex === index && !selectedTime && (
-                                  <motion.div
-                                    initial={{ opacity: 0 }}
-                                    animate={{ opacity: 1 }}
-                                    className="absolute inset-0 bg-[var(--theme-accent)]/5 rounded-lg"
-                                  />
-                                )}
-                                <span>{time}</span>
-                                {selectedTime === time ? (
-                                  <Check className="h-4 w-4 text-[var(--theme-accent)]" />
-                                ) : (
-                                  <ChevronRight className="h-3 w-3 text-[var(--muted-foreground)] opacity-0 group-hover:opacity-100 transition-opacity" />
-                                )}
-                              </motion.button>
-                            ))}
+                            {TIME_SLOTS.map((time, index) => {
+                              const isBooked = bookedSlots.includes(time);
+                              const isPast = isTimePast(time);
+                              const isAvailable = isTimeAvailable(time);
+
+                              return (
+                                <motion.button
+                                  key={time}
+                                  onClick={() => isAvailable && handleTimeSelect(time)}
+                                  disabled={!isAvailable}
+                                  whileHover={isAvailable ? { scale: 1.02 } : {}}
+                                  whileTap={isAvailable ? { scale: 0.98 } : {}}
+                                  className={cn(
+                                    "relative w-full py-2.5 px-4 rounded-lg text-sm font-medium transition-all duration-200 border flex items-center justify-between group",
+                                    selectedTime === time
+                                      ? "border-[var(--theme-accent)] bg-gradient-to-r from-[var(--primary)]/20 to-[var(--theme-accent)]/20 text-[var(--foreground)]"
+                                      : !isAvailable
+                                        ? "border-[var(--theme-border)]/20 bg-[var(--theme-dark-base)]/20 text-[var(--muted-foreground)]/40 cursor-not-allowed"
+                                        : "border-[var(--theme-border)]/30 hover:border-[var(--theme-accent)]/30 text-[var(--foreground)] hover:bg-[var(--theme-dark-base)]/30"
+                                  )}
+                                >
+                                  {glowingIndex === index && !selectedTime && isAvailable && (
+                                    <motion.div
+                                      initial={{ opacity: 0 }}
+                                      animate={{ opacity: 1 }}
+                                      className="absolute inset-0 bg-[var(--theme-accent)]/5 rounded-lg"
+                                    />
+                                  )}
+                                  <span className={!isAvailable ? "line-through" : ""}>{time}</span>
+                                  {selectedTime === time ? (
+                                    <Check className="h-4 w-4 text-[var(--theme-accent)]" />
+                                  ) : isBooked ? (
+                                    <span className="text-xs px-2 py-0.5 rounded-full bg-red-500/20 text-red-500 border border-red-500/30">
+                                      Booked
+                                    </span>
+                                  ) : isPast ? (
+                                    <span className="text-xs px-2 py-0.5 rounded-full bg-gray-500/20 text-gray-500 border border-gray-500/30">
+                                      Past
+                                    </span>
+                                  ) : (
+                                    <ChevronRight className="h-3 w-3 text-[var(--muted-foreground)] opacity-0 group-hover:opacity-100 transition-opacity" />
+                                  )}
+                                </motion.button>
+                              );
+                            })}
                           </div>
 
                           {selectedTime && (

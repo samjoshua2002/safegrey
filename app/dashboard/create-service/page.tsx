@@ -2,10 +2,9 @@
 
 import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
-import { format } from "date-fns"
-import { Loader2, CheckCircle2, XCircle, ShieldAlert, Mail, UserPlus, User } from "lucide-react"
+import { format, differenceInHours } from "date-fns"
+import { Loader2, Mail, UserPlus, User, Search, Trash2, X, Check, Sparkles } from "lucide-react"
 import { Button } from "@/components/ui/button"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Input } from "@/components/ui/input"
@@ -26,7 +25,18 @@ import {
     DialogDescription,
     DialogFooter,
 } from "@/components/ui/dialog"
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog"
 import { toast } from "sonner"
+import Link from "next/link"
 
 interface IUser {
     _id: string
@@ -42,13 +52,15 @@ export default function UserAuthorizationPage() {
     const router = useRouter()
     const [users, setUsers] = useState<IUser[]>([])
     const [loading, setLoading] = useState(true)
-    const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set())
-    const [processing, setProcessing] = useState(false)
+    const [processingId, setProcessingId] = useState<string | null>(null)
 
     // Manual Add User State
     const [isAddUserOpen, setIsAddUserOpen] = useState(false)
     const [newUser, setNewUser] = useState({ name: "", email: "" })
     const [isAddingUser, setIsAddingUser] = useState(false)
+    const [searchQuery, setSearchQuery] = useState("")
+    const [deleteUserId, setDeleteUserId] = useState<string | null>(null)
+    const [isDeleting, setIsDeleting] = useState(false)
 
     async function fetchUsers() {
         try {
@@ -67,50 +79,44 @@ export default function UserAuthorizationPage() {
         fetchUsers()
     }, [])
 
-    const toggleSelectAll = () => {
-        if (selectedUsers.size === users.length) {
-            setSelectedUsers(new Set())
-        } else {
-            setSelectedUsers(new Set(users.map(u => u._id)))
-        }
+    const filteredUsers = users.filter(user =>
+        user.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        user.email.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (user.company && user.company.toLowerCase().includes(searchQuery.toLowerCase()))
+    )
+
+    const isNewUser = (createdAt: string) => {
+        const hours = differenceInHours(new Date(), new Date(createdAt))
+        return hours < 24
     }
 
-    const toggleSelectUser = (id: string) => {
-        const newSelected = new Set(selectedUsers)
-        if (newSelected.has(id)) {
-            newSelected.delete(id)
-        } else {
-            newSelected.add(id)
-        }
-        setSelectedUsers(newSelected)
-    }
-
-    const handleAction = async (action: 'approve' | 'reject') => {
-        if (selectedUsers.size === 0) return
-
-        setProcessing(true)
+    const handleAction = async (userId: string, action: 'approve' | 'reject') => {
+        setProcessingId(userId)
         try {
             const res = await fetch("/api/dashboard/authorize-users", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    userIds: Array.from(selectedUsers),
+                    userIds: [userId],
                     action
                 })
             })
 
             if (!res.ok) throw new Error("Action failed")
 
-            const result = await res.json()
+            await res.json()
 
-            toast.success(`Users ${action === 'approve' ? 'authorized' : 'rejected'} successfully`)
-            setSelectedUsers(new Set())
-            fetchUsers() // Refresh list
+            toast.success(`User ${action === 'approve' ? 'authorized' : 'rejected'} successfully`)
+
+            // Optimistic update
+            setUsers(users.map(u =>
+                u._id === userId ? { ...u, status: action === 'approve' ? 'approved' : 'rejected' } : u
+            ))
         } catch (error) {
             console.error("Action error:", error)
             toast.error("An error occurred")
         } finally {
-            setProcessing(false)
+            setProcessingId(null)
         }
     }
 
@@ -144,6 +150,26 @@ export default function UserAuthorizationPage() {
         }
     }
 
+    const handleDeleteUser = async (userId: string) => {
+        setIsDeleting(true)
+        try {
+            const res = await fetch(`/api/dashboard/users/${userId}`, {
+                method: "DELETE",
+            })
+
+            if (!res.ok) throw new Error("Failed to delete user")
+
+            toast.success("User deleted successfully")
+            setUsers(users.filter(u => u._id !== userId))
+            setDeleteUserId(null)
+        } catch (error) {
+            console.error("Delete user error:", error)
+            toast.error("Failed to delete user")
+        } finally {
+            setIsDeleting(false)
+        }
+    }
+
     if (loading) {
         return (
             <div className="flex h-[80vh] w-full items-center justify-center">
@@ -158,86 +184,71 @@ export default function UserAuthorizationPage() {
                 <div className="space-y-2">
                     <h1 className="text-3xl font-bold tracking-tight text-[var(--foreground)]">User Authorization</h1>
                     <p className="text-[var(--muted-foreground)]">
-                        Approve requests or manually add new users.
+                        Manage user access and approvals.
                     </p>
                 </div>
-                <Button
-                    onClick={() => setIsAddUserOpen(true)}
-                    className="bg-[var(--theme-accent)] hover:bg-[var(--theme-accent)]/90 text-white"
-                >
-                    <UserPlus className="mr-2 h-4 w-4" /> Add Manual User
-                </Button>
+                <div className="flex gap-3">
+                    <div className="relative">
+                        <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-[var(--muted-foreground)]" />
+                        <Input
+                            placeholder="Search users..."
+                            value={searchQuery}
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                            className="pl-10 w-64 bg-[var(--theme-dark-base)]/50 border-[var(--theme-border)]"
+                        />
+                    </div>
+                    <Button
+                        onClick={() => setIsAddUserOpen(true)}
+                        className="bg-[var(--theme-accent)] hover:bg-[var(--theme-accent)]/90 text-white"
+                    >
+                        <UserPlus className="mr-2 h-4 w-4" /> Add Manual User
+                    </Button>
+                </div>
             </div>
 
             <Card className="bg-[var(--theme-dark-secondary)]/30 border-[var(--theme-border)]">
-                <CardHeader className="flex flex-row items-center justify-between">
-                    <div>
-                        <CardTitle>Pending & Active Users</CardTitle>
-                        <CardDescription>Select users to take bulk actions.</CardDescription>
-                    </div>
-                    {selectedUsers.size > 0 && (
-                        <div className="flex gap-2 animate-in fade-in slide-in-from-right-4 duration-300">
-                            <Button
-                                variant="destructive"
-                                size="sm"
-                                onClick={() => handleAction('reject')}
-                                disabled={processing}
-                            >
-                                <XCircle className="mr-2 h-4 w-4" /> Reject ({selectedUsers.size})
-                            </Button>
-                            <Button
-                                className="bg-[var(--theme-accent)] hover:bg-[var(--theme-accent)]/90 text-white"
-                                size="sm"
-                                onClick={() => handleAction('approve')}
-                                disabled={processing}
-                            >
-                                {processing ? <Loader2 className="mr-2 h-4 w-4 animate-spin" /> : <CheckCircle2 className="mr-2 h-4 w-4" />}
-                                Approve & Send OTP ({selectedUsers.size})
-                            </Button>
-                        </div>
-                    )}
+                <CardHeader>
+                    <CardTitle>All Users</CardTitle>
+                    <CardDescription>View and manage all registered users.</CardDescription>
                 </CardHeader>
                 <CardContent>
                     <Table>
                         <TableHeader>
                             <TableRow className="border-[var(--theme-border)] hover:bg-transparent">
-                                <TableHead className="w-[50px]">
-                                    <Checkbox
-                                        checked={users.length > 0 && selectedUsers.size === users.length}
-                                        onCheckedChange={toggleSelectAll}
-                                        className="border-[var(--muted-foreground)]"
-                                    />
-                                </TableHead>
                                 <TableHead className="text-[var(--muted-foreground)]">User</TableHead>
                                 <TableHead className="text-[var(--muted-foreground)]">Status</TableHead>
                                 <TableHead className="text-[var(--muted-foreground)]">Company</TableHead>
                                 <TableHead className="text-[var(--muted-foreground)] text-right">Joined</TableHead>
+                                <TableHead className="text-[var(--muted-foreground)] text-right">Actions</TableHead>
                             </TableRow>
                         </TableHeader>
                         <TableBody>
-                            {users.map((user) => (
+                            {filteredUsers.map((user) => (
                                 <TableRow
                                     key={user._id}
-                                    className={`border-[var(--theme-border)] transition-colors ${selectedUsers.has(user._id) ? 'bg-[var(--theme-accent)]/5' : 'hover:bg-white/5'}`}
+                                    className="border-[var(--theme-border)] hover:bg-white/5"
                                 >
                                     <TableCell>
-                                        <Checkbox
-                                            checked={selectedUsers.has(user._id)}
-                                            onCheckedChange={() => toggleSelectUser(user._id)}
-                                            className="border-[var(--muted-foreground)]"
-                                        />
-                                    </TableCell>
-                                    <TableCell>
                                         <div className="flex flex-col">
-                                            <span className="font-medium text-[var(--foreground)]">{user.name}</span>
+                                            <div className="flex items-center gap-2">
+                                                <Link href={`/dashboard/user/${user._id}`} className="font-medium text-[var(--theme-accent)] hover:underline hover:text-[var(--theme-accent)]/80 transition-colors">
+                                                    {user.name}
+                                                </Link>
+                                                {isNewUser(user.createdAt) && (
+                                                    <Badge className="bg-blue-500/10 text-blue-500 hover:bg-blue-500/20 border-blue-500/20 text-[10px] px-1 py-0 h-5">
+                                                        <Sparkles className="mr-1 h-2 w-2" />
+                                                        NEW
+                                                    </Badge>
+                                                )}
+                                            </div>
                                             <span className="text-xs text-[var(--muted-foreground)]">{user.email}</span>
                                         </div>
                                     </TableCell>
                                     <TableCell>
                                         <Badge variant="outline" className={`
-                                            ${user.status === 'approved' ? 'border-green-500/50 text-green-500' : ''}
-                                            ${user.status === 'pending' || !user.status ? 'border-yellow-500/50 text-yellow-500' : ''}
-                                            ${user.status === 'rejected' ? 'border-red-500/50 text-red-500' : ''}
+                                            ${user.status === 'approved' ? 'border-green-500/50 text-green-500 bg-green-500/10' : ''}
+                                            ${user.status === 'pending' || !user.status ? 'border-yellow-500/50 text-yellow-500 bg-yellow-500/10' : ''}
+                                            ${user.status === 'rejected' ? 'border-red-500/50 text-red-500 bg-red-500/10' : ''}
                                         `}>
                                             {user.status || 'pending'}
                                         </Badge>
@@ -248,12 +259,54 @@ export default function UserAuthorizationPage() {
                                     <TableCell className="text-right text-[var(--muted-foreground)]">
                                         {format(new Date(user.createdAt), "MMM d, yyyy")}
                                     </TableCell>
+                                    <TableCell className="text-right">
+                                        <div className="flex justify-end gap-2">
+                                            {user.status !== 'approved' && (
+                                                <Button
+                                                    size="sm"
+                                                    variant="outline"
+                                                    className="h-8 w-8 p-0 border-green-500/50 text-green-500 hover:bg-green-500/10 hover:text-green-600"
+                                                    onClick={() => handleAction(user._id, 'approve')}
+                                                    disabled={processingId === user._id}
+                                                >
+                                                    {processingId === user._id ? (
+                                                        <Loader2 className="h-4 w-4 animate-spin" />
+                                                    ) : (
+                                                        <Check className="h-4 w-4" />
+                                                    )}
+                                                </Button>
+                                            )}
+                                            {user.status !== 'rejected' && (
+                                                <Button
+                                                    size="sm"
+                                                    variant="outline"
+                                                    className="h-8 w-8 p-0 border-yellow-500/50 text-yellow-500 hover:bg-yellow-500/10 hover:text-yellow-600"
+                                                    onClick={() => handleAction(user._id, 'reject')}
+                                                    disabled={processingId === user._id}
+                                                >
+                                                    {processingId === user._id ? (
+                                                        <Loader2 className="h-4 w-4 animate-spin" />
+                                                    ) : (
+                                                        <X className="h-4 w-4" />
+                                                    )}
+                                                </Button>
+                                            )}
+                                            <Button
+                                                variant="ghost"
+                                                size="sm"
+                                                className="h-8 w-8 p-0 text-red-500 hover:text-red-600 hover:bg-red-500/10"
+                                                onClick={() => setDeleteUserId(user._id)}
+                                            >
+                                                <Trash2 className="h-4 w-4" />
+                                            </Button>
+                                        </div>
+                                    </TableCell>
                                 </TableRow>
                             ))}
-                            {users.length === 0 && (
+                            {filteredUsers.length === 0 && (
                                 <TableRow>
-                                    <TableCell colSpan={5} className="text-center py-12 text-[var(--muted-foreground)]">
-                                        No users found.
+                                    <TableCell colSpan={6} className="text-center py-12 text-[var(--muted-foreground)]">
+                                        {searchQuery ? "No users match your search." : "No users found."}
                                     </TableCell>
                                 </TableRow>
                             )}
@@ -331,6 +384,38 @@ export default function UserAuthorizationPage() {
                     </form>
                 </DialogContent>
             </Dialog>
+
+            {/* Delete Confirmation Dialog */}
+            <AlertDialog open={!!deleteUserId} onOpenChange={(open) => !open && setDeleteUserId(null)}>
+                <AlertDialogContent className="bg-[var(--theme-dark-secondary)] border-[var(--theme-border)] text-[var(--foreground)]">
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>Delete User</AlertDialogTitle>
+                        <AlertDialogDescription className="text-[var(--muted-foreground)]">
+                            Are you sure you want to delete this user? This action cannot be undone and will remove all associated data.
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel className="border-[var(--theme-border)]">Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                            onClick={() => deleteUserId && handleDeleteUser(deleteUserId)}
+                            disabled={isDeleting}
+                            className="bg-red-500 hover:bg-red-600 text-white"
+                        >
+                            {isDeleting ? (
+                                <>
+                                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                                    Deleting...
+                                </>
+                            ) : (
+                                <>
+                                    <Trash2 className="mr-2 h-4 w-4" />
+                                    Delete
+                                </>
+                            )}
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
         </div>
     )
 }

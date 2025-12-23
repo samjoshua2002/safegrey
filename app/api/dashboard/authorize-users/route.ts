@@ -28,6 +28,26 @@ export async function POST(request: NextRequest) {
 
         if (action === 'approve') {
             const users = await User.find({ _id: { $in: userIds } });
+
+            // Update all users first
+            await Promise.all(users.map(async (user) => {
+                // Generate OTP
+                const otp = Math.floor(100000 + Math.random() * 900000).toString();
+                const otpExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
+
+                user.otp = otp;
+                user.otpExpires = otpExpires;
+                user.status = 'approved';
+                await user.save();
+            }));
+
+            // Return success immediately
+            const response = NextResponse.json({
+                message: 'Users approved and emails are being sent',
+                count: users.length
+            });
+
+            // Send emails asynchronously (fire-and-forget)
             const transporter = nodemailer.createTransport({
                 service: 'gmail',
                 auth: {
@@ -36,17 +56,8 @@ export async function POST(request: NextRequest) {
                 },
             });
 
-            const results = await Promise.all(users.map(async (user) => {
-                // Generate OTP
-                const otp = Math.floor(100000 + Math.random() * 900000).toString();
-                const otpExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
-
-                user.otp = otp;
-                user.otpExpires = otpExpires;
-                user.status = 'approved'; // Mark as approved, but maybe they need to verify first? User said "grant permission... by approving". I'll mark approved.
-                await user.save();
-
-                // Send Email
+            // Send all emails in background without blocking
+            users.forEach((user) => {
                 const mailOptions = {
                     from: {
                         name: 'SafeGrey Security',
@@ -65,23 +76,23 @@ export async function POST(request: NextRequest) {
                             </div>
 
                             <p style="margin-bottom: 5px;">Your One Time Password:</p>
-                            <h1 style="color: #AE2012; letter-spacing: 5px; margin-top: 5px;">${otp}</h1>
+                            <h1 style="color: #AE2012; letter-spacing: 5px; margin-top: 5px;">${user.otp}</h1>
                             <p>This OTP is valid for 24 hours.</p>
                             <p>If you did not request this, please ignore this email.</p>
                         </div>
                     `,
                 };
 
-                try {
-                    await transporter.sendMail(mailOptions);
-                    return { id: user._id, status: 'success' };
-                } catch (error) {
-                    console.error(`Failed to email ${user.email}`, error);
-                    return { id: user._id, status: 'email_failed' };
-                }
-            }));
+                transporter.sendMail(mailOptions)
+                    .then(() => {
+                        console.log(`Email sent successfully to ${user.email}`);
+                    })
+                    .catch((error) => {
+                        console.error(`Failed to email ${user.email}`, error);
+                    });
+            });
 
-            return NextResponse.json({ message: 'Users approved and emails sent', results });
+            return response;
         }
 
         return NextResponse.json({ error: 'Action not handled' }, { status: 400 });
