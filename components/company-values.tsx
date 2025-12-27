@@ -33,7 +33,7 @@ export function CompanyValues() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-16">
           <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Our <span className="text-gradient">Core Values</span>
+            Our <span className="text-gradient">Core Values.</span>
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
             The principles that guide everything we do and shape how we protect your business.
