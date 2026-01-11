@@ -104,7 +104,7 @@ export function HeroSection() {
                   isScanning && "animate-scan-glitch"
                 )}
               >
-                before They Do.
+                before They Do. test
               </span>
             </h1>
 
