@@ -15,7 +15,7 @@ import {
   FolderGit2,
   Search,
   Mail,
-    Handshake
+  Handshake
 } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
@@ -295,6 +295,7 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
       key: "resources",
       links: [
         { name: "Tools", href: "/tools" },
+        { name: "CryptX", href: "/cryptx" },
         { name: "GitHub", href: "https://github.com/", external: true },
       ],
     },
@@ -304,16 +305,14 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
     <>
       <nav
         ref={navRef}
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          scrolled
-            ? "bg-[var(--theme-dark-base)]/95 backdrop-blur-sm shadow-lg border-b border-[var(--theme-border)]"
-            : "bg-[var(--theme-dark-base)] border-b border-[var(--theme-border)]"
-        }`}
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${scrolled
+          ? "bg-[var(--theme-dark-base)]/95 backdrop-blur-sm shadow-lg border-b border-[var(--theme-border)]"
+          : "bg-[var(--theme-dark-base)] border-b border-[var(--theme-border)]"
+          }`}
       >
         <div
-          className={`h-px w-full bg-gradient-to-r from-transparent via-[var(--theme-accent)]/30 to-transparent transition-opacity duration-300 ${
-            scrolled ? "opacity-100" : "opacity-0"
-          }`}
+          className={`h-px w-full bg-gradient-to-r from-transparent via-[var(--theme-accent)]/30 to-transparent transition-opacity duration-300 ${scrolled ? "opacity-100" : "opacity-0"
+            }`}
         ></div>
 
         <div className="relative">
@@ -340,17 +339,15 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
                     <button
                       data-nav-item
                       onClick={() => toggleDropdown(item.key)}
-                      className={`flex items-center transition-colors gap-1 px-4 py-2 rounded-lg text-lg hover:bg-[var(--theme-accent)]/10 hover:text-[var(--theme-accent)] ${
-                        activeDropdown === item.key
-                          ? "text-[var(--theme-accent)] bg-[var(--theme-accent)]/10"
-                          : "text-[var(--theme-text-primary)]"
-                      }`}
+                      className={`flex items-center transition-colors gap-1 px-4 py-2 rounded-lg text-lg hover:bg-[var(--theme-accent)]/10 hover:text-[var(--theme-accent)] ${activeDropdown === item.key
+                        ? "text-[var(--theme-accent)] bg-[var(--theme-accent)]/10"
+                        : "text-[var(--theme-text-primary)]"
+                        }`}
                     >
                       {item.title}
                       <ChevronDown
-                        className={`h-4 w-4 transition-transform duration-200 ${
-                          activeDropdown === item.key ? "rotate-180" : ""
-                        }`}
+                        className={`h-4 w-4 transition-transform duration-200 ${activeDropdown === item.key ? "rotate-180" : ""
+                          }`}
                       />
                     </button>
                   </div>
@@ -398,19 +395,16 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
                 >
                   <div className="relative w-6 h-6 flex items-center justify-center">
                     <span
-                      className={`absolute w-full h-0.5 bg-current rounded-full transition-all duration-300 ${
-                        isOpen ? "rotate-45" : "-translate-y-1.5 rotate-0"
-                      }`}
+                      className={`absolute w-full h-0.5 bg-current rounded-full transition-all duration-300 ${isOpen ? "rotate-45" : "-translate-y-1.5 rotate-0"
+                        }`}
                     />
                     <span
-                      className={`absolute w-full h-0.5 bg-current rounded-full transition-all duration-300 ${
-                        isOpen ? "opacity-0" : "opacity-100"
-                      }`}
+                      className={`absolute w-full h-0.5 bg-current rounded-full transition-all duration-300 ${isOpen ? "opacity-0" : "opacity-100"
+                        }`}
                     />
                     <span
-                      className={`absolute w-full h-0.5 bg-current rounded-full transition-all duration-300 ${
-                        isOpen ? "-rotate-45" : "translate-y-1.5 rotate-0"
-                      }`}
+                      className={`absolute w-full h-0.5 bg-current rounded-full transition-all duration-300 ${isOpen ? "-rotate-45" : "translate-y-1.5 rotate-0"
+                        }`}
                     />
                   </div>
                 </Button>
@@ -477,12 +471,11 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
                                   onClick={() =>
                                     setHoveredSection(section.title)
                                   }
-                                  className={`w-full text-left p-3 rounded-lg transition-all duration-200 flex items-center gap-3 ${
-                                    (hoveredSection ||
-                                      "Security Assessment") === section.title
-                                      ? "bg-[var(--theme-accent)]/10 text-[var(--theme-accent)] border border-[var(--theme-accent)]/30"
-                                      : "text-[var(--theme-text-secondary)] hover:text-[var(--theme-text-primary)] hover:bg-[var(--theme-dark-base)]/80 border border-transparent"
-                                  }`}
+                                  className={`w-full text-left p-3 rounded-lg transition-all duration-200 flex items-center gap-3 ${(hoveredSection ||
+                                    "Security Assessment") === section.title
+                                    ? "bg-[var(--theme-accent)]/10 text-[var(--theme-accent)] border border-[var(--theme-accent)]/30"
+                                    : "text-[var(--theme-text-secondary)] hover:text-[var(--theme-text-primary)] hover:bg-[var(--theme-dark-base)]/80 border border-transparent"
+                                    }`}
                                 >
                                   <Icon className="h-4 w-4 flex-shrink-0" />
                                   <span className="font-medium text-md">
@@ -552,62 +545,62 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
                         )}
 
 
-{activeDropdown === "whoweare" && (
-  <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-    {navItems
-      .find((item) => item.key === "whoweare")
-      ?.links?.map((link, i) => {
-        // Define icons for each link
-        const getIcon = (name: string) => {
-          switch (name) {
-            case "About":
-              return <Users className="h-5 w-5 text-[var(--theme-accent)]" />;
-            case "Partners":
-              return <Handshake className="h-5 w-5 text-[var(--theme-accent)]" />;
-            case "Contact":
-              return <Mail className="h-5 w-5 text-[var(--theme-accent)]" />;
-            default:
-              return <Users className="h-5 w-5 text-[var(--theme-accent)]" />;
-          }
-        };
+                        {activeDropdown === "whoweare" && (
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                            {navItems
+                              .find((item) => item.key === "whoweare")
+                              ?.links?.map((link, i) => {
+                                // Define icons for each link
+                                const getIcon = (name: string) => {
+                                  switch (name) {
+                                    case "About":
+                                      return <Users className="h-5 w-5 text-[var(--theme-accent)]" />;
+                                    case "Partners":
+                                      return <Handshake className="h-5 w-5 text-[var(--theme-accent)]" />;
+                                    case "Contact":
+                                      return <Mail className="h-5 w-5 text-[var(--theme-accent)]" />;
+                                    default:
+                                      return <Users className="h-5 w-5 text-[var(--theme-accent)]" />;
+                                  }
+                                };
 
-        return (
-          <Link
-            key={i}
-            href={link.href}
-            className="group p-5 rounded-lg border border-[var(--theme-border)] hover:border-[var(--theme-accent)]/30 transition-all duration-200 hover:bg-[var(--theme-dark-base)]/70"
-          >
-            <div className="flex items-center gap-3 mb-3">
-             
-                {getIcon(link.name)}
-         
-              <h4 className="text-lg font-semibold text-[var(--theme-text-primary)]">
-                {link.name}
-              </h4>
-            </div>
-            <p className="text-sm text-[var(--theme-text-secondary)] mb-3">
-              {link.name === "About" &&
-                "Learn about our mission and values"}
-              {link.name === "Partners" &&
-                "Our trusted security partners"}
-              {link.name === "Contact" &&
-                "Get in touch with our team"}
-            </p>
-            <div className="flex items-center text-sm text-[var(--theme-accent)] opacity-0 group-hover:opacity-100 transition-opacity">
-              Explore <ArrowRight className="ml-2 h-3 w-3" />
-            </div>
-          </Link>
-        );
-      })}
-  </div>
-)}
+                                return (
+                                  <Link
+                                    key={i}
+                                    href={link.href}
+                                    className="group p-5 rounded-lg border border-[var(--theme-border)] hover:border-[var(--theme-accent)]/30 transition-all duration-200 hover:bg-[var(--theme-dark-base)]/70"
+                                  >
+                                    <div className="flex items-center gap-3 mb-3">
+
+                                      {getIcon(link.name)}
+
+                                      <h4 className="text-lg font-semibold text-[var(--theme-text-primary)]">
+                                        {link.name}
+                                      </h4>
+                                    </div>
+                                    <p className="text-sm text-[var(--theme-text-secondary)] mb-3">
+                                      {link.name === "About" &&
+                                        "Learn about our mission and values"}
+                                      {link.name === "Partners" &&
+                                        "Our trusted security partners"}
+                                      {link.name === "Contact" &&
+                                        "Get in touch with our team"}
+                                    </p>
+                                    <div className="flex items-center text-sm text-[var(--theme-accent)] opacity-0 group-hover:opacity-100 transition-opacity">
+                                      Explore <ArrowRight className="ml-2 h-3 w-3" />
+                                    </div>
+                                  </Link>
+                                );
+                              })}
+                          </div>
+                        )}
 
                         {activeDropdown === "resources" && (
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                             {navItems
                               .find((item) => item.key === "resources")
                               ?.links?.map((link, i) => (
-                                <a
+                                <Link
                                   key={i}
                                   href={link.href}
                                   target={link.external ? "_blank" : "_self"}
@@ -617,9 +610,13 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
                                   className="group p-5 rounded-lg border border-[var(--theme-border)] hover:border-[var(--theme-accent)]/30 transition-all duration-200 hover:bg-[var(--theme-dark-base)]/70"
                                 >
                                   <div className="flex items-center gap-3 mb-3">
-                                    {link.name === "Tools" ? (
+                                    {link.name === "Tools" && (
                                       <Cog className="h-5 w-5 text-[var(--theme-accent)]" />
-                                    ) : (
+                                    )}
+                                    {link.name === "CryptX" && (
+                                      <Cloud className="h-5 w-5 text-[var(--theme-accent)]" />
+                                    )}
+                                    {link.name === "GitHub" && (
                                       <FolderGit2 className="h-5 w-5 text-[var(--theme-accent)]" />
                                     )}
                                     <h4 className="text-lg font-semibold text-[var(--theme-text-primary)]">
@@ -629,6 +626,8 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
                                   <p className="text-sm text-[var(--theme-text-secondary)] mb-3">
                                     {link.name === "Tools" &&
                                       "Our security tools and utilities"}
+                                    {link.name === "CryptX" &&
+                                      "Offensive tradecraft and evasion platform"}
                                     {link.name === "GitHub" &&
                                       "Open-source security projects"}
                                   </p>
@@ -638,7 +637,7 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
                                       : "Explore"}
                                     <ArrowRight className="ml-2 h-3 w-3" />
                                   </div>
-                                </a>
+                                </Link>
                               ))}
                           </div>
                         )}
@@ -674,11 +673,10 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
                   >
                     <span className="tracking-wide">{item.title}</span>
                     <ChevronDown
-                      className={`h-5 w-5 text-[var(--theme-text-secondary)] transition-transform duration-300 ${
-                        activeAccordion === item.key
-                          ? "rotate-180 text-[var(--theme-accent)]"
-                          : ""
-                      }`}
+                      className={`h-5 w-5 text-[var(--theme-text-secondary)] transition-transform duration-300 ${activeAccordion === item.key
+                        ? "rotate-180 text-[var(--theme-accent)]"
+                        : ""
+                        }`}
                     />
                   </button>
 
@@ -753,6 +751,9 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
                                 <div className="p-2 rounded-md bg-[var(--theme-accent)]/10 group-hover:bg-[var(--theme-accent)]/20 transition-colors">
                                   {link.name === "Tools" && (
                                     <Cog className="h-4 w-4 text-[var(--theme-accent)]" />
+                                  )}
+                                  {link.name === "CryptX" && (
+                                    <Cloud className="h-4 w-4 text-[var(--theme-accent)]" />
                                   )}
                                   {link.name === "GitHub" && (
                                     <FolderGit2 className="h-4 w-4 text-[var(--theme-accent)]" />

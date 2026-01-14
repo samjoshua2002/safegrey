@@ -44,6 +44,7 @@
     "@tanstack/react-table": "^8.21.3",
     "@types/bcryptjs": "^2.4.6",
     "@vercel/analytics": "latest",
+    "@xyflow/react": "^12.10.0",
     "ai": "^5.0.104",
     "autoprefixer": "^10.4.20",
     "axios": "^1.13.2",
