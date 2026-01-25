@@ -156,6 +156,14 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
     return () => document.removeEventListener("keydown", down);
   }, []);
 
+  // Close navigation menu when pathname changes
+  useEffect(() => {
+    setIsOpen(false);
+    setActiveDropdown(null);
+    setHoveredSection(null);
+    setActiveAccordion(null);
+  }, [pathname]);
+
   const toggleDropdown = (menu: string) => {
     if (activeDropdown === menu) {
       setActiveDropdown(null);
@@ -319,7 +327,17 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between items-center h-16">
               {/* Brand */}
-              <Link href="/" className="flex items-center space-x-2 z-50">
+              <Link
+                href="/"
+                className="flex items-center space-x-2 z-50 cursor-pointer"
+                onClick={(e) => {
+                  if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
+                  setIsOpen(false);
+                  setActiveDropdown(null);
+                  setHoveredSection(null);
+                  router.push("/");
+                }}
+              >
                 <img
                   src="/logo.png"
                   className="pl-4 h-10 w-auto"
@@ -471,7 +489,7 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
                                   onClick={() =>
                                     setHoveredSection(section.title)
                                   }
-                                  className={`w-full text-left p-3 rounded-lg transition-all duration-200 flex items-center gap-3 ${(hoveredSection ||
+                                  className={`w-full text-left p-3 rounded-lg transition-all duration-200 flex items-center gap-3 cursor-pointer ${(hoveredSection ||
                                     "Security Assessment") === section.title
                                     ? "bg-[var(--theme-accent)]/10 text-[var(--theme-accent)] border border-[var(--theme-accent)]/30"
                                     : "text-[var(--theme-text-secondary)] hover:text-[var(--theme-text-primary)] hover:bg-[var(--theme-dark-base)]/80 border border-transparent"
@@ -528,7 +546,7 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
                                             onClick={() =>
                                               handleServiceNavigation(link)
                                             }
-                                            className="group flex items-center justify-between p-3 rounded-lg border border-[var(--theme-border)] hover:border-[var(--theme-accent)]/30 transition-all duration-200 hover:bg-[var(--theme-dark-base)]/70 w-full text-left"
+                                            className="group flex items-center justify-between p-3 rounded-lg border border-[var(--theme-border)] hover:border-[var(--theme-accent)]/30 transition-all duration-200 hover:bg-[var(--theme-dark-base)]/70 w-full text-left cursor-pointer"
                                           >
                                             <span className="text-[var(--theme-text-secondary)] group-hover:text-[var(--theme-text-primary)] transition-colors">
                                               {link}
@@ -568,7 +586,12 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
                                   <Link
                                     key={i}
                                     href={link.href}
-                                    className="group p-5 rounded-lg border border-[var(--theme-border)] hover:border-[var(--theme-accent)]/30 transition-all duration-200 hover:bg-[var(--theme-dark-base)]/70"
+                                    className="group p-5 rounded-lg border border-[var(--theme-border)] hover:border-[var(--theme-accent)]/30 transition-all duration-200 hover:bg-[var(--theme-dark-base)]/70 cursor-pointer"
+                                    onClick={() => {
+                                      if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
+                                      setActiveDropdown(null);
+                                      setIsOpen(false);
+                                    }}
                                   >
                                     <div className="flex items-center gap-3 mb-3">
 
@@ -607,7 +630,12 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
                                   rel={
                                     link.external ? "noopener noreferrer" : ""
                                   }
-                                  className="group p-5 rounded-lg border border-[var(--theme-border)] hover:border-[var(--theme-accent)]/30 transition-all duration-200 hover:bg-[var(--theme-dark-base)]/70"
+                                  className="group p-5 rounded-lg border border-[var(--theme-border)] hover:border-[var(--theme-accent)]/30 transition-all duration-200 hover:bg-[var(--theme-dark-base)]/70 cursor-pointer"
+                                  onClick={() => {
+                                    if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
+                                    setActiveDropdown(null);
+                                    setIsOpen(false);
+                                  }}
                                 >
                                   <div className="flex items-center gap-3 mb-3">
                                     {link.name === "Tools" && (
@@ -711,7 +739,7 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
                                       onClick={() =>
                                         handleServiceNavigation(section.title)
                                       }
-                                      className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[var(--theme-accent)]/5 transition-all group text-left"
+                                      className="w-full flex items-center gap-3 p-3 rounded-lg hover:bg-[var(--theme-accent)]/5 transition-all group text-left cursor-pointer"
                                     >
                                       <div className="p-2 rounded-md bg-[var(--theme-accent)]/10 group-hover:bg-[var(--theme-accent)]/20 transition-colors">
                                         <Icon className="h-5 w-5 text-[var(--theme-accent)]" />
@@ -727,7 +755,7 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
                                           onClick={() =>
                                             handleServiceNavigation(link)
                                           }
-                                          className="w-full text-left text-sm text-[var(--theme-text-secondary)] hover:text-[var(--theme-accent)] hover:pl-2 transition-all py-1"
+                                          className="w-full text-left text-sm text-[var(--theme-text-secondary)] hover:text-[var(--theme-accent)] hover:pl-2 transition-all py-1 cursor-pointer"
                                         >
                                           • {link}
                                         </button>

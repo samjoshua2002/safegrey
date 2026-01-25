@@ -85,11 +85,6 @@ const FeatureCard = ({
         return () => clearTimeout(timer)
     }, [expanded, onUpdate])
 
-    // Also update immediately
-    useEffect(() => {
-        onUpdate()
-    }, [expanded, onUpdate])
-
     return (
         <div
             ref={cardRef}
@@ -155,8 +150,8 @@ export function CryptXFeatureMap() {
     const hubRef = useRef<HTMLDivElement>(null)
     const [lines, setLines] = useState<{ id: string, path: string }[]>([])
 
-    // Function to calculate lines
-    const drawLines = () => {
+    // Function to calculate lines (wrapped in useCallback to prevent infinite loops)
+    const drawLines = React.useCallback(() => {
         if (!containerRef.current || !hubRef.current) return
 
         // Hub Center/Anchor Points
@@ -210,21 +205,21 @@ export function CryptXFeatureMap() {
         })
 
         setLines(newLines)
-    }
+    }, [containerRef, hubRef])
 
     // Effect to re-draw lines on resize
     useEffect(() => {
         drawLines()
         window.addEventListener('resize', drawLines)
         return () => window.removeEventListener('resize', drawLines)
-    }, [])
+    }, [drawLines])
 
     return (
         <section className="py-24 bg-[var(--theme-dark-base)] w-full relative overflow-hidden">
 
             {/* Title */}
-            <div className="text-center mb-16 relative z-30">
-                <h2 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-[var(--theme-text-primary)] to-[var(--theme-text-secondary)] bg-clip-text text-transparent mb-4">
+            <div className="text-center  relative z-30">
+                <h2 className="text-3xl md:text-5xl font-bold bg-gradient-to-r from-[var(--theme-text-primary)] to-[var(--theme-text-secondary)] bg-clip-text text-transparent ">
                     Key Features & Capabilities
                 </h2>
                 <div className="h-1 w-32 bg-gradient-to-r from-transparent via-[var(--theme-accent)] to-transparent mx-auto rounded-full" />
