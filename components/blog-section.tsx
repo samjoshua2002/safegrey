@@ -17,7 +17,7 @@ export function BlogSection() {
     {
       title: "Zero Trust Architecture: Implementation Best Practices",
       excerpt: "A comprehensive guide to implementing Zero Trust security models in modern enterprise environments.",
-      author: "Marcus Rodriguez",
+      author: "Marcus ",
       date: "March 10, 2024",
       readTime: "12 min read",
       category: "Security Architecture",

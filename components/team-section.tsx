@@ -12,7 +12,7 @@ export function TeamSection() {
       description: "Former NSA cybersecurity analyst with 15+ years of experience."
     },
     {
-      name: "Marcus Rodriguez",
+      name: "Marcus ",
       role: "CTO & Co-Founder",
       image: "/placeholder-user.jpg",
       color: "bg-white", // White
@@ -21,7 +21,7 @@ export function TeamSection() {
     },
     {
       name: "Dr. Emily Watson",
-      role: "Head of Threat Intelligence",
+      role: "Head",
       image: "/placeholder-user.jpg",
       color: "bg-black", // Black
       textColor: "text-white",
@@ -64,12 +64,12 @@ export function TeamSection() {
   ];
 
   return (
-    <section className="pb-10 px-4 sm:px-6 lg:px-8 relative bg-[var(--theme-dark-base)] overflow-hidden" id="team">
+    <section className="pb-10 px-8 lg:px-16 relative bg-[var(--theme-dark-base)] overflow-hidden" id="team">
       {/* Background Decorative Elements */}
       <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[var(--theme-accent)]/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-white/5 rounded-full blur-[120px] pointer-events-none" />
 
-      <div className="max-w-[1600px] mx-auto relative z-10">
+      <div className="max-w-7xl mx-auto relative z-10">
         <div className="text-center mb-20">
           <h2 className="text-5xl md:text-6xl font-black mb-6 uppercase tracking-tighter">
             Our Team
@@ -124,14 +124,14 @@ export function TeamSection() {
                     {/* Socials */}
                     <div className="flex justify-center gap-4 mt-6">
                       <button className={`p-2 rounded-full transition-all duration-300 hover:scale-110 cursor-pointer ${member.color === "bg-white"
-                          ? "bg-black text-white hover:bg-[var(--theme-accent)]"
-                          : "bg-white text-black hover:bg-[var(--theme-accent)] hover:text-white"
+                        ? "bg-black text-white hover:bg-[var(--theme-accent)]"
+                        : "bg-white text-black hover:bg-[var(--theme-accent)] hover:text-white"
                         }`}>
                         <Linkedin size={18} />
                       </button>
                       <button className={`p-2 rounded-full transition-all duration-300 hover:scale-110 cursor-pointer ${member.color === "bg-white"
-                          ? "bg-black text-white hover:bg-[var(--theme-accent)]"
-                          : "bg-white text-black hover:bg-[var(--theme-accent)] hover:text-white"
+                        ? "bg-black text-white hover:bg-[var(--theme-accent)]"
+                        : "bg-white text-black hover:bg-[var(--theme-accent)] hover:text-white"
                         }`}>
                         <Twitter size={18} />
                       </button>
