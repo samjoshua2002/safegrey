@@ -6,95 +6,141 @@ export function TeamSection() {
     {
       name: "Sarah Chen",
       role: "CEO & Co-Founder",
-      bio: "Former NSA cybersecurity analyst with 15+ years of experience in threat intelligence and incident response.",
-      image: "/professional-woman-ceo-cybersecurity.jpg",
-      social: {
-        linkedin: "#",
-        twitter: "#",
-      },
+      image: "/placeholder-user.jpg",
+      color: "bg-[var(--theme-accent)]", // Red
+      textColor: "text-white",
+      description: "Former NSA cybersecurity analyst with 15+ years of experience."
     },
     {
       name: "Marcus Rodriguez",
       role: "CTO & Co-Founder",
-      bio: "Ex-Google security engineer specializing in AI-powered threat detection and automated response systems.",
-      image: "/professional-man-cto-cybersecurity.jpg",
-      social: {
-        linkedin: "#",
-        twitter: "#",
-      },
+      image: "/placeholder-user.jpg",
+      color: "bg-white", // White
+      textColor: "text-black",
+      description: "Ex-Google security engineer specializing in AI-powered threat detection."
     },
     {
       name: "Dr. Emily Watson",
       role: "Head of Threat Intelligence",
-      bio: "PhD in Computer Security with expertise in advanced persistent threats and nation-state attack patterns.",
-      image: "/professional-woman-doctor-cybersecurity.jpg",
-      social: {
-        linkedin: "#",
-        twitter: "#",
-      },
+      image: "/placeholder-user.jpg",
+      color: "bg-black", // Black
+      textColor: "text-white",
+      description: "PhD in Computer Security with expertise in nation-state attack patterns."
     },
     {
       name: "James Park",
       role: "Director of Incident Response",
-      bio: "Former FBI cybercrime investigator with extensive experience in digital forensics and crisis management.",
-      image: "/professional-man-director-cybersecurity.jpg",
-      social: {
-        linkedin: "#",
-        twitter: "#",
-      },
+      image: "/placeholder-user.jpg",
+      color: "bg-[var(--theme-accent)]", // Red
+      textColor: "text-white",
+      description: "Former FBI cybercrime investigator"
+    },
+    {
+      name: "Alex Rivera",
+      role: "Head of Operations",
+      image: "/placeholder-user.jpg",
+      color: "bg-white", // Red
+      textColor: "text-black",
+      description: "Former FBI cybercrime investigator with extensive experience in digital forensics."
+    },
+    {
+      name: "Sarah Chen",
+      role: "CEO & Co-Founder",
+      image: "/placeholder-user.jpg",
+      color: "bg-black", // Red
+      textColor: "text-white",
+      description: "Former NSA cybersecurity analyst with 15+ years of experience."
     },
   ]
 
-  return (
-    <section className="py-24 px-4 sm:px-6 lg:px-8 relative" id="team">
-      {/* Background Effect */}
-      <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent/5 to-transparent" />
+  // Array of artistic "blob" shapes
+  const shapes = [
+    "rounded-[40%_60%_70%_30%/40%_50%_60%_50%]",
+    "rounded-[50%_50%_20%_80%/25%_80%_20%_75%]",
+    "rounded-[70%_30%_50%_50%/30%_30%_70%_70%]",
+    "rounded-[30%_70%_70%_30%/30%_30%_70%_70%]",
+    "rounded-[60%_40%_30%_70%/60%_30%_70%_40%]",
+    "rounded-[50%_50%_70%_30%/50%_20%_80%_50%]"
+  ];
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-bold mb-4">
-            Meet Our <span className="text-gradient">Expert Team</span>
+  return (
+    <section className="pb-10 px-4 sm:px-6 lg:px-8 relative bg-[var(--theme-dark-base)] overflow-hidden" id="team">
+      {/* Background Decorative Elements */}
+      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[var(--theme-accent)]/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-white/5 rounded-full blur-[120px] pointer-events-none" />
+
+      <div className="max-w-[1600px] mx-auto relative z-10">
+        <div className="text-center mb-20">
+          <h2 className="text-5xl md:text-6xl font-black mb-6 uppercase tracking-tighter">
+            Our Team
           </h2>
-          <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Industry veterans with decades of combined experience in cybersecurity, threat intelligence, and incident
-            response.
+          {/* <div className="h-2 w-24 bg-[var(--theme-accent)] mx-auto rounded-full mb-6" /> */}
+          <p className="text-xl text-[var(--theme-text-secondary)] max-w-3xl mx-auto font-light">
+            The minds behind the shield. Veterans, researchers, and strategists.
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {team.map((member, index) => (
-            <Card key={index} className="glass-effect hover:glow-accent transition-all duration-300 group">
-              <CardContent className="p-6 text-center">
-                <div className="relative mb-6">
-                  <img
-                    src={member.image || "/placeholder.svg"}
-                    alt={member.name}
-                    className="w-24 h-24 rounded-full mx-auto object-cover"
-                  />
-                  <div className="absolute inset-0 rounded-full bg-gradient-to-br from-accent/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-                </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16 pb-16">
+          {team.map((member, index) => {
+            const shapeClass = shapes[index % shapes.length];
+            return (
+              <div key={index} className="group relative">
+                {/* Backing 'Brush Stroke' / Shadow Element */}
+                <div
+                  className={`absolute inset-0 translate-x-4 translate-y-4 rounded-[2rem] opacity-50 transition-transform duration-300 group-hover:translate-x-6 group-hover:translate-y-6 ${member.color === "bg-black" ? "bg-[var(--theme-accent)]" : "bg-black"
+                    }`}
+                />
 
-                <h3 className="text-lg font-semibold mb-1">{member.name}</h3>
-                <div className="text-accent text-sm font-medium mb-3">{member.role}</div>
-                <p className="text-muted-foreground text-sm leading-relaxed mb-4">{member.bio}</p>
+                {/* Main Card */}
+                <div className={`relative h-[500px] rounded-[2rem] p-8 flex flex-col items-center text-center transition-transform duration-300 group-hover:-translate-y-2 overflow-hidden ${member.color}`}>
 
-                <div className="flex justify-center space-x-3">
-                  <a
-                    href={member.social.linkedin}
-                    className="p-2 rounded-lg glass-effect hover:bg-accent/10 transition-colors"
-                  >
-                    <Linkedin className="w-4 h-4 text-muted-foreground hover:text-accent transition-colors" />
-                  </a>
-                  <a
-                    href={member.social.twitter}
-                    className="p-2 rounded-lg glass-effect hover:bg-accent/10 transition-colors"
-                  >
-                    <Twitter className="w-4 h-4 text-muted-foreground hover:text-accent transition-colors" />
-                  </a>
+                  {/* Decorative Pattern overlay */}
+                  <div className={`absolute inset-0 opacity-15 bg-[url('/noise.png')] ${member.color === "bg-white" ? "mix-blend-multiply" : "mix-blend-overlay"
+                    }`} />
+
+                  {/* Image Container with 'Brush' Mask Look */}
+                  <div className="relative w-48 h-48 mb-8 mx-auto transform transition-transform duration-500 group-hover:scale-110">
+                    <div className={`absolute inset-0 bg-current opacity-20 rotate-6 ${shapeClass}`} />
+                    <img
+                      src={member.image}
+                      alt={member.name}
+                      className={`relative w-full h-full object-cover shadow-xl ${shapeClass}`}
+                    />
+                  </div>
+
+                  {/* Content */}
+                  <div className={`relative z-10 flex-1 flex flex-col justify-between ${member.textColor}`}>
+                    <div>
+                      <h3 className="text-2xl font-bold mb-2 font-sans tracking-tight uppercase">{member.name}</h3>
+                      <div className={`text-sm font-bold uppercase tracking-widest mb-4 opacity-80 border-b-2 inline-block pb-1 ${member.textColor === "text-white" ? "border-white/30" : "border-black/30"
+                        }`}>
+                        {member.role}
+                      </div>
+                      <p className={`text-base font-medium leading-relaxed opacity-90 line-clamp-3`}>
+                        {member.description}
+                      </p>
+                    </div>
+
+                    {/* Socials */}
+                    <div className="flex justify-center gap-4 mt-6">
+                      <button className={`p-2 rounded-full transition-all duration-300 hover:scale-110 cursor-pointer ${member.color === "bg-white"
+                          ? "bg-black text-white hover:bg-[var(--theme-accent)]"
+                          : "bg-white text-black hover:bg-[var(--theme-accent)] hover:text-white"
+                        }`}>
+                        <Linkedin size={18} />
+                      </button>
+                      <button className={`p-2 rounded-full transition-all duration-300 hover:scale-110 cursor-pointer ${member.color === "bg-white"
+                          ? "bg-black text-white hover:bg-[var(--theme-accent)]"
+                          : "bg-white text-black hover:bg-[var(--theme-accent)] hover:text-white"
+                        }`}>
+                        <Twitter size={18} />
+                      </button>
+                    </div>
+                  </div>
                 </div>
-              </CardContent>
-            </Card>
-          ))}
+              </div>
+            )
+          })}
         </div>
       </div>
     </section>

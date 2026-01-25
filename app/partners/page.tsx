@@ -18,7 +18,7 @@ export default function PartnersPage() {
             <Navigation />
 
             <PartnersGrid />
-            <GridCard />
+            {/* <GridCard /> */}
             {/* <Marquee /> */}
             <PartnerProcess />
 

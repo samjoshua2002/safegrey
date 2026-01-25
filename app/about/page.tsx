@@ -23,13 +23,13 @@ export default function AboutPage() {
       {/* <AboutHero /> */}
       <AboutSection />
 
-      {/*       
-      <CompanyValues />
+
+      {/* <CompanyValues /> */}
       <TeamSection />
-      <CompanyStats />
-      <CTASection /> */}
-    
-      <BookingScheduler/>
+      {/* <CompanyStats /> */}
+      {/* <CTASection /> */}
+
+      {/* <BookingScheduler/> */}
       <Footer />
 
     </main>
