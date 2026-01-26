@@ -51,6 +51,7 @@ export function Footer() {
     ],
     "Resources": [
       { name: "Tools", href: "/tools" },
+      { name: "CryptX", href: "/cryptx" },
       { name: "GitHub", href: "https://github.com/safegrey", external: true },
     ],
   };

@@ -304,7 +304,7 @@ export function Navigation({ onServiceSelect }: NavigationProps) {
       links: [
         { name: "Tools", href: "/tools" },
         { name: "CryptX", href: "/cryptx" },
-        { name: "GitHub", href: "https://github.com/", external: true },
+        { name: "GitHub", href: "https://github.com/safegrey", external: true },
       ],
     },
   ];
