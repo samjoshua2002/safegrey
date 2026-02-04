@@ -1,5 +1,8 @@
-import { Card, CardContent } from "@/components/ui/card"
-import { Linkedin, Twitter } from "lucide-react"
+"use client";
+
+import { motion } from "framer-motion";
+import { Card, CardContent } from "@/components/ui/card";
+import { Linkedin, Twitter } from "lucide-react";
 
 export function TeamSection() {
   const team = [
@@ -7,142 +10,126 @@ export function TeamSection() {
       name: "Sarah Chen",
       role: "CEO & Co-Founder",
       image: "/placeholder-user.jpg",
-      color: "bg-[var(--theme-accent)]", // Red
-      textColor: "text-white",
       description: "Former NSA cybersecurity analyst with 15+ years of experience."
     },
     {
       name: "Marcus ",
       role: "CTO & Co-Founder",
       image: "/placeholder-user.jpg",
-      color: "bg-white", // White
-      textColor: "text-black",
       description: "Ex-Google security engineer specializing in AI-powered threat detection."
     },
     {
       name: "Dr. Emily Watson",
       role: "Head",
       image: "/placeholder-user.jpg",
-      color: "bg-black", // Black
-      textColor: "text-white",
       description: "PhD in Computer Security with expertise in nation-state attack patterns."
     },
     {
       name: "James Park",
       role: "Director of Incident Response",
       image: "/placeholder-user.jpg",
-      color: "bg-[var(--theme-accent)]", // Red
-      textColor: "text-white",
       description: "Former FBI cybercrime investigator"
     },
     {
       name: "Alex Rivera",
       role: "Head of Operations",
       image: "/placeholder-user.jpg",
-      color: "bg-white", // Red
-      textColor: "text-black",
       description: "Former FBI cybercrime investigator with extensive experience in digital forensics."
     },
     {
       name: "Sarah Chen",
       role: "CEO & Co-Founder",
       image: "/placeholder-user.jpg",
-      color: "bg-black", // Red
-      textColor: "text-white",
       description: "Former NSA cybersecurity analyst with 15+ years of experience."
     },
   ]
 
-  // Array of artistic "blob" shapes
-  const shapes = [
-    "rounded-[40%_60%_70%_30%/40%_50%_60%_50%]",
-    "rounded-[50%_50%_20%_80%/25%_80%_20%_75%]",
-    "rounded-[70%_30%_50%_50%/30%_30%_70%_70%]",
-    "rounded-[30%_70%_70%_30%/30%_30%_70%_70%]",
-    "rounded-[60%_40%_30%_70%/60%_30%_70%_40%]",
-    "rounded-[50%_50%_70%_30%/50%_20%_80%_50%]"
-  ];
-
   return (
-    <section className="pb-10 px-8 lg:px-16 relative bg-[var(--theme-dark-base)] overflow-hidden" id="team">
-      {/* Background Decorative Elements */}
-      <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[var(--theme-accent)]/5 rounded-full blur-[120px] pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-white/5 rounded-full blur-[120px] pointer-events-none" />
+    <section className="relative py-16 lg:py-24 px-4 sm:px-6 lg:px-8 bg-[var(--theme-dark-base)] overflow-hidden" id="team">
+      {/* Soft Background Accents */}
+      <div className="absolute inset-0 z-0 pointer-events-none">
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[var(--theme-accent)]/5 rounded-full blur-[120px]" />
+        <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[var(--theme-accent)]/3 rounded-full blur-[120px]" />
+      </div>
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        <div className="text-center mb-20">
-          <h2 className="text-5xl md:text-6xl font-black mb-6 uppercase tracking-tighter">
-            Our Team
-          </h2>
-          {/* <div className="h-2 w-24 bg-[var(--theme-accent)] mx-auto rounded-full mb-6" /> */}
-          <p className="text-xl text-[var(--theme-text-secondary)] max-w-3xl mx-auto font-light">
-            The minds behind the shield. Veterans, researchers, and strategists.
-          </p>
+      <div className="relative z-10 max-w-7xl mx-auto">
+        <div className="text-center mb-16 px-4">
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5 }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--theme-accent)]/10 border border-[var(--theme-accent)]/20 mb-6"
+          >
+            <div className="w-1.5 h-1.5 rounded-full bg-[var(--theme-accent)] animate-pulse" />
+            <span className="text-xs font-bold tracking-widest uppercase text-[var(--theme-accent)]">Our Experts</span>
+          </motion.div>
+          <motion.h2
+            className="text-4xl md:text-5xl lg:text-6xl font-black mb-6 text-[var(--theme-text-primary)] tracking-tight"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+          >
+            Behind the <span className="text-[var(--theme-accent)]">Shield</span>
+          </motion.h2>
+          <motion.p
+            className="text-lg text-[var(--theme-text-secondary)] max-w-2xl mx-auto font-light leading-relaxed"
+            initial={{ opacity: 1, y: 0 }}
+          >
+            A collective of elite security professionals dedicated to protecting your digital enterprise.
+          </motion.p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-16 pb-16">
-          {team.map((member, index) => {
-            const shapeClass = shapes[index % shapes.length];
-            return (
-              <div key={index} className="group relative">
-                {/* Backing 'Brush Stroke' / Shadow Element */}
-                <div
-                  className={`absolute inset-0 translate-x-4 translate-y-4 rounded-[2rem] opacity-50 transition-transform duration-300 group-hover:translate-x-6 group-hover:translate-y-6 ${member.color === "bg-black" ? "bg-[var(--theme-accent)]" : "bg-black"
-                    }`}
-                />
-
-                {/* Main Card */}
-                <div className={`relative h-[500px] rounded-[2rem] p-8 flex flex-col items-center text-center transition-transform duration-300 group-hover:-translate-y-2 overflow-hidden ${member.color}`}>
-
-                  {/* Decorative Pattern overlay */}
-                  <div className={`absolute inset-0 opacity-15 bg-[url('/noise.png')] ${member.color === "bg-white" ? "mix-blend-multiply" : "mix-blend-overlay"
-                    }`} />
-
-                  {/* Image Container with 'Brush' Mask Look */}
-                  <div className="relative w-48 h-48 mb-8 mx-auto transform transition-transform duration-500 group-hover:scale-110">
-                    <div className={`absolute inset-0 bg-current opacity-20 rotate-6 ${shapeClass}`} />
-                    <img
-                      src={member.image}
-                      alt={member.name}
-                      className={`relative w-full h-full object-cover shadow-xl ${shapeClass}`}
-                    />
-                  </div>
-
-                  {/* Content */}
-                  <div className={`relative z-10 flex-1 flex flex-col justify-between ${member.textColor}`}>
-                    <div>
-                      <h3 className="text-2xl font-bold mb-2 font-sans tracking-tight uppercase">{member.name}</h3>
-                      <div className={`text-sm font-bold uppercase tracking-widest mb-4 opacity-80 border-b-2 inline-block pb-1 ${member.textColor === "text-white" ? "border-white/30" : "border-black/30"
-                        }`}>
-                        {member.role}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {team.map((member, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+            >
+              <Card className="group h-full bg-card/40 backdrop-blur-sm border border-white/5 hover:border-[var(--theme-accent)]/30 rounded-2xl transition-all duration-500 hover:shadow-2xl hover:shadow-[var(--theme-accent)]/10 overflow-hidden">
+                <CardContent className="p-6 flex flex-col items-center text-center">
+                  {/* Premium Profile Image */}
+                  <div className="relative mb-6">
+                    <div className="absolute inset-0 bg-gradient-to-br from-[var(--theme-accent)] to-transparent opacity-0 group-hover:opacity-20 transition-opacity duration-500 rounded-full scale-110" />
+                    <div className="relative w-32 h-32 rounded-full p-1 bg-gradient-to-br from-white/10 to-transparent group-hover:from-[var(--theme-accent)]/50 transition-all duration-500">
+                      <div className="w-full h-full rounded-full overflow-hidden border-2 border-transparent bg-[var(--theme-dark-base)]">
+                        <img
+                          src={member.image}
+                          alt={member.name}
+                          className="w-full h-full object-cover grayscale transition-all duration-500 group-hover:grayscale-0 group-hover:scale-110"
+                        />
                       </div>
-                      <p className={`text-base font-medium leading-relaxed opacity-90 line-clamp-3`}>
-                        {member.description}
-                      </p>
-                    </div>
-
-                    {/* Socials */}
-                    <div className="flex justify-center gap-4 mt-6">
-                      <button className={`p-2 rounded-full transition-all duration-300 hover:scale-110 cursor-pointer ${member.color === "bg-white"
-                        ? "bg-black text-white hover:bg-[var(--theme-accent)]"
-                        : "bg-white text-black hover:bg-[var(--theme-accent)] hover:text-white"
-                        }`}>
-                        <Linkedin size={18} />
-                      </button>
-                      <button className={`p-2 rounded-full transition-all duration-300 hover:scale-110 cursor-pointer ${member.color === "bg-white"
-                        ? "bg-black text-white hover:bg-[var(--theme-accent)]"
-                        : "bg-white text-black hover:bg-[var(--theme-accent)] hover:text-white"
-                        }`}>
-                        <Twitter size={18} />
-                      </button>
                     </div>
                   </div>
-                </div>
-              </div>
-            )
-          })}
+
+                  <div className="space-y-3 pb-6">
+                    <h3 className="text-xl font-bold text-white tracking-tight group-hover:text-[var(--theme-accent)] transition-colors duration-300">
+                      {member.name}
+                    </h3>
+                    <p className="text-xs font-bold uppercase tracking-[0.1em] text-[var(--theme-accent)] bg-[var(--theme-accent)]/10 px-3 py-1 rounded-full inline-block">
+                      {member.role}
+                    </p>
+                    <p className="text-sm text-[var(--theme-text-secondary)] leading-relaxed line-clamp-3 font-light">
+                      {member.description}
+                    </p>
+                  </div>
+
+                  {/* Elegant Social Actions */}
+                  <div className="mt-auto w-full flex items-center justify-center gap-3 pt-6 border-t border-white/5">
+                    <button className="p-2 rounded-xl bg-white/[0.03] text-[var(--theme-text-secondary)] hover:bg-[var(--theme-accent)]/10 hover:text-[var(--theme-accent)] transition-all duration-300 hover:-translate-y-1">
+                      <Linkedin size={18} />
+                    </button>
+                    <button className="p-2 rounded-xl bg-white/[0.03] text-[var(--theme-text-secondary)] hover:bg-[var(--theme-accent)]/10 hover:text-[var(--theme-accent)] transition-all duration-300 hover:-translate-y-1">
+                      <Twitter size={18} />
+                    </button>
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          ))}
         </div>
       </div>
     </section>
-  )
+  );
 }
