@@ -8,15 +8,9 @@ import { Button } from "@/components/ui/button";
 import Link from "next/link";
 import InteractiveTypography from './InteractiveTypography';
 import { motion } from 'framer-motion';
+import RotatingText from './ui/rotating-text';
 
 export function AboutSection() {
-  const [currentSlide, setCurrentSlide] = useState(0);
-  const [isPlaying, setIsPlaying] = useState(true);
-  const carouselRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const imageRef = useRef<HTMLDivElement>(null);
-  const progressRef = useRef<HTMLDivElement>(null);
-
   const teamStats = [
     { number: "50+", label: "Certified Experts" },
     { number: "100+", label: "Projects Completed" },
@@ -47,34 +41,6 @@ export function AboutSection() {
     }
   ];
 
-  const carouselSlides = [
-    {
-      id: 1,
-      title: "Securing Your Digital Future",
-      subtitle: "Advanced Threat Protection",
-      description:
-        "Comprehensive security services that protect your organization from evolving cyber threats with cutting-edge technology and expert oversight.",
-      image: "https://images.pexels.com/photos/17766789/pexels-photo-17766789.jpeg?auto=compress&cs=tinysrgb&w=1920"
-    },
-    {
-      id: 2,
-      title: "Zero Trust Security Framework",
-      subtitle: "Modern Security Architecture",
-      description:
-        "Implementing never trust, always verify principles across your entire digital ecosystem for maximum protection.",
-      video: "/bg.mp4"
-    },
-    {
-      id: 3,
-      title: "24/7 Security Operations Center",
-      subtitle: "Continuous Monitoring",
-      description:
-        "Round-the-clock surveillance and threat detection to keep your assets secure against emerging threats.",
-
-      image: "./img.png"
-    }
-  ];
-
   const gridItems = [
     "Security", "ThreatOps", "Cyber", "Defense",
     "Protection", "Risk", "Analysis", "Monitoring",
@@ -92,309 +58,45 @@ export function AboutSection() {
     "Compliance & Risk"
   ];
 
-  // GSAP Animations
-  const animateSlideChange = (direction: 'next' | 'prev' | 'jump') => {
-    const tl = gsap.timeline();
 
-    // Reset progress bar
-    if (progressRef.current) {
-      gsap.set(progressRef.current, { width: '0%' });
-    }
-
-    // Exit animation for current content
-    tl.to(contentRef.current, {
-      duration: 0.6,
-      y: direction === 'next' ? -50 : 50,
-      opacity: 0,
-      ease: "power2.inOut"
-    })
-      .to(imageRef.current, {
-        duration: 0.8,
-        scale: 1.1,
-        opacity: 0.3,
-        ease: "power2.inOut"
-      }, 0)
-      // Update slide (this happens in the middle of the animation)
-      .add(() => {
-        if (direction === 'next') {
-          setCurrentSlide((prev) => (prev + 1) % carouselSlides.length);
-        } else if (direction === 'prev') {
-          setCurrentSlide((prev) => (prev - 1 + carouselSlides.length) % carouselSlides.length);
-        }
-      }, 0.4)
-      // Enter animation for new content
-      .fromTo(imageRef.current,
-        { scale: 1.1, opacity: 0.3 },
-        {
-          duration: 0.8,
-          scale: 1,
-          opacity: 1,
-          ease: "power2.out"
-        }, 0.4
-      )
-      .fromTo(contentRef.current,
-        { y: direction === 'next' ? 50 : -50, opacity: 0 },
-        {
-          duration: 0.6,
-          y: 0,
-          opacity: 1,
-          ease: "power2.out"
-        }, 0.6
-      )
-      // Restart progress bar animation if playing
-      .add(() => {
-        if (isPlaying && progressRef.current) {
-          gsap.to(progressRef.current, {
-            duration: 5,
-            width: '100%',
-            ease: "none"
-          });
-        }
-      }, 0.8);
-
-    return tl;
-  };
-
-  const nextSlide = () => {
-    animateSlideChange('next');
-  };
-
-  const prevSlide = () => {
-    animateSlideChange('prev');
-  };
-
-  const goToSlide = (index: number) => {
-    if (index !== currentSlide) {
-      animateSlideChange('jump');
-      setCurrentSlide(index);
-    }
-  };
-
-  // Initial animation on mount
-  useEffect(() => {
-    if (contentRef.current && imageRef.current) {
-      const tl = gsap.timeline();
-      tl.fromTo(carouselRef.current,
-        { opacity: 0 },
-        { duration: 1, opacity: 1, ease: "power2.out" }
-      )
-        .fromTo(imageRef.current,
-          { scale: 1.2 },
-          { duration: 1.5, scale: 1, ease: "power2.out" },
-          0
-        )
-        .fromTo(contentRef.current,
-          { y: 30, opacity: 0 },
-          { duration: 1, y: 0, opacity: 1, ease: "power2.out" },
-          0.5
-        );
-
-      // Initial progress bar animation
-      if (isPlaying && progressRef.current) {
-        gsap.fromTo(progressRef.current,
-          { width: '0%' },
-          { duration: 5, width: '100%', ease: "none" }
-        );
-      }
-    }
-  }, []);
-
-  // Auto-play effect
-  useEffect(() => {
-    if (!isPlaying) return;
-
-    const interval = setInterval(() => {
-      nextSlide();
-    }, 5000);
-
-    return () => clearInterval(interval);
-  }, [isPlaying, currentSlide]);
-
-  const currentCarousel = carouselSlides[currentSlide];
 
   return (
     <div className="min-h-screen bg-[var(--theme-dark-base)] text-[var(--foreground)] overflow-hidden">
-      <section ref={carouselRef} className="relative h-screen w-full overflow-hidden">
-        {/* Background Image */}
-        {/* Background Media */}
-        <div className="absolute inset-0">
-          {/* If image exists */}
-          {currentCarousel.image && (
-            <div
-              ref={imageRef}
-              className="absolute inset-0 bg-cover bg-center"
-              style={{
-                backgroundImage:
-                  typeof currentCarousel.image === "string"
-                    ? `url(${currentCarousel.image})`
-                    : `url(${URL.createObjectURL(currentCarousel.image)})`,
-                filter: "brightness(0.4)"
-              }}
-            />
-          )}
 
-          {/* If video exists */}
-          {currentCarousel.video && (
-            <video
-              className="absolute inset-0 w-full h-full object-cover"
-              autoPlay
-              muted
-              loop
-              playsInline
-              style={{ filter: "brightness(0.4)" }}
-            >
-              <source
-                src={
-                  typeof currentCarousel.video === "string"
-                    ? currentCarousel.video
-                    : URL.createObjectURL(currentCarousel.video)
-                }
-                type="video/mp4"
-              />
-            </video>
-          )}
-        </div>
-
-        <div className="absolute inset-0 bg-gradient-to-r from-black via-black/80 to-transparent z-10" />
-
-        <div className="absolute inset-0 z-5 opacity-20">
+      {/* 40vh Premium Banner */}
+      <section className="relative h-[45vh] min-h-[400px] w-full flex items-center justify-center overflow-hidden border-[var(--theme-border)]/50 border-b">
+        <div className="absolute inset-0 z-0 opacity-[0.05] pointer-events-none">
           <GridMotion items={gridItems} />
         </div>
 
-        {/* Content */}
-        <div ref={contentRef} className="relative z-20 h-full flex items-center">
-          <div className="max-w-7xl mx-auto px-8 lg:px-16 w-full">
-            <div className="max-w-3xl">
+        {/* Deep shadows and gradients for background */}
+        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[var(--theme-dark-base)]/50 to-[var(--theme-dark-base)] z-0"></div>
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[var(--theme-accent)]/15 blur-[100px] rounded-full pointer-events-none"></div>
 
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--theme-accent)]/10 border border-[var(--theme-accent)]/20 mb-6">
-                <Sparkles className="w-4 h-4 text-[var(--theme-accent)]" />
-                <span className="text-sm font-semibold text-[var(--theme-accent)]">
-                  {currentCarousel.subtitle}
-                </span>
-              </div>
-
-              <h1 className="text-6xl lg:text-8xl font-bold mb-8 leading-none text-[var(--foreground)]">
-                {currentCarousel.title}
-              </h1>
-
-              <p className="text-xl lg:text-2xl text-[var(--muted-foreground)] mb-12 leading-relaxed">
-                {currentCarousel.description}
-              </p>
-
-              <div className="flex flex-col sm:flex-row gap-4 ">
-                <Button
-                  size="lg"
-                  className="glow-accent animate-pulse-glow group cursor-pointer"
-                  style={{ backgroundColor: "var(--primary)", color: "var(--foreground)" }}
-                >
-                  Start Your Security Assessment
-                  <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-1 transition-transform" />
-                </Button>
-
-                <Link href="/services" passHref legacyBehavior>
-                  <Button
-                    variant="outline"
-                    size="lg"
-                    className="glass-effect bg-transparent border border-primary text-foreground hover:bg-primary hover:text-foreground transition-colors cursor-pointer"
-                  >
-                    View Our Services
-                  </Button>
-                </Link>
-              </div>
-            </div>
+        <div className="relative z-10 max-w-7xl mx-auto px-4 mt-24 sm:px-6 lg:px-8 w-full text-center">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--theme-accent)]/10 border border-[var(--theme-accent)]/30 mb-6 shadow-[0_0_20px_rgba(235,54,54,0.15)]">
+            <Sparkles className="w-4 h-4 text-[var(--theme-accent)] animate-pulse" />
+            <span className="text-xs font-bold uppercase tracking-widest text-[var(--theme-accent)]">
+              Securing Your Future
+            </span>
           </div>
-        </div>
 
-        {/* Enhanced Carousel Controls */}
-        <div className="hidden md:absolute md:bottom-12 md:right-8 lg:right-16 md:z-30 md:flex">
-          <div className="flex items-center gap-4 bg-black/50 backdrop-blur-sm border border-white/20 p-4 rounded-lg shadow-2xl">
-
-            {/* Play/Pause Button */}
-            <button
-              onClick={() => {
-                setIsPlaying(!isPlaying);
-                if (!isPlaying && progressRef.current) {
-                  gsap.to(progressRef.current, {
-                    duration: 5 - (gsap.getProperty(progressRef.current, "width") as number) / 100 * 5,
-                    width: '100%',
-                    ease: "none"
-                  });
-                }
-              }}
-              className="w-10 h-10 flex items-center justify-center hover:bg-white/10 transition-all duration-300 rounded-lg group"
-              title={isPlaying ? "Pause" : "Play"}
-            >
-              {isPlaying ?
-                <Pause className="w-4 h-4 group-hover:scale-110 transition-transform" /> :
-                <Play className="w-4 h-4 group-hover:scale-110 transition-transform" />
-              }
-            </button>
-
-            {/* Previous Slide */}
-            <button
-              onClick={prevSlide}
-              className="w-10 h-10 flex items-center justify-center hover:bg-white/10 transition-all duration-300 rounded-lg group"
-              title="Previous"
-            >
-              <ChevronLeft className="w-5 h-5 group-hover:scale-110 transition-transform" />
-            </button>
-
-            {/* Slide Dashes */}
-            <div className="flex gap-1 mx-2">
-              {carouselSlides.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => goToSlide(index)}
-                  className={`relative overflow-hidden transition-all duration-300 ${index === currentSlide
-                    ? 'w-8 h-1 shadow-lg'
-                    : 'w-4 h-1 bg-white/30 hover:bg-white/50'
-                    }`}
-                  style={{
-                    backgroundColor: index === currentSlide ? "var(--primary)" : undefined,
-                  }}
-                  title={`Go to slide ${index + 1}`}
-                  onMouseEnter={(e) => {
-                    if (index !== currentSlide) {
-                      gsap.to(e.currentTarget, {
-                        duration: 0.3,
-                        scaleX: 1.2,
-                        ease: "power2.out"
-                      });
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    if (index !== currentSlide) {
-                      gsap.to(e.currentTarget, {
-                        duration: 0.3,
-                        scaleX: 1,
-                        ease: "power2.out"
-                      });
-                    }
-                  }}
-                />
-              ))}
+          <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white uppercase tracking-tighter mb-6 flex flex-col items-center justify-center gap-4 md:flex-row">
+            <span>Advanced</span>
+            <div className="flex border border-[var(--theme-accent)]/40 p-1 rounded-sm shadow-[0_0_30px_rgba(235,54,54,0.2)] bg-[#111114]">
+              <RotatingText
+                texts={['ThreatOps.', 'Defenses.', 'Red Teams.', 'Zero Trust.']}
+                mainClassName="px-4 py-1 bg-[var(--theme-accent)] text-white overflow-hidden shadow-inner"
+                staggerDuration={0.03}
+                splitBy="characters"
+                rotationInterval={3500}
+              />
             </div>
+          </h1>
 
-            {/* Next Slide */}
-            <button
-              onClick={nextSlide}
-              className="w-10 h-10 flex items-center justify-center hover:bg-white/10 transition-all duration-300 rounded-lg group"
-              title="Next"
-            >
-              <ChevronRight className="w-5 h-5 group-hover:scale-110 transition-transform" />
-            </button>
-
-          </div>
-        </div>
-        {/* GSAP Controlled Progress Bar */}
-        <div className="absolute bottom-0 left-0 w-full h-1 bg-white/10 z-30">
-          <div
-            ref={progressRef}
-            className="h-full"
-            style={{
-              backgroundColor: "var(--primary)",
-            }}
-          />
+          <p className="text-lg md:text-xl text-[var(--muted-foreground)] max-w-3xl mx-auto font-medium leading-relaxed border-t border-[var(--theme-border)] pt-8 inline-block select-none">
+            We are a collective of specialized operators dismantling generic defense strategies through adversary emulation and battle-tested methodologies.
+          </p>
         </div>
       </section>
 
