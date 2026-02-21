@@ -1,46 +1,46 @@
 "use client";
 import Image from "next/image"
 import { StickyScroll } from "@/components/ui/sticky-scroll-reveal";
-import { Zap, Target, Shield } from "lucide-react";
+import { Zap, Target, Shield, Lock, Users } from "lucide-react";
 
 const stickyContent = [
     {
-        title: "Collaborative Editing",
+        title: "Project Coordination",
         description:
-            "Work together in real time with your team, clients, and stakeholders. Collaborate on documents, share ideas, and make decisions quickly. With our platform, you can streamline your workflow and increase productivity.",
+            "Maintain an agreed point of contact for project and commercial coordination to ensure smooth communication and alignment throughout our partnership.",
         content: (
-            <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(to_bottom_right,var(--theme-accent),var(--theme-accent))] text-white">
-                <div className="text-2xl font-bold">Collaborative Editing</div>
+            <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(to_bottom_right,var(--theme-accent),#8a1515)] text-white p-8 text-center">
+                <div className="text-3xl font-bold text-balance">Coordinate Responsibly</div>
             </div>
         ),
     },
     {
-        title: "Real time changes",
+        title: "Enablement & Compliance",
         description:
-            "See changes as they happen. With our platform, you can track every modification in real time.Say goodbye to the chaos of version control and embrace the simplicity of real-time updates.",
+            "Complete minimum enablement and compliance requirements for the selected tier. This ensures delivery excellence and adherence to our high security standards.",
         content: (
-            <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(to_bottom_right,var(--theme-accent),#10b981)] text-white">
-                <div className="text-2xl font-bold">Real Time Updates</div>
+            <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(to_bottom_right,#9b1b1b,#1e1e1f)] text-white p-8 text-center">
+                <div className="text-3xl font-bold text-balance">Stay Compliant</div>
             </div>
         ),
     },
     {
-        title: "Version control",
+        title: "Co-selling Guidelines",
         description:
-            "Experience real-time updates and never stress about version control again. eliminating the need for constant manual updates. Stay in the loop, keep your team aligned, and maintain the flow of your work without any interruptions.",
+            "Follow co-selling guidelines and maintain strict confidentiality on shared materials. We believe in mutual trust and protecting sensitive go-to-market strategies.",
         content: (
-            <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(to_bottom_right,#f97316,#fbbf24)] text-white">
-                <div className="text-2xl font-bold">Version Control</div>
+            <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(to_bottom_right,#2a2a2c,#111)] text-white p-8 text-center">
+                <div className="text-3xl font-bold text-balance">Protect Shared Data</div>
             </div>
         ),
     },
     {
-        title: "Running out of content",
+        title: "Client Management",
         description:
-            "Experience real-time updates and never stress about version control again. Our platform ensures that you're always working on the most recent version of your project, eliminating the need for constant manual updates",
+            "Deliver local customer communications and provide first-line client management where white-labeling is used to maintain brand consistency and client trust.",
         content: (
-            <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(to_bottom_right,var(--theme-accent),#10b981)] text-white">
-                <div className="text-2xl font-bold">More Content</div>
+            <div className="flex h-full w-full items-center justify-center bg-[linear-gradient(to_bottom_right,var(--theme-accent),#000)] text-white p-8 text-center">
+                <div className="text-3xl font-bold text-balance">Manage Relationships</div>
             </div>
         ),
     },
@@ -55,17 +55,108 @@ const iconMap = {
 export function PartnerProcess() {
     return (
         <section className="relative py-24">
-            {/* Sticky Scroll Section */}
-            <div className="mb-24">
-                <div className="text-center mb-12 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                    <h2 className="text-4xl font-bold text-[var(--foreground)] mb-4">
-                        Partner <span className="text-[var(--theme-accent)]">Experience</span>
-                    </h2>
-                    <p className="text-lg text-[var(--muted-foreground)] max-w-2xl mx-auto">
-                        Discover how our partnership platform transforms collaboration and accelerates your success
-                    </p>
+            {/* Futuristic 2026 Responsibilities Section */}
+            <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-32 group">
+                {/* Section Header */}
+                <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+                    <div>
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded bg-[var(--theme-accent)]/10 border border-[var(--theme-accent)]/30 mb-4 shadow-[0_0_15px_rgba(235,54,54,0.1)]">
+                            <Zap className="w-4 h-4 text-[var(--theme-accent)] animate-pulse" />
+                            <span className="text-xs font-mono font-bold text-[var(--theme-accent)] uppercase tracking-widest">Protocol Framework</span>
+                        </div>
+                        <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-white uppercase tracking-tighter">
+                            Typical Partner <span className="text-transparent bg-clip-text bg-gradient-to-r from-[var(--theme-accent)] to-[#4a0b0b]">Responsibilities</span>
+                        </h2>
+                    </div>
+                    <div className="text-right">
+                        <p className="text-[var(--muted-foreground)] max-w-sm text-sm font-medium border-l-[2px] border-[var(--theme-accent)]/50 pl-4">
+                            Understand what it takes to build a successful and secure partnership with SafeGrey.
+                        </p>
+                    </div>
                 </div>
-                <StickyScroll content={stickyContent} />
+
+                {/* 2026 Grid Layout */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    {/* Item 1 */}
+                    <div className="group/card relative p-8 rounded-2xl bg-[#0a0a0c] border border-[var(--theme-border)] hover:border-[var(--theme-accent)]/50 hover:bg-[#111114] transition-all duration-500 overflow-hidden min-h-[200px]">
+                        <div className="absolute inset-0 bg-gradient-to-br from-[var(--theme-accent)]/10 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"></div>
+                        <div className="absolute top-0 right-0 w-24 h-24 bg-[var(--theme-accent)]/20 blur-[50px] rounded-full group-hover/card:scale-150 transition-transform duration-700"></div>
+                        <div className="relative z-10 flex flex-col items-start gap-4">
+                            <div className="flex justify-between items-start w-full">
+                                <div className="text-[10px] uppercase font-mono tracking-widest text-[var(--theme-accent)] mb-2 mt-1">SYS.01</div>
+                                <div className="p-3 bg-[var(--theme-dark-secondary)] border border-[var(--theme-accent)]/20 rounded shadow-[0_0_10px_rgba(235,54,54,0.1)] group-hover/card:bg-[var(--theme-accent)]/10 group-hover/card:border-[var(--theme-accent)]/40 transition-colors">
+                                    <Target className="w-6 h-6 text-[var(--theme-accent)]" />
+                                </div>
+                            </div>
+                            <div>
+                                <h3 className="text-xl md:text-2xl font-black text-white uppercase mb-3 tracking-wide">Project Coordination</h3>
+                                <p className="text-sm text-[var(--muted-foreground)] leading-relaxed">
+                                    Maintain an agreed point of contact for project and commercial coordination to ensure smooth communication and alignment throughout our partnership.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Item 2 */}
+                    <div className="group/card relative p-8 rounded-2xl bg-[#0a0a0c] border border-[var(--theme-border)] hover:border-[var(--theme-accent)]/50 hover:bg-[#111114] transition-all duration-500 overflow-hidden min-h-[200px]">
+                        <div className="absolute inset-0 bg-gradient-to-tr from-[var(--theme-accent)]/10 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"></div>
+                        <div className="absolute bottom-0 left-0 w-24 h-24 bg-[var(--theme-accent)]/20 blur-[50px] rounded-full group-hover/card:scale-150 transition-transform duration-700"></div>
+                        <div className="relative z-10 flex flex-col items-start gap-4">
+                            <div className="flex justify-between items-start w-full">
+                                <div className="text-[10px] uppercase font-mono tracking-widest text-[var(--theme-accent)] mb-2 mt-1">SYS.02</div>
+                                <div className="p-3 bg-[var(--theme-dark-secondary)] border border-[var(--theme-accent)]/20 rounded shadow-[0_0_10px_rgba(235,54,54,0.1)] group-hover/card:bg-[var(--theme-accent)]/10 group-hover/card:border-[var(--theme-accent)]/40 transition-colors">
+                                    <Shield className="w-6 h-6 text-[var(--theme-accent)]" />
+                                </div>
+                            </div>
+                            <div>
+                                <h3 className="text-xl md:text-2xl font-black text-white uppercase mb-3 tracking-wide">Enablement & Compliance</h3>
+                                <p className="text-sm text-[var(--muted-foreground)] leading-relaxed">
+                                    Complete minimum enablement and compliance requirements for the selected tier. This ensures delivery excellence and adherence to our high security standards.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Item 3 */}
+                    <div className="group/card relative p-8 rounded-2xl bg-[#0a0a0c] border border-[var(--theme-border)] hover:border-[var(--theme-accent)]/50 hover:bg-[#111114] transition-all duration-500 overflow-hidden min-h-[200px]">
+                        <div className="absolute inset-0 bg-gradient-to-bl from-[var(--theme-accent)]/10 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"></div>
+                        <div className="absolute top-0 left-0 w-24 h-24 bg-[var(--theme-accent)]/20 blur-[50px] rounded-full group-hover/card:scale-150 transition-transform duration-700"></div>
+                        <div className="relative z-10 flex flex-col items-start gap-4">
+                            <div className="flex justify-between items-start w-full">
+                                <div className="text-[10px] uppercase font-mono tracking-widest text-[var(--theme-accent)] mb-2 mt-1">SYS.03</div>
+                                <div className="p-3 bg-[var(--theme-dark-secondary)] border border-[var(--theme-accent)]/20 rounded shadow-[0_0_10px_rgba(235,54,54,0.1)] group-hover/card:bg-[var(--theme-accent)]/10 group-hover/card:border-[var(--theme-accent)]/40 transition-colors">
+                                    <Lock className="w-6 h-6 text-[var(--theme-accent)]" />
+                                </div>
+                            </div>
+                            <div>
+                                <h3 className="text-xl md:text-2xl font-black text-white uppercase mb-3 tracking-wide">Co-selling Guidelines</h3>
+                                <p className="text-sm text-[var(--muted-foreground)] leading-relaxed">
+                                    Follow co-selling guidelines and maintain strict confidentiality on shared materials. We believe in mutual trust and protecting sensitive go-to-market strategies.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Item 4 */}
+                    <div className="group/card relative p-8 rounded-2xl bg-[#0a0a0c] border border-[var(--theme-border)] hover:border-[var(--theme-accent)]/50 hover:bg-[#111114] transition-all duration-500 overflow-hidden min-h-[200px]">
+                        <div className="absolute inset-0 bg-gradient-to-tl from-[var(--theme-accent)]/10 to-transparent opacity-0 group-hover/card:opacity-100 transition-opacity duration-500"></div>
+                        <div className="absolute bottom-0 right-0 w-24 h-24 bg-[var(--theme-accent)]/20 blur-[50px] rounded-full group-hover/card:scale-150 transition-transform duration-700"></div>
+                        <div className="relative z-10 flex flex-col items-start gap-4">
+                            <div className="flex justify-between items-start w-full">
+                                <div className="text-[10px] uppercase font-mono tracking-widest text-[var(--theme-accent)] mb-2 mt-1">SYS.04</div>
+                                <div className="p-3 bg-[var(--theme-dark-secondary)] border border-[var(--theme-accent)]/20 rounded shadow-[0_0_10px_rgba(235,54,54,0.1)] group-hover/card:bg-[var(--theme-accent)]/10 group-hover/card:border-[var(--theme-accent)]/40 transition-colors">
+                                    <Users className="w-6 h-6 text-[var(--theme-accent)]" />
+                                </div>
+                            </div>
+                            <div>
+                                <h3 className="text-xl md:text-2xl font-black text-white uppercase mb-3 tracking-wide">Client Management</h3>
+                                <p className="text-sm text-[var(--muted-foreground)] leading-relaxed">
+                                    Deliver local customer communications and provide first-line client management where white-labeling is used to maintain brand consistency and client trust.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
 
 
@@ -199,25 +290,28 @@ export function PartnerProcess() {
                             </div>
 
                             <p className="text-lg md:text-xl max-w-xl mb-6 font-semibold text-[var(--muted-foreground)]">
-                                Collaborate in real time and launch security initiatives faster than ever before.
+                                Partners must execute a partner agreement and adhere to SafeGrey's code of conduct, data protection policies, and any regulatory constraints applicable to joint engagements.
                             </p>
-                            <h2 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-[var(--foreground)] md:text-balance leading-tight">
-                                Instant Partnership
+                            <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black tracking-tight text-[var(--foreground)] md:text-balance leading-tight mb-8">
+                                Ready to grow <br />with SafeGrey?
                             </h2>
+                            <button className="relative flex items-center justify-center font-bold transition-all duration-300 ease-in-out select-none rounded-lg text-white bg-[var(--theme-accent)] shadow-[0_0_20px_rgba(235,54,54,0.3)] hover:shadow-[0_0_30px_rgba(235,54,54,0.6)] hover:-translate-y-1 h-14 px-8 text-lg w-fit">
+                                Complete our partner application
+                            </button>
                         </div>
                     </div>
 
                     {/* Floating elements */}
                     <div className="absolute top-8 right-8 hidden lg:block">
                         <div className="bg-[var(--theme-card-bg)]/80 backdrop-blur-sm rounded-xl p-4 border border-[var(--theme-border)]">
-                            <div className="text-sm text-[var(--muted-foreground)]">Trusted by</div>
-                            <div className="text-lg font-bold text-[var(--foreground)]">500+ Partners</div>
+                            <div className="text-sm text-[var(--muted-foreground)]">Legal & Compliance</div>
+                            <div className="text-base font-bold text-[var(--foreground)]">Snapshot</div>
                         </div>
                     </div>
                 </div>
             </div>
 
-          
+
 
             {/* New Stats Section */}
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
