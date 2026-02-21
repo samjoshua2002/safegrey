@@ -22,7 +22,7 @@ export default function AboutPage() {
 
       {/* Premium Team Grid from reference */}
       {/* New Horizontal Team Cards */}
-      <AboutTeam />
+      {/* <AboutTeam /> */}
 
       <Footer />
     </main>
