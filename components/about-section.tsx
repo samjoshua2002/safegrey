@@ -93,6 +93,7 @@ export function AboutSection() {
               />
             </div>
           </h1>
+         
 
           <p className="text-lg md:text-xl text-[var(--muted-foreground)] max-w-3xl mx-auto font-medium leading-relaxed border-t border-[var(--theme-border)] pt-8 inline-block select-none">
             We are a collective of specialized operators dismantling generic defense strategies through adversary emulation and battle-tested methodologies.
