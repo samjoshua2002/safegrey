@@ -3,7 +3,7 @@
     <img src="./readme1.png" alt="SafeGrey Logo" width="100%" style="border-radius: 12px; margin-bottom: 20px;" />
   </a>
   
-  <h1>🛡️ SafeGrey (ThreatOps)</h1>
+  <h1>🛡️ SafeGrey</h1>
   <p><strong>Advanced Threat Operations & Security Solutions. Live at <a href="https://safegrey.com">safegrey.com</a>.</strong></p>
 </div>
 
