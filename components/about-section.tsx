@@ -63,45 +63,8 @@ export function AboutSection() {
   return (
     <div className="min-h-screen bg-[var(--theme-dark-base)] text-[var(--foreground)] overflow-hidden">
 
-      {/* 40vh Premium Banner */}
-      <section className="relative h-[45vh] min-h-[400px] w-full flex items-center justify-center overflow-hidden border-[var(--theme-border)]/50 border-b">
-        <div className="absolute inset-0 z-0 opacity-[0.05] pointer-events-none">
-          <GridMotion items={gridItems} />
-        </div>
+    
 
-        {/* Deep shadows and gradients for background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-transparent via-[var(--theme-dark-base)]/50 to-[var(--theme-dark-base)] z-0"></div>
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-[var(--theme-accent)]/15 blur-[100px] rounded-full pointer-events-none"></div>
-
-        <div className="relative z-10 max-w-7xl mx-auto px-4 mt-24 sm:px-6 lg:px-8 w-full text-center">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[var(--theme-accent)]/10 border border-[var(--theme-accent)]/30 mb-6 shadow-[0_0_20px_rgba(235,54,54,0.15)]">
-            <Sparkles className="w-4 h-4 text-[var(--theme-accent)] animate-pulse" />
-            <span className="text-xs font-bold uppercase tracking-widest text-[var(--theme-accent)]">
-              Securing Your Future
-            </span>
-          </div>
-
-          <h1 className="text-4xl md:text-5xl lg:text-7xl font-black text-white uppercase tracking-tighter mb-6 flex flex-col items-center justify-center gap-4 md:flex-row">
-            <span>Advanced</span>
-            <div className="flex border border-[var(--theme-accent)]/40 p-1 rounded-sm shadow-[0_0_30px_rgba(235,54,54,0.2)] bg-[#111114]">
-              <RotatingText
-                texts={['ThreatOps.', 'Defenses.', 'Red Teams.', 'Zero Trust.']}
-                mainClassName="px-4 py-1 bg-[var(--theme-accent)] text-white overflow-hidden shadow-inner"
-                staggerDuration={0.03}
-                splitBy="characters"
-                rotationInterval={3500}
-              />
-            </div>
-          </h1>
-         
-
-          <p className="text-lg md:text-xl text-[var(--muted-foreground)] max-w-3xl mx-auto font-medium leading-relaxed border-t border-[var(--theme-border)] pt-8 inline-block select-none">
-            We are a collective of specialized operators dismantling generic defense strategies through adversary emulation and battle-tested methodologies.
-          </p>
-        </div>
-      </section>
-
-      <FlowingMenu items={flowingItems} />
 
       <section className="relative py-32 px-8 lg:px-16 overflow-hidden">
         {/* Dotted Background */}

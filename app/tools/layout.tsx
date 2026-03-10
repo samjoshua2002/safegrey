@@ -20,38 +20,6 @@ export default function ToolsLayout({ children }: ToolsLayoutProps) {
             icon: Shield,
             description: "Analyze HTTP security headers",
             active: true
-        },
-        {
-            name: "SSL/TLS Analyzer",
-            href: "/tools/ssl-analyzer",
-            icon: Lock,
-            description: "Certificate & cipher analysis",
-            active: false,
-            comingSoon: true
-        },
-        {
-            name: "DNS Security Check",
-            href: "/tools/dns-check",
-            icon: Globe,
-            description: "DNSSEC & configuration",
-            active: false,
-            comingSoon: true
-        },
-        {
-            name: "Subdomain Finder",
-            href: "/tools/subdomain-finder",
-            icon: Search,
-            description: "Discover subdomains",
-            active: false,
-            comingSoon: true
-        },
-        {
-            name: "Port Scanner",
-            href: "/tools/port-scanner",
-            icon: Activity,
-            description: "Network port analysis",
-            active: false,
-            comingSoon: true
         }
     ]
 

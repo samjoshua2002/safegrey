@@ -115,7 +115,8 @@ export function Footer() {
               </div>
               <div className="flex items-start text-sm text-[var(--theme-text-secondary)]">
                 <MapPin className="w-4 h-4 mr-2 text-[var(--theme-accent)]" />
-               BANGALORE - 560036
+            Plot No. 77, JBR Tech Park, 6th Rd, Whitefield, EPIP Zone, <br />
+Whitefield, Bengaluru, Karnataka 560066
               </div>
             </div>
           </div>
@@ -183,17 +184,12 @@ export function Footer() {
             >
               Terms of Service
             </Link>
-            <Link
-              href="/security"
-              className="text-sm text-[var(--theme-text-secondary)] hover:text-[var(--theme-accent)] transition-colors hover:underline"
-            >
-              Security
-            </Link>
+           
             <Link
               href="/sitemap.xml"
               className="text-sm text-[var(--theme-text-secondary)] hover:text-[var(--theme-accent)] transition-colors hover:underline"
             >
-              Sitemap
+              
             </Link>
           </div>
         </div>
