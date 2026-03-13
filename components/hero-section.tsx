@@ -96,7 +96,7 @@ export function HeroSection() {
                   isScanning && "animate-scan-glitch"
                 )}
               >
-                Find the breach point
+                Find the Breach Point
               </span>{" "}
               <span
                 className={cn(
@@ -104,7 +104,7 @@ export function HeroSection() {
                   isScanning && "animate-scan-glitch"
                 )}
               >
-                before They Do.
+                Before They Do.
               </span>
             </h1>
 
@@ -113,10 +113,9 @@ export function HeroSection() {
                 "text-lg sm:text-xl md:text-2xl mb-8 leading-relaxed text-[var(--muted-foreground)] transition-all duration-300"
               )}
             >
-             Real-world attack simulations and end-to-end cybersecurity –
-proactively protecting your digital
+      Real-world attack simulations and end-to-end cybersecurity services — protecting your business before threats become breaches.
 <span className="hidden lg:inline"><br /></span>
-assets from emerging threats
+
 
             </p>
 

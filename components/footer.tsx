@@ -84,8 +84,7 @@ export function Footer() {
               <img src="/logo.png" className="h-10 w-auto" alt="safegrey" />
             </Link>
             <p className="text-[var(--theme-text-secondary)] mb-6 max-w-md">
-              Advanced cybersecurity solutions that protect your business before threats become breaches. Proactive.
-              Reliable. Always vigilant.
+           Advanced cybersecurity solutions that protect your business before threats become breaches. Proactive. Reliable. Always vigilant.
             </p>
             
             {/* Social Icons */}

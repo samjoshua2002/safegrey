@@ -135,7 +135,7 @@ const services = [
   },
   {
     key: "risk-compliance",
-    title: "Risk and Compliance Assessment",
+    title: "Risk Management",
     sections: [
       {
         subTitle: "ISO 27001 Consulting",

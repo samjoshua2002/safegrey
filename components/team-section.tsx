@@ -47,6 +47,108 @@ export function TeamSection() {
   return (
     <section className="relative py-16 lg:py-24 px-4 sm:px-6 lg:px-8 bg-[var(--theme-dark-base)] overflow-hidden" id="team">
       {/* Soft Background Accents */}
+
+            <style jsx>{`
+        .brush-frame-bg {
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(20, 20, 20, 0.8);
+          backdrop-filter: blur(12px);
+          clip-path: polygon(10% 0%, 100% 5%, 90% 100%, 0% 95%);
+          z-index: 2;
+          transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+          border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+        .brush-frame-secondary {
+          position: absolute;
+          top: -12px;
+          left: -10px;
+          width: 112%;
+          height: 108%;
+          background: linear-gradient(135deg, rgba(var(--theme-accent-rgb), 0.2) 0%, rgba(255, 255, 255, 0.05) 100%);
+          clip-path: polygon(15% 5%, 95% 0%, 85% 95%, 5% 100%);
+          z-index: 1;
+          transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .brush-accent-red {
+          position: absolute;
+          background: var(--theme-accent);
+          z-index: 3;
+          transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+          box-shadow: 0 0 15px var(--theme-accent);
+        }
+        .accent-top-left {
+          width: 60px;
+          height: 4px;
+          top: -8px;
+          left: 10%;
+          transform: rotate(-3deg);
+        }
+        .accent-bottom-right {
+          width: 80px;
+          height: 6px;
+          bottom: -15px;
+          right: 5%;
+          transform: rotate(2deg);
+        }
+        .portrait-bw {
+          filter: grayscale(100%) contrast(120%) brightness(0.9);
+          width: 100%;
+          height: auto;
+          display: block;
+          position: relative;
+          z-index: 4;
+          clip-path: polygon(5% 2%, 98% 0%, 95% 98%, 0% 95%);
+          transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+        }
+        .card-wrapper:hover .brush-frame-bg {
+          transform: translateY(-8px) scale(1.02);
+          background: rgba(30, 30, 30, 0.9);
+          border-color: rgba(var(--theme-accent-rgb), 0.3);
+        }
+        .card-wrapper:hover .brush-frame-secondary {
+          transform: translateY(-4px) scale(1.05);
+          background: rgba(var(--theme-accent-rgb), 0.15);
+        }
+        .card-wrapper:hover .portrait-bw {
+          filter: grayscale(0%) contrast(100%) brightness(1.1);
+          transform: translateY(-12px) scale(1.08);
+          clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);
+        }
+        .card-wrapper:hover .brush-accent-red {
+          background: #fff;
+          box-shadow: 0 0 25px #fff;
+        }
+        .text-title {
+          font-weight: 900;
+          letter-spacing: -0.04em;
+          text-transform: uppercase;
+        }
+        .glitch-text {
+          position: relative;
+          color: white;
+        }
+        .glitch-text::before {
+          content: attr(data-text);
+          position: absolute;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          color: var(--theme-accent);
+          overflow: hidden;
+          clip: rect(0, 900px, 0, 0);
+          animation: noise-before 3s infinite linear alternate-reverse;
+          opacity: 0.5;
+        }
+        @keyframes noise-before {
+          0% { clip: rect(20px, 9999px, 40px, 0); }
+          100% { clip: rect(60px, 9999px, 80px, 0); }
+        }
+      `}</style>
       <div className="absolute inset-0 z-0 pointer-events-none">
         <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[var(--theme-accent)]/5 rounded-full blur-[120px]" />
         <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-[var(--theme-accent)]/3 rounded-full blur-[120px]" />

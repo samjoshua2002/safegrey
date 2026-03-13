@@ -5,6 +5,7 @@ import { AboutTeam } from "@/components/about-team"
 import { Footer } from "@/components/footer"
 
 import { Metadata } from "next"
+import { TeamSections } from "@/components/team-sections"
 
 export const metadata: Metadata = {
   title: "About Us",
@@ -18,7 +19,8 @@ export default function AboutPage() {
       <AboutSection />
 
       {/* Existing Team Section */}
-      <TeamSection />
+      {/* <TeamSection /> */}
+      <TeamSections />
 
       {/* Premium Team Grid from reference */}
       {/* New Horizontal Team Cards */}

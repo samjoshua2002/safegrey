@@ -12,8 +12,8 @@ import RotatingText from './ui/rotating-text';
 
 export function AboutSection() {
   const teamStats = [
-    { number: "50+", label: "Certified Experts" },
-    { number: "100+", label: "Projects Completed" },
+
+
     { number: "24/7", label: "Security Operations" },
     { number: "99%", label: "Client Satisfaction" }
   ];
@@ -66,7 +66,7 @@ export function AboutSection() {
     
 
 
-      <section className="relative py-32 px-8 lg:px-16 overflow-hidden">
+      <section className="relative pt-32 px-8 lg:px-16 overflow-hidden">
         {/* Dotted Background */}
         <div className="absolute inset-0 opacity-20 pointer-events-none">
           <div className="absolute inset-0 grid grid-cols-4 gap-24 transform -rotate-6 scale-150">
@@ -94,12 +94,7 @@ export function AboutSection() {
               {/* Expertise Badge */}
 
 
-              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-[var(--theme-accent)]/10 border border-[var(--theme-accent)]/20 mb-6">
-                <Users className="w-4 h-4 text-[var(--theme-accent)]" />
-                <span className="text-sm font-semibold text-[var(--theme-accent)]">
-                  Expertise
-                </span>
-              </div>
+             
 
               <InteractiveTypography
                 text="Expertise That Makes a Difference"
@@ -117,15 +112,12 @@ export function AboutSection() {
 
             <div className="space-y-8">
               <p className="text-xl text-[var(--muted-foreground)] leading-relaxed">
-                At <span style={{ color: "var(--primary)" }} className="font-semibold">Safegrey</span>, our strength comes from a team of highly qualified professionals who are passionate about cybersecurity. Our consultants and engineers hold leading industry certifications.
+                <span style={{ color: "var(--primary)" }} className="font-semibold">Safegrey</span> was founded on a simple conviction: organizations defend best when they truly understand how attackers think and operate. We blend adversary-focused research with hands-on offensive testing to reveal realistic attack paths and harden the people, processes, and systems that matter most.
               </p>
 
+             
               <p className="text-xl text-[var(--muted-foreground)] leading-relaxed">
-                This deep expertise ensures our clients receive not only world-class security solutions but also practical guidance that stands up to real-world threats.
-              </p>
-
-              <p className="text-xl text-[var(--muted-foreground)] leading-relaxed">
-                We are committed to advancing the state of cybersecurity for organizations of all sizes—empowering you to build resilience and confidently secure your digital assets.
+              Working side-by-side with your security teams, we translate attacker techniques into actionable controls, tuned detections, and tabletop-ready playbooks. The result is strengthened defenses, empowered defenders, and lasting confidence that your most critical assets remain secure.
               </p>
 
               <div className="grid grid-cols-2 gap-6 pt-8">
@@ -322,7 +314,7 @@ export function AboutSection() {
             </div>
           </div>
 
-          <div className="text-center mt-32">
+          {/* <div className="text-center mt-32">
             <Button
               size="lg"
               className="glow-accent animate-pulse-glow group cursor-pointer"
@@ -334,7 +326,7 @@ export function AboutSection() {
             <p className="text-[var(--muted-foreground)] mt-6 text-lg">
               Ready to strengthen your security posture? Let's talk.
             </p>
-          </div>
+          </div> */}
         </div>
       </section>
     </div>

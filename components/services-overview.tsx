@@ -83,13 +83,12 @@ export function ServicesOverview() {
             </span>
           </h2>
           <p className="text-lg text-[var(--muted-foreground)] mb-4">
-            Despite record-high investments, organizations continue to face
-            relentless attacks, operational disruptions, and rising risk.
+           Despite record-high investments, organisations continue to face relentless attacks, operational disruptions, and rising risk.
           </p>
           <p className="text-2xl font-semibold text-[var(--primary)] mb-8">
             $10.5 Trillion
             <span className="block text-base font-normal text-[var(--muted-foreground)]">
-              Estimated global cost of cybercrime by 2025
+              Estimated global cost of cybercrime annually
             </span>
           </p>
         </div>
@@ -117,8 +116,7 @@ export function ServicesOverview() {
           At SafeGrey, we close the gap.
         </h3>
         <p className="text-lg text-[var(--muted-foreground)] mb-6">
-          We help transform your security posture from reactive to resilient—
-          arming your business to face the threats of today and tomorrow.
+         We help transform your security posture from reactive to resilient — arming your business to face the threats of today and tomorrow.
         </p>
       </div>
     </section>
