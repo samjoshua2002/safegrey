@@ -20,4 +20,17 @@ jobs:
           curl -f https://www.safegrey.com/api/health
           
       - name: Prevent Workflow Suspension
-        uses: gautamkrishnar/keepalive-workflow@v2
+        run: |
+          LAST_COMMIT_DATE=$(git log -1 --format=%ct)
+          CURRENT_DATE=$(date +%s)
+          DAYS_SINCE_COMMIT=$(( (CURRENT_DATE - LAST_COMMIT_DATE) / 86400 ))
+          
+          if [ "$DAYS_SINCE_COMMIT" -ge 50 ]; then
+            echo "Last commit was $DAYS_SINCE_COMMIT days ago. Making an empty keepalive commit."
+            git config --global user.name 'github-actions[bot]'
+            git config --global user.email 'github-actions[bot]@users.noreply.github.com'
+            git commit --allow-empty -m "chore: keepalive commit to prevent workflow suspension"
+            git push
+          else
+            echo "Last commit was $DAYS_SINCE_COMMIT days ago. No keepalive commit needed."
+          fi
