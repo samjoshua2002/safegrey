@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button"
 const plans = [
     {
         name: "1-Year License",
-        price: "€1,250",
+        price: "$1,250",
         period: "/year",
         description: "Standard license for professional teams.",
         features: [
@@ -20,7 +20,7 @@ const plans = [
     },
     {
         name: "2-Year License",
-        price: "€2,250",
+        price: "$2,250",
         period: "/2 years",
         description: "Save 10% off the original price!",
         features: [
@@ -34,7 +34,7 @@ const plans = [
     },
     {
         name: "Enterprise",
-        price: "€25,000",
+        price: "$25,000",
         period: "/year",
         description: "Unlimited potential for large organizations.",
         features: [

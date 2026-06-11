@@ -3,33 +3,50 @@
 import { motion } from "framer-motion";
 
 export function TeamSections() {
-  const team = [
-    {
-      name: "Alex Rivera",
-      role: "Head of Operations",
-      image: "/team/alex.jpg",
-      description: "Former FBI cybercrime investigator. 15+ years in digital forensics."
-    },
-    {
-      name: "Sarah Chen",
-      role: "CEO & Co-Founder",
-      image: "/team/sarah.jpg",
-      description: "Former NSA analyst specializing in advanced persistent threat mitigation."
-    },
-    {
-      name: "Marcus Thorne",
-      role: "Chief Strategist",
-      image: "/team/marcus.jpg",
-      description: "Global security architect with a focus on enterprise risk modeling."
-    },
-    {
-      name: "Elena Vance",
-      role: "Lead Security Architect",
-      image: "/team/elena.jpg",
-      description: "Vulnerability researcher known for zero-day discovery and hardening."
-    }
-  ];
-
+const team = [
+  {
+    name: "Vivek Balaji",
+    role: "Co-Founder & Head of Cyber Defense",
+    image: "profile.jpg",
+    description:
+      "Cybersecurity leader specializing in enterprise security architecture, cyber defense operations, and strategic risk management."
+  },
+  {
+    name: "Dhiwakar Gurumurthy",
+    role: "CFO & Head of Operations",
+    image: "profile.jpg",
+    description:
+      "Leads financial planning, business operations, and organizational growth with a focus on efficiency and scalability."
+  },
+  {
+    name: "Monu Kumar",
+    role: "Offensive Security Lead",
+    image: "profile.jpg",
+    description:
+      "Certified security professional focused on penetration testing, red teaming, and proactive threat assessment."
+  },
+  {
+    name: "Jaggajit Vasishta",
+    role: "Security Research Specialist",
+    image: "profile.jpg",
+    description:
+      "Specializes in security research, threat intelligence, vulnerability analysis, and security operations excellence."
+  },
+  {
+    name: "Naveen Vijay",
+    role: "Associate Security Analyst",
+    image: "profile.jpg",
+    description:
+      "Focused on security monitoring, incident analysis, threat detection, and strengthening organizational security posture."
+  },
+  {
+    name: "Sam Joshua",
+    role: "Offensive R&D Engineer",
+    image: "profile.jpg",
+    description:
+      "Researches emerging attack vectors, develops security tools, automates offensive testing workflows, and advances security innovation."
+  }
+];
   return (
     <section className="relative py-24 lg:py-40 px-4 sm:px-6 lg:px-8 bg-[var(--theme-dark-base)] overflow-hidden" id="team">
       <style jsx>{`
@@ -81,9 +98,12 @@ export function TeamSections() {
         .portrait-bw {
           filter: grayscale(100%) contrast(120%) brightness(0.9);
           width: 100%;
-          height: auto;
+          height: 100%;
+          object-fit: cover;
           display: block;
-          position: relative;
+          position: absolute;
+          top: 0;
+          left: 0;
           z-index: 4;
           clip-path: polygon(5% 2%, 98% 0%, 95% 98%, 0% 95%);
           transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
@@ -161,7 +181,7 @@ export function TeamSections() {
   
         </header>
 
-        <main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-20 lg:gap-12">
+        <main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-20 lg:gap-12">
 
           
           {team.map((member, index) => (
@@ -172,7 +192,7 @@ export function TeamSections() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: index * 0.15, ease: [0.23, 1, 0.32, 1] }}
             >
-              <div className="relative w-full aspect-[4/5] max-w-[300px] mb-12 group cursor-crosshair">
+              <div className="relative w-full aspect-square max-w-[240px] mb-8 group cursor-crosshair">
                 <div className="brush-frame-secondary" />
                 <div className="brush-frame-bg shadow-[0_20px_50px_rgba(0,0,0,0.8)]" />
                 <div className="brush-accent-red accent-top-left" />
