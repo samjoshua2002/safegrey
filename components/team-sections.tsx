@@ -214,7 +214,7 @@ const team = [
               
               <div className="text-center w-full group">
                 <motion.h3 
-                  className="text-3xl font-black uppercase tracking-tighter text-white mb-3"
+                  className="text-3xl font-black  tracking-tighter text-white mb-3"
                 >
                   {member.name}
                 </motion.h3>
