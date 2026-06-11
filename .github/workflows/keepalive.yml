@@ -8,8 +8,16 @@ on:
 jobs:
   ping:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        
       - name: Ping Health Endpoint
         run: |
           echo "Pinging health endpoint..."
           curl -f https://www.safegrey.com/api/health
+          
+      - name: Prevent Workflow Suspension
+        uses: gautamkrishnar/keepalive-workflow@v2
