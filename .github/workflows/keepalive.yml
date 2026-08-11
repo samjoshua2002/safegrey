@@ -1,36 +1,6 @@
-name: MongoDB Keep Alive
+﻿name: MongoDB Keep Alive
 
 on:
   schedule:
     - cron: '0 * * * *'
   workflow_dispatch:
-
-jobs:
-  ping:
-    runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v4
-        
-      - name: Ping Health Endpoint
-        run: |
-          echo "Pinging health endpoint..."
-          curl -f https://www.safegrey.com/api/health
-          
-      - name: Prevent Workflow Suspension
-        run: |
-          LAST_COMMIT_DATE=$(git log -1 --format=%ct)
-          CURRENT_DATE=$(date +%s)
-          DAYS_SINCE_COMMIT=$(( (CURRENT_DATE - LAST_COMMIT_DATE) / 86400 ))
-          
-          if [ "$DAYS_SINCE_COMMIT" -ge 50 ]; then
-            echo "Last commit was $DAYS_SINCE_COMMIT days ago. Making an empty keepalive commit."
-            git config --global user.name 'github-actions[bot]'
-            git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-            git commit --allow-empty -m "chore: keepalive commit to prevent workflow suspension"
-            git push
-          else
-            echo "Last commit was $DAYS_SINCE_COMMIT days ago. No keepalive commit needed."
-          fi
