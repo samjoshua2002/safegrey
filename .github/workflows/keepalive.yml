@@ -4,3 +4,14 @@ on:
   schedule:
     - cron: '0 * * * *'
   workflow_dispatch:
+
+jobs:
+  keep-alive:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Ping MongoDB
+        run: |
+          curl -X GET "${{ secrets.MONGO_DB_URL }}/ping" || echo "Ping failed, but continuing..."
+      - name: Keep booking service active
+        run: |
+          curl -X POST "${{ secrets.BOOKING_API_URL }}/health-check" || echo "Health check failed, but continuing..."
